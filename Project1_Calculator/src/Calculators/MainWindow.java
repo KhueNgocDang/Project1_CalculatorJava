@@ -12,8 +12,13 @@ import javax.swing.JMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
+
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import java.awt.Color;
 import javax.swing.UIManager;
@@ -22,6 +27,9 @@ import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.SystemColor;
+import javax.swing.event.ChangeListener;
+import javax.swing.text.AbstractDocument.Content;
+import javax.swing.event.ChangeEvent;
 
 public class MainWindow extends JFrame {
 	double firstnum = 0;
@@ -29,6 +37,7 @@ public class MainWindow extends JFrame {
 	double result;
 	int mark=0;
 	int mark2=0;
+	int mark3 = 0;
 	String operator;
 	
 	private Object math;
@@ -36,7 +45,14 @@ public class MainWindow extends JFrame {
 	private JTextField CalDisplayInput;
 	private JTextField CalDisplayResult;
 	
-
+	public void GenOps() 
+	{
+		firstnum = 0;
+		secondnum = 0;
+		mark=0;
+		mark2=0;
+		mark3 = 0;
+	}
 	/**
 	 * Launch the application.
 	 */
@@ -171,12 +187,14 @@ public class MainWindow extends JFrame {
 				contentPane.removeAll();
 				
 				CalDisplayEngage();
-				
+				GenOps();
 				setTitle("Standard Calculator - Project 1");
 				setBounds(100, 100, 325, 465);
 				
 				CalDisplayInput.setBounds(10, 11, 295, 37);
+				CalDisplayInput.setText(null);
 				CalDisplayResult.setBounds(10, 59, 295, 57);
+				CalDisplayResult.setText(null);
 				
 				JButton btnClearEntryButton = new JButton("CE");
 				btnClearEntryButton.setBounds(83, 127, 74, 45);
@@ -358,12 +376,14 @@ public class MainWindow extends JFrame {
 				contentPane.removeAll();
 				
 				CalDisplayEngage();
-				
+				GenOps();
 				setTitle("Scienctific Calculator - Project 1");
 				setBounds(100, 100, 462, 475);
 				
 				CalDisplayInput.setBounds(10, 11, 380, 37);
+				CalDisplayInput.setText(null);
 				CalDisplayResult.setBounds(10, 59, 380, 57);
+				CalDisplayResult.setText(null);
 				
 				JButton btnZeroButton = new JButton("0");
 				btnZeroButton.setFont(new Font("Arial", Font.PLAIN, 11));
@@ -478,10 +498,6 @@ public class MainWindow extends JFrame {
 				btnAbsoluteButton.setBounds(154, 208, 74, 32);
 				contentPane.add(btnAbsoluteButton);
 				
-				JButton btnButtonFour_1 = new JButton("4");
-				btnButtonFour_1.setBounds(10, 208, 74, 32);;
-				contentPane.add(btnButtonFour_1);
-				
 				JButton btnOpeningParenthesis = new JButton("(");
 				btnOpeningParenthesis.setFont(new Font("Arial", Font.PLAIN, 11));
 				btnOpeningParenthesis.setBounds(81, 239, 74, 32);
@@ -497,33 +513,65 @@ public class MainWindow extends JFrame {
 				btnFactorial.setBounds(227, 239, 74, 32);
 				contentPane.add(btnFactorial);
 				
-				JButton btn2ndmode = new JButton("2nd");
-				btn2ndmode.setBounds(10, 177, 74, 32);
-				contentPane.add(btn2ndmode);
-				
 				JButton btnReciprocalButton = new JButton("1⁄x");
 				btnReciprocalButton.setBounds(81, 208, 74, 32);
 				contentPane.add(btnReciprocalButton);
 				
-				JButton btnButtonOne_1_1 = new JButton("1");
-				btnButtonOne_1_1.setBounds(10, 239, 74, 32);
-				contentPane.add(btnButtonOne_1_1);
+				JButton btn2ndmode = new JButton("2nd");
+				btn2ndmode.setFont(new Font("Arial", Font.PLAIN, 11));
+				btn2ndmode.addActionListener(new ActionListener() {
+					
+					public void actionPerformed(ActionEvent e) {
+						String tag = null;
+						switch(mark3) 
+						{
+							case 0: mark3 = 1;tag="0";break;
+							case 1: mark3 = 0;tag="1";break;
+							
+						}
+						
+						CalDisplayResult.setText(tag);
+					}
+				});
+				btn2ndmode.setBounds(10, 177, 74, 32);
+				contentPane.add(btn2ndmode);
 				
-				JButton btnButtonSeven_2 = new JButton("7");
-				btnButtonSeven_2.setBounds(10, 270, 74, 32);
-				contentPane.add(btnButtonSeven_2);
 				
-				JButton btnButtonFour_2 = new JButton("4");
-				btnButtonFour_2.setBounds(10, 301, 74, 32);
-				contentPane.add(btnButtonFour_2);
+				JButton btnLevel1 = new JButton();
+				btnLevel1.setFont(new Font("Arial", Font.PLAIN, 11));
+				if(mark3 == 0) 
+				{
+					
+					btnLevel1.setText("1");;
+				}
+				else btnLevel1.setText("0");
+				btnLevel1.setBounds(10, 208, 74, 32);;
+				contentPane.add(btnLevel1);
 				
-				JButton btnButtonOne_2 = new JButton("1");
-				btnButtonOne_2.setBounds(10, 332, 74, 32);
-				contentPane.add(btnButtonOne_2);
+				JButton btnLevel2 = new JButton("cube");
+				btnLevel2.setFont(new Font("Arial", Font.PLAIN, 11));
+				btnLevel2.setBounds(10, 239, 74, 32);
+				contentPane.add(btnLevel2);
 				
-				JButton btnNegateButton_1 = new JButton("+/-");
-				btnNegateButton_1.setBounds(10, 363, 74, 32);
-				contentPane.add(btnNegateButton_1);
+				JButton btnLevel3 = new JButton("x^y");
+				btnLevel3.setFont(new Font("Arial", Font.PLAIN, 11));
+				btnLevel3.setBounds(10, 270, 74, 32);
+				contentPane.add(btnLevel3);
+				
+				JButton btnLevel4 = new JButton("10^x");
+				btnLevel4.setFont(new Font("Arial", Font.PLAIN, 11));
+				btnLevel4.setBounds(10, 301, 74, 32);
+				contentPane.add(btnLevel4);
+				
+				JButton btnLevel5 = new JButton("log");
+				btnLevel5.setFont(new Font("Arial", Font.PLAIN, 11));
+				btnLevel5.setBounds(10, 332, 74, 32);
+				contentPane.add(btnLevel5);
+				
+				JButton btnLevel6 = new JButton("ln");
+				btnLevel6.setFont(new Font("Arial", Font.PLAIN, 11));
+				btnLevel6.setBounds(10, 363, 74, 32);
+				contentPane.add(btnLevel6);
 				
 				JButton btnDeleteButton = new JButton("←");
 				btnDeleteButton.setFont(new Font("Arial", Font.PLAIN, 11));
@@ -627,8 +675,6 @@ public class MainWindow extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		
 		
 	}
 }
