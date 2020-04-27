@@ -384,7 +384,7 @@ public class MainWindow extends JFrame {
 		SciencetificCal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				contentPane.removeAll();
-				
+				//aaa
 				CalDisplayEngage();
 				GenOps();
 				setTitle("Scienctific Calculator - Project 1");
