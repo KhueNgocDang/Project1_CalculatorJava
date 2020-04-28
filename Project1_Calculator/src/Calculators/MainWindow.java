@@ -72,16 +72,14 @@ public class MainWindow extends JFrame {
 	public void CalDisplayEngage() 
 	{
 		CalDisplayInput = new JTextField();
-		CalDisplayInput.setText("");
-		CalDisplayInput.setFont(new Font("Arial", Font.BOLD, 14));
+		CalDisplayInput.setText("0");
 		CalDisplayInput.setHorizontalAlignment(SwingConstants.RIGHT);
 		CalDisplayInput.setBackground(UIManager.getColor("Button.background"));
 		contentPane.add(CalDisplayInput);
 		CalDisplayInput.setColumns(10);
 		
 		CalDisplayResult = new JTextField();
-		CalDisplayResult.setText("");
-		CalDisplayResult.setFont(new Font("Arial", Font.BOLD, 24));
+		CalDisplayResult.setText("0");
 		CalDisplayResult.setHorizontalAlignment(SwingConstants.RIGHT);
 		CalDisplayResult.setBackground(UIManager.getColor("Button.background"));
 		contentPane.add(CalDisplayResult);
@@ -102,15 +100,77 @@ public class MainWindow extends JFrame {
 		});
 	}
 	
-	public void OperatorButtonPressed(JButton Button) 
+	public void EulerNumber(JButton Button, int exptype) 
 	{
 		Button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				operator = Button.getText();
+				double exp = 0 ;
+				
+				switch(exptype) 
+				{
+					case 1: exp = 1; break;
+					case 2: exp = Double.parseDouble(CalDisplayResult.getText()); 
+					CalDisplayInput.setText("e^("+CalDisplayResult.getText()+")");
+					break;
+				}
+				CalDisplayResult.setText(String.valueOf(Math.exp(exp)));
+			}
+		});
+	}
+	
+	public void GetPercentage(JButton Button) 
+	{
+
+		Button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				double ops = Double.parseDouble(String.valueOf(CalDisplayResult.getText()));
+				ops = ops/100;
+				CalDisplayResult.setText(String.valueOf(ops));
+			}
+		});
+	}
+	
+	public void GetReciprocal(JButton Button) 
+	{
+		Button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				double ops = Double.parseDouble(String.valueOf(CalDisplayResult.getText()));
+				ops = 1/ops;
+				CalDisplayInput.setText("1/(" + CalDisplayResult.getText() + ")");
+				CalDisplayResult.setText(String.valueOf(ops));
+			}
+		});
+	}
+	
+	public void GetFactorial(JButton Button) 
+	{
+		Button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				double ops = Double.parseDouble(String.valueOf(CalDisplayResult.getText()));
+				double res = 1,i;
+				for(i=2;i<=ops;i++) res *= 1;
+				CalDisplayInput.setText("fact(" + CalDisplayResult.getText() + ")");
+				CalDisplayResult.setText(String.valueOf(res));
+			}
+		});
+	}
+	
+	public void OperatorButtonPressed(JButton Button,int OpType) 
+	{
+		Button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				switch(OpType) 
+				{
+				case 0: operator = Button.getText();break;
+				case 1: operator = "^";break;
+				case 2: operator = "yroot";break;
+				case 3: operator = "base log";break;
+				}
 				String answer;
 				if(mark == 0) 
 				{
-					String iNum = CalDisplayResult.getText()+Button.getText();
+					String iNum = CalDisplayResult.getText()+operator;
+					if(CalDisplayResult == null) firstnum = 0; else
 					firstnum = Double.parseDouble(CalDisplayResult.getText());
 					if(CalDisplayInput.getText()==null) 
 						{
@@ -120,6 +180,9 @@ public class MainWindow extends JFrame {
 				
 				switch(operator) 
 				{
+				case "mod":
+					result = firstnum % secondnum;
+					break;
 				case "+":
 					result = firstnum + secondnum;
 					break;
@@ -132,6 +195,15 @@ public class MainWindow extends JFrame {
 				case "/":
 					result = firstnum / secondnum;
 					break;
+				case "^":
+					result = Math.pow(firstnum,secondnum);
+					break;
+				case "yroot":
+					result = Math.pow(firstnum, 1/secondnum);
+					break;
+				case "base log":
+					result = Math.log(firstnum)/Math.log(secondnum);
+					break;
 				}
 				answer = String.format("%.2f",result);
 				if(mark2 == 1) CalDisplayResult.setText(answer); 
@@ -139,6 +211,36 @@ public class MainWindow extends JFrame {
 				mark = 1;
 				mark2 = 1;
 			}}
+		});
+	}
+	
+	public void powfunc(JButton Button, int functype) 
+	{
+		Button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				double ops = Double.parseDouble(String.valueOf(CalDisplayResult.getText()));
+				double expresult = 0;
+				switch(functype) 
+				{
+					case 1: expresult = Math.pow(ops, 2);
+						CalDisplayInput.setText("sqr(" + CalDisplayResult.getText() + ")");break;
+					case 2: expresult = Math.pow(ops, 3);
+						CalDisplayInput.setText("cube(" + CalDisplayResult.getText() + ")");break;
+					case 3: expresult = Math.pow(2, ops);
+						CalDisplayInput.setText("2^(" + CalDisplayResult.getText() + ")");break;
+					case 4: expresult = Math.pow(10, ops);
+						CalDisplayInput.setText("10^(" + CalDisplayResult.getText() + ")");break;
+					case 5: expresult = Math.pow(ops, 1/2);
+						CalDisplayInput.setText("sqrt(" + CalDisplayResult.getText() + ")");break;
+					case 6: expresult = Math.pow(ops, 1/3);
+						CalDisplayInput.setText("cube(" + CalDisplayResult.getText() + ")");break;
+					case 7: expresult = Math.log10(ops);
+						CalDisplayInput.setText("log(" + CalDisplayResult.getText() + ")");break;
+					case 8: expresult = Math.log(ops);
+						CalDisplayInput.setText("ln(" + CalDisplayResult.getText() + ")");break;
+				}
+				CalDisplayResult.setText(String.valueOf(expresult));
+			}
 		});
 	}
 	
@@ -151,31 +253,34 @@ public class MainWindow extends JFrame {
 				secondnum = Double.parseDouble(CalDisplayResult.getText());
 				switch(operator) 
 				{
+				case "mod":
+					result = firstnum % secondnum;
+					break;
 				case "+":
 					result = firstnum + secondnum;
-					answer = String.format("%.2f",result);
-					CalDisplayInput.setText(firstnum + "+" + secondnum);
-					CalDisplayResult.setText(answer);
 					break;
 				case "-":
 					result = firstnum - secondnum;
-					answer = String.format("%.2f",result);
-					CalDisplayInput.setText(firstnum + "-" + secondnum);
-					CalDisplayResult.setText(answer);
 					break;
 				case "*":
 					result = firstnum * secondnum;
-					answer = String.format("%.2f",result);
-					CalDisplayInput.setText(firstnum + "*" + secondnum);
-					CalDisplayResult.setText(answer);
 					break;
 				case "/":
 					result = firstnum / secondnum;
-					answer = String.format("%.2f",result);
-					CalDisplayInput.setText(firstnum + "/" + secondnum);
-					CalDisplayResult.setText(answer);
+					break;
+				case "^":
+					result = Math.pow(firstnum,secondnum);
+					break;
+				case "yroot":
+					result = Math.pow(firstnum , 1/secondnum);
+					break;
+				case "base log":
+					result = Math.log(firstnum)/Math.log(secondnum);
 					break;
 				}
+				answer = String.format("%.2f",result);
+				CalDisplayInput.setText(firstnum + operator + secondnum);
+				CalDisplayResult.setText(answer);
 			}
 		});
 	}
@@ -194,7 +299,7 @@ public class MainWindow extends JFrame {
 				CalDisplayInput.setBounds(10, 11, 295, 37);
 				CalDisplayInput.setText(null);
 				CalDisplayResult.setBounds(10, 59, 295, 57);
-				CalDisplayResult.setText(null);
+				CalDisplayResult.setText("0");
 				
 				JButton btnClearEntryButton = new JButton("CE");
 				btnClearEntryButton.setBounds(83, 127, 74, 45);
@@ -229,25 +334,11 @@ public class MainWindow extends JFrame {
 				contentPane.add(btnDeleteButton);
 				
 				JButton btnPercentageButton = new JButton("%");
-				btnPercentageButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						double ops = Double.parseDouble(String.valueOf(CalDisplayResult.getText()));
-						ops = ops/100;
-						CalDisplayResult.setText(String.valueOf(ops));
-					}
-				});
+				GetPercentage(btnPercentageButton);
 				btnPercentageButton.setBounds(10, 127, 74, 45);
 				contentPane.add(btnPercentageButton);
 				
 				JButton btnReciprocalButton = new JButton("1/x");
-				btnReciprocalButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						double ops = Double.parseDouble(String.valueOf(CalDisplayResult.getText()));
-						ops = 1/ops;
-						CalDisplayInput.setText("1/(" + CalDisplayResult.getText() + ")");
-						CalDisplayResult.setText(String.valueOf(ops));
-					}
-				});
 				btnReciprocalButton.setBounds(10, 171, 74, 45);
 				contentPane.add(btnReciprocalButton);
 				
@@ -266,14 +357,7 @@ public class MainWindow extends JFrame {
 				contentPane.add(btnNegateButton);
 				
 				JButton btnSquareButton = new JButton("<html>x<sup>2</sup></html>");
-				btnSquareButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						double ops = Double.parseDouble(String.valueOf(CalDisplayResult.getText()));
-						ops *= ops;
-						CalDisplayInput.setText("sqr(" + CalDisplayResult.getText() + ")");
-						CalDisplayResult.setText(String.valueOf(ops));
-					}
-				});
+				powfunc(btnSquareButton, 1);
 				btnSquareButton.setBounds(83, 171, 74, 45);
 				contentPane.add(btnSquareButton);
 				
@@ -290,22 +374,22 @@ public class MainWindow extends JFrame {
 				contentPane.add(btnSquareRootButton);
 
 				JButton btnPlusButton = new JButton("+");
-				OperatorButtonPressed(btnPlusButton);
+				OperatorButtonPressed(btnPlusButton,0);
 				btnPlusButton.setBounds(229, 303, 74, 45);
 				contentPane.add(btnPlusButton);
 				
 				JButton btnMinusButton = new JButton("-");
-				OperatorButtonPressed(btnMinusButton);
+				OperatorButtonPressed(btnMinusButton,0);
 				btnMinusButton.setBounds(229, 259, 74, 45);
 				contentPane.add(btnMinusButton);
 				
 				JButton btnMultiplyButton = new JButton("×");
-				OperatorButtonPressed(btnMultiplyButton);
+				OperatorButtonPressed(btnMultiplyButton,0);
 				btnMultiplyButton.setBounds(229, 215, 74, 45);
 				contentPane.add(btnMultiplyButton);
 
 				JButton btnDivideButton = new JButton("÷");
-				OperatorButtonPressed(btnDivideButton);
+				OperatorButtonPressed(btnDivideButton,0);
 				btnDivideButton.setBounds(229, 171, 74, 45);
 				contentPane.add(btnDivideButton);
 				
@@ -393,7 +477,7 @@ public class MainWindow extends JFrame {
 				CalDisplayInput.setBounds(10, 11, 440, 37);
 				CalDisplayInput.setText(null);
 				CalDisplayResult.setBounds(10, 59, 440, 57);
-				CalDisplayResult.setText(null);
+				CalDisplayResult.setText("0");
 				
 				JButton btnZeroButton = new JButton("0");
 				NumberButtonPressed(btnZeroButton);
@@ -472,10 +556,16 @@ public class MainWindow extends JFrame {
 				contentPane.add(btnNegateButton);
 				
 				JButton btnPiButton = new JButton("π");
+				btnPiButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						CalDisplayResult.setText(String.valueOf(Math.PI));
+					}
+				});
 				btnPiButton.setBounds(83, 177, 74, 32);
 				contentPane.add(btnPiButton);
 				
 				JButton btnEulersNumberButton = new JButton("e");
+				EulerNumber(btnEulersNumberButton,1);
 				btnEulersNumberButton.setBounds(156, 177, 74, 32);
 				contentPane.add(btnEulersNumberButton);
 				
@@ -483,7 +573,7 @@ public class MainWindow extends JFrame {
 				btnClearButton.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
 								CalDisplayInput.setText("");
-								CalDisplayResult.setText("");
+								CalDisplayResult.setText("0");
 								firstnum = 0;
 								secondnum = 0;
 								result = 0;
@@ -493,10 +583,23 @@ public class MainWindow extends JFrame {
 				contentPane.add(btnClearButton);
 				
 				JButton btnExponentialButton = new JButton("exp");
+				btnExponentialButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						double a = Double.parseDouble(CalDisplayResult.getText());
+						String b = String.format("%6.3e", a);
+						CalDisplayResult.setText(b);
+					}
+				});
 				btnExponentialButton.setBounds(302, 208, 74, 32);
 				contentPane.add(btnExponentialButton);
 				
 				JButton btnAbsoluteButton = new JButton("|x|");
+				btnAbsoluteButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						double a = Double.parseDouble(CalDisplayResult.getText());
+						CalDisplayResult.setText(String.valueOf(Math.abs(a)));
+					}
+				});
 				btnAbsoluteButton.setBounds(229, 208, 74, 32);
 				contentPane.add(btnAbsoluteButton);
 				
@@ -509,53 +612,47 @@ public class MainWindow extends JFrame {
 				contentPane.add(btnClosingParenthesis);
 				
 				JButton btnFactorial = new JButton("n!");
+				GetFactorial(btnFactorial);
 				btnFactorial.setBounds(302, 239, 74, 32);
 				contentPane.add(btnFactorial);
 				
 				JButton btnReciprocalButton = new JButton("1⁄x");
+				GetReciprocal(btnReciprocalButton);
 				btnReciprocalButton.setBounds(156, 208, 74, 32);
 				contentPane.add(btnReciprocalButton);
 				
 				JButton btnPercentageButton = new JButton("%");
-				btnPercentageButton.addActionListener(new ActionListener() {
-					
-					public void actionPerformed(ActionEvent e) {
-						String tag = null;
-						switch(mark3) 
-						{
-							case 0: mark3 = 1;tag="0";break;
-							case 1: mark3 = 0;tag="1";break;
-							
-						}
-						
-						CalDisplayResult.setText(tag);
-					}
-				});
+				GetPercentage(btnPercentageButton);
 				btnPercentageButton.setBounds(10, 177, 74, 32);
 				contentPane.add(btnPercentageButton);
 				
-				
 				JButton btnSquareButton = new JButton("<html>x<sup>2</sup></html>");
+				powfunc(btnSquareButton, 1);
 				btnSquareButton.setBounds(10, 208, 74, 32);;
 				contentPane.add(btnSquareButton);
 				
 				JButton btnCubeButton = new JButton("<html>x<sup>3</sup></html>");
+				powfunc(btnCubeButton, 2);
 				btnCubeButton.setBounds(10, 239, 74, 32);
 				contentPane.add(btnCubeButton);
 				
 				JButton btnXtothepowerofY = new JButton("<html>x<sup>y</sup></html>");
+				OperatorButtonPressed(btnXtothepowerofY,1);
 				btnXtothepowerofY.setBounds(10, 270, 74, 32);
 				contentPane.add(btnXtothepowerofY);
 				
 				JButton btn10tothepowerofX = new JButton("<html>10<sup>x</sup></html>");
+				powfunc(btn10tothepowerofX, 4);
 				btn10tothepowerofX.setBounds(10, 301, 74, 32);
 				contentPane.add(btn10tothepowerofX);
 				
 				JButton btnLogof10Button = new JButton("log");
+				powfunc(btnLogof10Button, 7);
 				btnLogof10Button.setBounds(10, 332, 74, 32);
 				contentPane.add(btnLogof10Button);
 				
 				JButton btnNaturalLog = new JButton("ln");
+				powfunc(btnNaturalLog, 8);
 				btnNaturalLog.setBounds(10, 363, 74, 32);
 				contentPane.add(btnNaturalLog);
 				
@@ -575,26 +672,27 @@ public class MainWindow extends JFrame {
 				contentPane.add(btnDeleteButton);
 				
 				JButton btnModularButton = new JButton("mod");
+				OperatorButtonPressed(btnModularButton,0);
 				btnModularButton.setBounds(376, 208, 74, 32);
 				contentPane.add(btnModularButton);
 				
 				JButton btnDivideButton = new JButton("÷");
-				OperatorButtonPressed(btnDivideButton);
+				OperatorButtonPressed(btnDivideButton,0);
 				btnDivideButton.setBounds(376, 239, 74, 32);
 				contentPane.add(btnDivideButton);
 				
 				JButton btnMultiplyButton = new JButton("×");
-				OperatorButtonPressed(btnMultiplyButton);
+				OperatorButtonPressed(btnMultiplyButton,0);
 				btnMultiplyButton.setBounds(376, 270, 74, 32);
 				contentPane.add(btnMultiplyButton);
 				
 				JButton btnMinusButton = new JButton("-");
-				OperatorButtonPressed(btnMinusButton);
+				OperatorButtonPressed(btnMinusButton,0);
 				btnMinusButton.setBounds(376, 301, 74, 32);
 				contentPane.add(btnMinusButton);
 				
 				JButton btnPlusButton = new JButton("+");
-				OperatorButtonPressed(btnPlusButton);
+				OperatorButtonPressed(btnPlusButton,0);
 				btnPlusButton.setBounds(376, 332, 74, 32);
 				contentPane.add(btnPlusButton);
 				
@@ -603,6 +701,40 @@ public class MainWindow extends JFrame {
 				btnEqualButton.setBounds(376, 363, 74, 32);
 				contentPane.add(btnEqualButton);
 				
+				JButton btnClearEntryButton = new JButton("CE");
+				btnClearEntryButton.setBounds(229, 177, 74, 32);
+				contentPane.add(btnClearEntryButton);
+				
+				JButton btnSquareRootButton = new JButton("\u221A"+"x");
+				powfunc(btnSquareRootButton, 5);
+				btnSquareRootButton.setBounds(83, 208, 74, 32);
+				contentPane.add(btnSquareRootButton);
+				
+				JButton btnCubeRootButton = new JButton("\u221B"+"x");
+				powfunc(btnSquareRootButton, 6);
+				btnCubeRootButton.setBounds(83, 239, 74, 32);
+				contentPane.add(btnCubeRootButton);
+				
+				JButton btn2SquareButton = new JButton("<html>2<sup>x</sup></html>");
+				powfunc(btn2SquareButton, 3);
+				btn2SquareButton.setBounds(83, 301, 74, 32);
+				contentPane.add(btn2SquareButton);
+				
+				JButton btnYRootButton = new JButton("<html><sup>y</sup>\u221Ax</html>");
+				OperatorButtonPressed(btnYRootButton,2);
+				btnYRootButton.setBounds(83, 270, 74, 32);
+				contentPane.add(btnYRootButton);
+				
+				JButton btnLogYofXButton = new JButton("<html>log<sub>y</sub>x</html>");
+				OperatorButtonPressed(btnLogYofXButton,3);
+				btnLogYofXButton.setBounds(83, 332, 74, 32);
+				contentPane.add(btnLogYofXButton);
+				
+				JButton btnEulertothepowerofX = new JButton("<html>e<sup>x</sup></html>");
+				EulerNumber(btnEulertothepowerofX,2);
+				btnEulertothepowerofX.setBounds(83, 363, 74, 32);
+				contentPane.add(btnEulertothepowerofX);
+
 				JMenu mnNewMenu = new JMenu("New menu");
 				mnNewMenu.setBounds(10, 137, 113, 27);
 				contentPane.add(mnNewMenu);
@@ -610,43 +742,6 @@ public class MainWindow extends JFrame {
 				JMenu mnNewMenu_1 = new JMenu("New menu");
 				mnNewMenu_1.setBounds(134, 137, 113, 27);
 				contentPane.add(mnNewMenu_1);
-				
-				JButton btnClearEntryButton = new JButton("CE");
-				btnClearEntryButton.setBounds(229, 177, 74, 32);
-				contentPane.add(btnClearEntryButton);
-				
-				JButton btnSquareRootButton = new JButton("\u221A"+"x");
-				btnSquareRootButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						double ops = Double.parseDouble(String.valueOf(CalDisplayResult.getText()));
-						ops = Math.sqrt(ops);
-						CalDisplayInput.setText("sqrt(" + CalDisplayResult.getText() + ")");
-						CalDisplayResult.setText(String.valueOf(ops));
-					}
-				});
-				btnSquareRootButton.setBounds(83, 208, 74, 32);
-				contentPane.add(btnSquareRootButton);
-				
-				JButton btnCubeRootButton = new JButton("\u221B"+"x");
-				btnCubeRootButton.setBounds(83, 239, 74, 32);
-				contentPane.add(btnCubeRootButton);
-				
-				JButton btn2SquareButton = new JButton("<html>2<sup>x</sup></html>");
-				btn2SquareButton.setBounds(83, 301, 74, 32);
-				contentPane.add(btn2SquareButton);
-				
-				JButton btnYRootButton = new JButton("<html><sup>y</sup>\u221Ax</html>");
-				btnYRootButton.setBounds(83, 270, 74, 32);
-				contentPane.add(btnYRootButton);
-				
-				JButton btnLogYofXButton = new JButton("<html>log<sub>y</sub>x</html>");
-				btnLogYofXButton.setBounds(83, 332, 74, 32);
-				contentPane.add(btnLogYofXButton);
-				
-				JButton btnEulertothepowerofX = new JButton("<html>e<sup>x</sup></html>");
-				btnEulertothepowerofX.setBounds(83, 363, 74, 32);
-				contentPane.add(btnEulertothepowerofX);
-				
 			}
 		});
 		
@@ -690,7 +785,6 @@ public class MainWindow extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
 		
 	}
 }
