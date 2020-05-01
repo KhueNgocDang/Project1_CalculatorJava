@@ -23,6 +23,8 @@ import javax.swing.JButton;
 import java.awt.Color;
 import javax.swing.UIManager;
 import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
+
 import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -31,6 +33,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.AbstractDocument.Content;
 import javax.swing.event.ChangeEvent;
 import javax.swing.JTextPane;
+import javax.swing.JCheckBox;
 
 public class MainWindow extends JFrame {
 	double firstnum = 0;
@@ -125,7 +128,6 @@ public class MainWindow extends JFrame {
 	
 	public void GetPercentage(JButton Button) 
 	{
-
 		Button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				double ops = Double.parseDouble(String.valueOf(CalDisplayResult.getText()));
@@ -137,6 +139,13 @@ public class MainWindow extends JFrame {
 	
 	public void GetReciprocal(JButton Button) 
 	{
+		Button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				double ops = Double.parseDouble(String.valueOf(CalDisplayResult.getText()));
+				ops =1/ops;
+				CalDisplayResult.setText(String.valueOf(ops));
+			}
+		});
 	}
 	
 	public void GetFactorial(JButton Button) 
@@ -310,6 +319,7 @@ public class MainWindow extends JFrame {
 				contentPane.add(btnPercentageButton);
 				
 				JButton btnReciprocalButton = new JButton("1/x");
+				GetReciprocal(btnReciprocalButton);
 				btnReciprocalButton.setBounds(10, 171, 74, 45);
 				contentPane.add(btnReciprocalButton);
 				
@@ -720,7 +730,6 @@ public class MainWindow extends JFrame {
 	{
 		ProgrammerCal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
 				contentPane.removeAll();
 				
 				CalDisplayEngage();
@@ -735,52 +744,52 @@ public class MainWindow extends JFrame {
 				
 				JButton btnZeroButton = new JButton("0");
 				NumberButtonPressed(btnZeroButton);
-				btnZeroButton.setBounds(229, 456, 74, 32);
+				btnZeroButton.setBounds(229, 486, 74, 32);
 				contentPane.add(btnZeroButton);
 				
 				JButton btnButtonOne = new JButton("1");
 				NumberButtonPressed(btnButtonOne);
-				btnButtonOne.setBounds(156, 425, 74, 32);
+				btnButtonOne.setBounds(156, 455, 74, 32);
 				contentPane.add(btnButtonOne);
 				
 				JButton btnButtonTwo = new JButton("2");
 				NumberButtonPressed(btnButtonTwo);
-				btnButtonTwo.setBounds(229, 425, 74, 32);
+				btnButtonTwo.setBounds(229, 455, 74, 32);
 				contentPane.add(btnButtonTwo);
 				
 				JButton btnButtonThree = new JButton("3");
 				NumberButtonPressed(btnButtonThree);
-				btnButtonThree.setBounds(302, 425, 74, 32);
+				btnButtonThree.setBounds(302, 455, 74, 32);
 				contentPane.add(btnButtonThree);
 
 				JButton btnButtonFour = new JButton("4");
 				NumberButtonPressed(btnButtonFour);
-				btnButtonFour.setBounds(156, 394, 74, 32);
+				btnButtonFour.setBounds(156, 424, 74, 32);
 				contentPane.add(btnButtonFour);
 				
 				JButton btnButtonFive = new JButton("5");
 				NumberButtonPressed(btnButtonFive);
-				btnButtonFive.setBounds(229, 394, 74, 32);
+				btnButtonFive.setBounds(229, 424, 74, 32);
 				contentPane.add(btnButtonFive);
 				
 				JButton btnButtonSix = new JButton("6");
 				NumberButtonPressed(btnButtonSix);
-				btnButtonSix.setBounds(302, 394, 74, 32);
+				btnButtonSix.setBounds(302, 424, 74, 32);
 				contentPane.add(btnButtonSix);
 				
 				JButton btnButtonSeven = new JButton("7");
 				NumberButtonPressed(btnButtonSeven);
-				btnButtonSeven.setBounds(156, 363, 74, 32);
+				btnButtonSeven.setBounds(156, 393, 74, 32);
 				contentPane.add(btnButtonSeven);
 				
 				JButton btnButtonEight = new JButton("8");
 				NumberButtonPressed(btnButtonEight);
-				btnButtonEight.setBounds(229, 363, 74, 32);
+				btnButtonEight.setBounds(229, 393, 74, 32);
 				contentPane.add(btnButtonEight);
 				
 				JButton btnButtonNine = new JButton("9");
 				NumberButtonPressed(btnButtonNine);
-				btnButtonNine.setBounds(302, 363, 74, 32);
+				btnButtonNine.setBounds(302, 393, 74, 32);
 				contentPane.add(btnButtonNine);
 				
 				JButton btnPointButton = new JButton(".");
@@ -792,7 +801,7 @@ public class MainWindow extends JFrame {
 						}
 					}
 				});
-				btnPointButton.setBounds(302, 456, 74, 32);
+				btnPointButton.setBounds(302, 486, 74, 32);
 				contentPane.add(btnPointButton);
 				
 				JButton btnNegateButton = new JButton("+/-");
@@ -806,7 +815,7 @@ public class MainWindow extends JFrame {
 						}
 					}
 				});
-				btnNegateButton.setBounds(156, 456, 74, 32);
+				btnNegateButton.setBounds(156, 486, 74, 32);
 				contentPane.add(btnNegateButton);
 				
 				JButton btnHexAButton = new JButton("A");
@@ -815,70 +824,73 @@ public class MainWindow extends JFrame {
 						CalDisplayResult.setText(String.valueOf(Math.PI));
 					}
 				});
-				btnHexAButton.setBounds(83, 301, 74, 32);
+				btnHexAButton.setBounds(83, 331, 74, 32);
 				contentPane.add(btnHexAButton);
 				
 				JButton btnLeftShiftButton = new JButton("<<");
 				EulerNumber(btnLeftShiftButton,1);
-				btnLeftShiftButton.setBounds(156, 301, 74, 32);
+				btnLeftShiftButton.setBounds(156, 331, 74, 32);
 				contentPane.add(btnLeftShiftButton);
 				
-				JButton btnClear_ClearEntryButton = new JButton();
-				if(CalDisplayResult.getText()=="0") btnClear_ClearEntryButton.setText("C");
-				else btnClear_ClearEntryButton.setText("CE");
-				btnClear_ClearEntryButton.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent e) {
-								CalDisplayInput.setText("");
-								CalDisplayResult.setText("0");
-								firstnum = 0;
-								secondnum = 0;
-								result = 0;
-							}
-						});
-				btnClear_ClearEntryButton.setBounds(302, 301, 74, 32);
-				contentPane.add(btnClear_ClearEntryButton);
+				JButton btnClearEntryButton = new JButton();
+				btnClearEntryButton.setText("CE");
+				btnClearEntryButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						if(CalDisplayResult.getText()=="0") 
+						{
+							btnClearEntryButton.setText("CE");
+							btnClearEntryButton.paintImmediately(btnClearEntryButton.getVisibleRect());
+						}else 
+						{
+							btnClearEntryButton.setText("C");
+							btnClearEntryButton.paintImmediately(btnClearEntryButton.getVisibleRect());
+						}
+					}
+				});
+				btnClearEntryButton.setBounds(302, 331, 74, 32);
+				contentPane.add(btnClearEntryButton);
 				
 				JButton btnOpeningParenthesis = new JButton("(");
-				btnOpeningParenthesis.setBounds(156, 332, 74, 32);
+				btnOpeningParenthesis.setBounds(156, 362, 74, 32);
 				contentPane.add(btnOpeningParenthesis);
 				
 				JButton btnClosingParenthesis = new JButton(")");
-				btnClosingParenthesis.setBounds(229, 332, 74, 32);
+				btnClosingParenthesis.setBounds(229, 362, 74, 32);
 				contentPane.add(btnClosingParenthesis);
 				
 				JButton btnPercentageButton = new JButton("%");
 				GetFactorial(btnPercentageButton);
-				btnPercentageButton.setBounds(302, 332, 74, 32);
+				btnPercentageButton.setBounds(302, 362, 74, 32);
 				contentPane.add(btnPercentageButton);
 				
 				JButton btnANDButton = new JButton("AND");
 				GetPercentage(btnANDButton);
-				btnANDButton.setBounds(10, 301, 74, 32);
+				btnANDButton.setBounds(10, 331, 74, 32);
 				contentPane.add(btnANDButton);;
 				
 				JButton btnORButton = new JButton("OR");
 				powfunc(btnORButton, 2);
-				btnORButton.setBounds(10, 332, 74, 32);
+				btnORButton.setBounds(10, 362, 74, 32);
 				contentPane.add(btnORButton);
 				
 				JButton btnNOTButton = new JButton("NOT");
 				OperatorButtonPressed(btnNOTButton,1);
-				btnNOTButton.setBounds(10, 363, 74, 32);
+				btnNOTButton.setBounds(10, 393, 74, 32);
 				contentPane.add(btnNOTButton);
 				
 				JButton btnNANDButton = new JButton("NAND");
 				powfunc(btnNANDButton, 4);
-				btnNANDButton.setBounds(10, 394, 74, 32);
+				btnNANDButton.setBounds(10, 424, 74, 32);
 				contentPane.add(btnNANDButton);
 				
 				JButton btnNORButton = new JButton("NOR");
 				powfunc(btnNORButton, 7);
-				btnNORButton.setBounds(10, 425, 74, 32);
+				btnNORButton.setBounds(10, 455, 74, 32);
 				contentPane.add(btnNORButton);
 				
 				JButton btnXORButton = new JButton("XOR");
 				powfunc(btnXORButton, 8);
-				btnXORButton.setBounds(10, 456, 74, 32);
+				btnXORButton.setBounds(10, 486, 74, 32);
 				contentPane.add(btnXORButton);
 				
 				JButton btnDeleteButton = new JButton("\u232b");
@@ -893,60 +905,60 @@ public class MainWindow extends JFrame {
 						}
 					}
 				});
-				btnDeleteButton.setBounds(376, 301, 74, 32);
+				btnDeleteButton.setBounds(375, 331, 74, 32);
 				contentPane.add(btnDeleteButton);
 				
 				JButton btnDivideButton = new JButton("÷");
 				OperatorButtonPressed(btnDivideButton,0);
-				btnDivideButton.setBounds(376, 332, 74, 32);
+				btnDivideButton.setBounds(375, 362, 74, 32);
 				contentPane.add(btnDivideButton);
 				
 				JButton btnMultiplyButton = new JButton("×");
 				OperatorButtonPressed(btnMultiplyButton,0);
-				btnMultiplyButton.setBounds(376, 363, 74, 32);
+				btnMultiplyButton.setBounds(375, 393, 74, 32);
 				contentPane.add(btnMultiplyButton);
 				
 				JButton btnMinusButton = new JButton("-");
 				OperatorButtonPressed(btnMinusButton,0);
-				btnMinusButton.setBounds(376, 394, 74, 32);
+				btnMinusButton.setBounds(375, 424, 74, 32);
 				contentPane.add(btnMinusButton);
 				
 				JButton btnPlusButton = new JButton("+");
 				OperatorButtonPressed(btnPlusButton,0);
-				btnPlusButton.setBounds(376, 425, 74, 32);
+				btnPlusButton.setBounds(375, 455, 74, 32);
 				contentPane.add(btnPlusButton);
 				
 				JButton btnEqualButton = new JButton("=");
 				EqualButtonPressed(btnEqualButton);
-				btnEqualButton.setBounds(376, 456, 74, 32);
+				btnEqualButton.setBounds(375, 486, 74, 32);
 				contentPane.add(btnEqualButton);
 				
 				JButton btnRightShiftButton = new JButton(">>");
-				btnRightShiftButton.setBounds(229, 301, 74, 32);
+				btnRightShiftButton.setBounds(229, 331, 74, 32);
 				contentPane.add(btnRightShiftButton);
 				
 				JButton btnHexBButton = new JButton("B");
-				btnHexBButton.setBounds(83, 332, 74, 32);
+				btnHexBButton.setBounds(83, 362, 74, 32);
 				contentPane.add(btnHexBButton);
 				
 				JButton btnHexDButton = new JButton("D");
 				powfunc(btnHexDButton, 3);
-				btnHexDButton.setBounds(83, 394, 74, 32);
+				btnHexDButton.setBounds(83, 424, 74, 32);
 				contentPane.add(btnHexDButton);
 				
 				JButton btnHexCButton = new JButton("C");
 				OperatorButtonPressed(btnHexCButton,2);
-				btnHexCButton.setBounds(83, 363, 74, 32);
+				btnHexCButton.setBounds(83, 393, 74, 32);
 				contentPane.add(btnHexCButton);
 				
 				JButton btnHexEButton = new JButton("E");
 				OperatorButtonPressed(btnHexEButton,3);
-				btnHexEButton.setBounds(83, 425, 74, 32);
+				btnHexEButton.setBounds(83, 455, 74, 32);
 				contentPane.add(btnHexEButton);
 				
 				JButton btnHexFButton = new JButton("F");
 				EulerNumber(btnHexFButton,2);
-				btnHexFButton.setBounds(83, 456, 74, 32);
+				btnHexFButton.setBounds(83, 486, 74, 32);
 				contentPane.add(btnHexFButton);
 				
 				textField = new JTextField();
@@ -968,6 +980,35 @@ public class MainWindow extends JFrame {
 				textField_3.setColumns(10);
 				textField_3.setBounds(10, 233, 440, 20);
 				contentPane.add(textField_3);
+				
+				JCheckBox chckbxArithmeticShift = new JCheckBox("Arithmetic Shift");
+				chckbxArithmeticShift.setFont(new Font("Tahoma", Font.PLAIN, 10));
+				chckbxArithmeticShift.setHorizontalAlignment(SwingConstants.LEFT);
+				chckbxArithmeticShift.setBounds(10, 271, 97, 23);
+				contentPane.add(chckbxArithmeticShift);
+				
+				JCheckBox chckbxLogicalShift = new JCheckBox("Logical Shift");
+				chckbxLogicalShift.setFont(new Font("Tahoma", Font.PLAIN, 10));
+				chckbxLogicalShift.setHorizontalAlignment(SwingConstants.LEFT);
+				chckbxLogicalShift.setBounds(10, 301, 97, 23);
+				contentPane.add(chckbxLogicalShift);
+				
+				JCheckBox chckbxRotateCirShift = new JCheckBox("Rotate Circular Shift");
+				chckbxRotateCirShift.setFont(new Font("Tahoma", Font.PLAIN, 10));
+				chckbxRotateCirShift.setHorizontalAlignment(SwingConstants.LEFT);
+				chckbxRotateCirShift.setBounds(109, 271, 123, 23);
+				contentPane.add(chckbxRotateCirShift);
+				
+				JCheckBox chckbxRotateThrCarCirShift = new JCheckBox("Rotate Throught Carry Circular Shift");
+				chckbxRotateThrCarCirShift.setFont(new Font("Tahoma", Font.PLAIN, 10));
+				chckbxRotateThrCarCirShift.setHorizontalAlignment(SwingConstants.LEFT);
+				chckbxRotateThrCarCirShift.setBounds(109, 301, 194, 23);
+				contentPane.add(chckbxRotateThrCarCirShift);
+				
+				JButton btnClearButton = new JButton();
+				btnClearButton.setText("C");
+				btnClearButton.setBounds(302, 300, 74, 32);
+				contentPane.add(btnClearButton);
 			}
 		});
 	}
@@ -1015,6 +1056,7 @@ public class MainWindow extends JFrame {
 		contentPane.setLayout(null);
 		
 		CalDisplayEngage();
+		
 		
 		
 	}
