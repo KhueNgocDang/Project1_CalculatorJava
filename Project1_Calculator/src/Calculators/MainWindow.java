@@ -31,6 +31,7 @@ import javax.swing.SwingWorker;
 import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Stack;
 import java.awt.SystemColor;
 
 import javax.swing.text.AbstractDocument.Content;
@@ -77,6 +78,8 @@ public class MainWindow extends JFrame {
 	private JButton btnClearEntryButton;
 	private JButton btnClearButton;
 	private JButton btnDeleteButton;
+	//Stack
+	static Stack<Double> numbers = new Stack<Double>();
 	
 	/**
 	 * Launch the application.
@@ -93,6 +96,10 @@ public class MainWindow extends JFrame {
 			}
 		});
 	}
+	
+
+
+	
 	//Refresh content pane before moving to new calculator mode
 	public void RefreshCal() 
 	{
@@ -195,6 +202,7 @@ public class MainWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				CalDisplayInput.setText("");
 				CalDisplayResult.setText("0");
+				numbers.clear();
 				firstnum = 0;
 				secondnum = 0;
 				result = 0;
@@ -224,15 +232,15 @@ public class MainWindow extends JFrame {
 		contentPane.add(btnPlusButton);
 		
 		btnMinusButton = new JButton("-");
-		OperatorButtonPressed(btnMinusButton,0);
+		OperatorButtonPressed(btnMinusButton,1);
 		contentPane.add(btnMinusButton);
 		
 		btnMultiplyButton = new JButton("×");
-		OperatorButtonPressed(btnMultiplyButton,0);
+		OperatorButtonPressed(btnMultiplyButton,2);
 		contentPane.add(btnMultiplyButton);
 
 		btnDivideButton = new JButton("÷");
-		OperatorButtonPressed(btnDivideButton,0);
+		OperatorButtonPressed(btnDivideButton,3);
 		contentPane.add(btnDivideButton);
 		
 		btnEqualButton = new JButton("=");
@@ -311,53 +319,73 @@ public class MainWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				switch(OpType) 
 				{
-				case 0: operator = Button.getText();break;
-				case 1: operator = "^";break;
-				case 2: operator = "yroot";break;
-				case 3: operator = "base log";break;
+				case 0: operator = "+";break;
+				case 1: operator = "-";break;
+				case 2: operator = "*";break;
+				case 3: operator = "/";break;
+				case 4: operator = "^";break;
+				case 5: operator = "yroot";break;
+				case 6: operator = "base log";break;
+				case 7: operator = "mod";break;
 				}
 				String answer;
 				if(mark == 0) 
 				{
 					String iNum = CalDisplayResult.getText()+operator;
-					if(CalDisplayResult == null) firstnum = 0; else
-					firstnum = Double.parseDouble(CalDisplayResult.getText());
+					double pushnum = Double.parseDouble(CalDisplayResult.getText());
+					numbers.push(pushnum);
 					if(CalDisplayInput.getText()==null) 
 						{
 						CalDisplayInput.setText(iNum);
 						}
 					else CalDisplayInput.setText(CalDisplayInput.getText()+iNum);
 				}
-				switch(operator) 
+				if(numbers.size()==2)switch(operator) 
 				{
 				case "mod":
-					result = firstnum % secondnum;
+					firstnum = numbers.pop();
+					secondnum = numbers.pop();
+					numbers.push(firstnum % secondnum);
 					break;
 				case "+":
-					result = firstnum + secondnum;
+					firstnum = numbers.pop();
+					secondnum = numbers.pop();
+					numbers.push(firstnum + secondnum);
 					break;
 				case "-":
-					result = firstnum - secondnum;
+					firstnum = numbers.pop();
+					secondnum = numbers.pop();
+					numbers.push(firstnum - secondnum);
 					break;
 				case "*":
-					result = firstnum * secondnum;
+					firstnum = numbers.pop();
+					secondnum = numbers.pop();
+					numbers.push(firstnum * secondnum);
 					break;
 				case "/":
-					result = firstnum / secondnum;
+					firstnum = numbers.pop();
+					secondnum = numbers.pop();
+					numbers.push(firstnum / secondnum);
 					break;
 				case "^":
-					result = Math.pow(firstnum,secondnum);
+					firstnum = numbers.pop();
+					secondnum = numbers.pop();
+					numbers.push(Math.pow(firstnum,secondnum));
 					break;
 				case "yroot":
-					result = Math.pow(firstnum, 1/secondnum);
+					firstnum = numbers.pop();
+					secondnum = numbers.pop();
+					numbers.push(Math.pow(firstnum, 1/secondnum));
 					break;
 				case "base log":
-					result = Math.log(firstnum)/Math.log(secondnum);
+					firstnum = numbers.pop();
+					secondnum = numbers.pop();
+					numbers.push(Math.log(firstnum)/Math.log(secondnum));
 					break;
 				}
+				result = numbers.lastElement();
 				answer = String.format("%.2f",result);
-				if(mark2 == 1) CalDisplayResult.setText(answer); 
-				secondnum = Double.parseDouble(CalDisplayResult.getText());
+				if(mark2 == 1) CalDisplayResult.setText(answer);
 				mark = 1;
 				mark2 = 1;
 			}
@@ -398,39 +426,64 @@ public class MainWindow extends JFrame {
 		Button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String answer;
-				mark = 1;
-				secondnum = Double.parseDouble(CalDisplayResult.getText());
-				switch(operator) 
+				if(mark == 0) 
 				{
-				case "=":
-					result = secondnum;
-					break;
+					String iNum = CalDisplayResult.getText()+operator;
+					double pushnum = Double.parseDouble(CalDisplayResult.getText());
+					numbers.push(pushnum);
+					if(CalDisplayInput.getText()==null) 
+						{
+						CalDisplayInput.setText(iNum);
+						}
+					else CalDisplayInput.setText(CalDisplayInput.getText()+iNum);
+				}
+				mark = 1;
+				if(numbers.size()==2)switch(operator) 
+				{
 				case "mod":
-					result = firstnum % secondnum;
+					firstnum = numbers.pop();
+					secondnum = numbers.pop();
+					numbers.push(firstnum % secondnum);
 					break;
 				case "+":
-					result = firstnum + secondnum;
+					firstnum = numbers.pop();
+					secondnum = numbers.pop();
+					numbers.push(firstnum + secondnum);
 					break;
 				case "-":
-					result = firstnum - secondnum;
+					firstnum = numbers.pop();
+					secondnum = numbers.pop();
+					numbers.push(firstnum - secondnum);
 					break;
 				case "*":
-					result = firstnum * secondnum;
+					firstnum = numbers.pop();
+					secondnum = numbers.pop();
+					numbers.push(firstnum * secondnum);
 					break;
 				case "/":
-					result = firstnum / secondnum;
+					firstnum = numbers.pop();
+					secondnum = numbers.pop();
+					numbers.push(firstnum / secondnum);
 					break;
 				case "^":
-					result = Math.pow(firstnum,secondnum);
+					firstnum = numbers.pop();
+					secondnum = numbers.pop();
+					numbers.push(Math.pow(firstnum,secondnum));
 					break;
 				case "yroot":
-					result = Math.pow(firstnum , 1/secondnum);
+					firstnum = numbers.pop();
+					secondnum = numbers.pop();
+					numbers.push(Math.pow(firstnum, 1/secondnum));
 					break;
 				case "base log":
-					result = Math.log(firstnum)/Math.log(secondnum);
+					firstnum = numbers.pop();
+					secondnum = numbers.pop();
+					numbers.push(Math.log(firstnum)/Math.log(secondnum));
 					break;
 				}
+				result = numbers.lastElement();
 				answer = String.format("%.2f",result);
+				if(mark2 == 1) CalDisplayResult.setText(answer);
 				CalDisplayInput.setText(firstnum + operator + secondnum);
 				CalDisplayResult.setText(answer);
 				operator = "=";
@@ -655,7 +708,7 @@ public class MainWindow extends JFrame {
 				contentPane.add(btnCubeButton);
 				
 				JButton btnXtothepowerofY = new JButton("<html>x<sup>y</sup></html>");
-				OperatorButtonPressed(btnXtothepowerofY,1);
+				OperatorButtonPressed(btnXtothepowerofY,4);
 				btnXtothepowerofY.setBounds(10, 270, 74, 32);
 				contentPane.add(btnXtothepowerofY);
 				
@@ -675,7 +728,7 @@ public class MainWindow extends JFrame {
 				contentPane.add(btnNaturalLog);
 				
 				JButton btnModularButton = new JButton("mod");
-				OperatorButtonPressed(btnModularButton,0);
+				OperatorButtonPressed(btnModularButton,7);
 				btnModularButton.setBounds(376, 208, 74, 32);
 				contentPane.add(btnModularButton);
 				
@@ -695,12 +748,12 @@ public class MainWindow extends JFrame {
 				contentPane.add(btn2SquareButton);
 				
 				JButton btnYRootButton = new JButton("<html><sup>y</sup>\u221Ax</html>");
-				OperatorButtonPressed(btnYRootButton,2);
+				OperatorButtonPressed(btnYRootButton,5);
 				btnYRootButton.setBounds(83, 270, 74, 32);
 				contentPane.add(btnYRootButton);
 				
 				JButton btnLogYofXButton = new JButton("<html>log<sub>y</sub>x</html>");
-				OperatorButtonPressed(btnLogYofXButton,3);
+				OperatorButtonPressed(btnLogYofXButton,6);
 				btnLogYofXButton.setBounds(83, 332, 74, 32);
 				contentPane.add(btnLogYofXButton);
 				
@@ -1006,5 +1059,6 @@ public class MainWindow extends JFrame {
 		
 		CalDisplayEngage();
 		
+		}
 	}
-}
+
