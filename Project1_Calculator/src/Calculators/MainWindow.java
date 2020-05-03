@@ -173,17 +173,7 @@ public class MainWindow extends JFrame {
 		btnButtonNine = new JButton("9");
 		NumberButtonPressed(btnButtonNine);
 		contentPane.add(btnButtonNine);
-		
-		btnPointButton = new JButton(".");
-		btnPointButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(!CalDisplayResult.getText().contains(".")) 
-				{
-					CalDisplayResult.setText(CalDisplayResult.getText() + btnPointButton.getText());
-				}
-			}
-		});
-		contentPane.add(btnPointButton);
+
 	} 
 	//Create clear, clear entry and delete button to be use and reuse in other mode 
 	//of the calculator
@@ -214,11 +204,11 @@ public class MainWindow extends JFrame {
 		btnDeleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String bsp = null;
-				if(CalDisplayInput.getText().length()>0) {
-					StringBuilder strB = new StringBuilder(CalDisplayInput.getText());
-					strB.deleteCharAt(CalDisplayInput.getText().length() - 1);
+				if(CalDisplayResult.getText().length()>0) {
+					StringBuilder strB = new StringBuilder(CalDisplayResult.getText());
+					strB.deleteCharAt(CalDisplayResult.getText().length() - 1);
 					bsp = strB.toString();
-					CalDisplayInput.setText(bsp);
+					CalDisplayResult.setText(bsp);
 				}
 			}
 		});
@@ -533,13 +523,24 @@ public class MainWindow extends JFrame {
 				btnButtonSeven.setBounds(10, 215, 74, 45);				
 				btnButtonEight.setBounds(83, 215, 74, 45);				
 				btnButtonNine.setBounds(156, 215, 74, 45);				
-				btnPointButton.setBounds(156, 347, 74, 45);	
-			
+				
 		//Standard Calculator other button
 				JButton btnPercentageButton = new JButton("%");
 				GetPercentage(btnPercentageButton);
 				btnPercentageButton.setBounds(10, 127, 74, 45);
 				contentPane.add(btnPercentageButton);
+				
+				btnPointButton = new JButton(".");
+				btnPointButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						if(!CalDisplayResult.getText().contains(".")) 
+						{
+							CalDisplayResult.setText(CalDisplayResult.getText() + btnPointButton.getText());
+						}
+					}
+				});
+				btnPointButton.setBounds(156, 347, 74, 45);	
+				contentPane.add(btnPointButton);
 				
 				JButton btnReciprocalButton = new JButton("1/x");
 				GetReciprocal(btnReciprocalButton);
@@ -608,8 +609,7 @@ public class MainWindow extends JFrame {
 				btnButtonSeven.setBounds(156, 270, 74, 32);
 				btnButtonEight.setBounds(229, 270, 74, 32);
 				btnButtonNine.setBounds(302, 270, 74, 32);
-				btnPointButton.setBounds(302, 363, 74, 32);
-				
+		
 		//Basic Operator Buttons
 				BasicOperatorButtonInitiate();
 				btnDivideButton.setBounds(376, 239, 74, 32);
@@ -638,6 +638,18 @@ public class MainWindow extends JFrame {
 				});
 				btnNegateButton.setBounds(156, 363, 74, 32);
 				contentPane.add(btnNegateButton);
+				
+				btnPointButton = new JButton(".");
+				btnPointButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						if(!CalDisplayResult.getText().contains(".")) 
+						{
+							CalDisplayResult.setText(CalDisplayResult.getText() + btnPointButton.getText());
+						}
+					}
+				});
+				btnPointButton.setBounds(302, 363, 74, 32);	
+				contentPane.add(btnPointButton);
 				
 				JButton btnPiButton = new JButton("π");
 				btnPiButton.addActionListener(new ActionListener() {
@@ -798,7 +810,7 @@ public class MainWindow extends JFrame {
 				btnButtonSeven.setBounds(156, 393, 74, 32);
 				btnButtonEight.setBounds(229, 393, 74, 32);
 				btnButtonNine.setBounds(302, 393, 74, 32);
-				btnPointButton.setBounds(302, 486, 74, 32);
+				
 				
 		//Operator Buttons 
 				BasicOperatorButtonInitiate();	
@@ -810,8 +822,8 @@ public class MainWindow extends JFrame {
 				
 		//Clear, CLear Entry  and Delete Button
 				Clear_DeleteButton();
-				btnClearButton.setBounds(302, 300, 74, 32);
-				btnClearEntryButton.setBounds(302, 331, 74, 32);
+				btnClearButton.setBounds(302, 331, 74, 32);
+				btnClearEntryButton.setBounds(302, 362, 74, 32);
 				btnDeleteButton.setBounds(375, 331, 74, 32);
 				
 				JButton btnNegateButton = new JButton("+/-");
@@ -852,7 +864,8 @@ public class MainWindow extends JFrame {
 				
 				JButton btnPercentageButton = new JButton("%");
 				GetFactorial(btnPercentageButton);
-				btnPercentageButton.setBounds(302, 362, 74, 32);
+				
+				btnPercentageButton.setBounds(302, 486, 74, 32);
 				contentPane.add(btnPercentageButton);
 				
 				JButton btnANDButton = new JButton("AND");
@@ -914,7 +927,7 @@ public class MainWindow extends JFrame {
 				contentPane.add(btnHexFButton);
 				
 				HEXtextField = new JTextField();
-				DocumentListener dl = new DocumentListener() 
+				DocumentListener HEXdl = new DocumentListener() 
 				{
 					@Override
 					public void removeUpdate(DocumentEvent e) 
@@ -932,30 +945,109 @@ public class MainWindow extends JFrame {
 					
 					private void textChanged() 
 					{
-						double Hex = Double.valueOf(CalDisplayResult.getText());
-						String HexString = Double.toHexString(Hex);
-						HEXtextField.setText(HexString);
+						Long Hex = Long.parseLong(CalDisplayResult.getText());
+						String Hexstring = Long.toHexString(Hex);
+						HEXtextField.setText(String.format("%2s",Hexstring ));
 					}
 				};
-				double Hex = Double.valueOf(CalDisplayResult.getText());
-				String HexString = Double.toHexString(Hex);
-				HEXtextField.setText(HexString);
-				CalDisplayResult.getDocument().addDocumentListener(dl);
-				HEXtextField.setBounds(83, 141, 367, 20);
+				Long Hex = Long.parseLong(CalDisplayResult.getText());
+				String Hexstring = Long.toHexString(Hex);
+				HEXtextField.setText(String.format("%2s",Hexstring ));
+				CalDisplayResult.getDocument().addDocumentListener(HEXdl);
+				HEXtextField.setBounds(83, 172, 367, 20);
 				contentPane.add(HEXtextField);
 				HEXtextField.setColumns(10);
 				
 				DECtextField = new JTextField();
+				DocumentListener DECdl = new DocumentListener() 
+				{
+					@Override
+					public void removeUpdate(DocumentEvent e) 
+					{
+						
+					}
+					@Override
+					public void insertUpdate(DocumentEvent e) 
+					{
+						textChanged();
+					}
+					@Override
+					public void changedUpdate(DocumentEvent e) 
+					{}
+					
+					private void textChanged() 
+					{
+						String Decstring = CalDisplayResult.getText();
+						DECtextField.setText(String.format("%2s",Decstring));
+					}
+				};
+				String Decstring = CalDisplayResult.getText();
+				DECtextField.setText(String.format("%2s",Decstring));
+				CalDisplayResult.getDocument().addDocumentListener(DECdl);
 				DECtextField.setColumns(10);
-				DECtextField.setBounds(83, 172, 367, 20);
+				DECtextField.setBounds(83, 141, 367, 20);
 				contentPane.add(DECtextField);
 				
 				OCTtextField = new JTextField();
+				DocumentListener OCTdl = new DocumentListener() 
+				{
+					@Override
+					public void removeUpdate(DocumentEvent e) 
+					{
+						
+					}
+					@Override
+					public void insertUpdate(DocumentEvent e) 
+					{
+						textChanged();
+					}
+					@Override
+					public void changedUpdate(DocumentEvent e) 
+					{}
+					
+					private void textChanged() 
+					{
+						Long Oct = Long.parseLong(CalDisplayResult.getText());
+						String Octstring = Long.toOctalString(Oct);
+						OCTtextField.setText(String.format("%2s",Octstring ));
+					}
+				};
+				Long Oct = Long.parseLong(CalDisplayResult.getText());
+				String Octstring = Double.toHexString(Oct);
+				OCTtextField.setText(String.format("%2s",Octstring ));
+				CalDisplayResult.getDocument().addDocumentListener(OCTdl);
 				OCTtextField.setColumns(10);
 				OCTtextField.setBounds(83, 202, 367, 20);
 				contentPane.add(OCTtextField);
 				
 				BINtextField = new JTextField();
+				DocumentListener BINdl = new DocumentListener() 
+				{
+					@Override
+					public void removeUpdate(DocumentEvent e) 
+					{
+						
+					}
+					@Override
+					public void insertUpdate(DocumentEvent e) 
+					{
+						textChanged();
+					}
+					@Override
+					public void changedUpdate(DocumentEvent e) 
+					{}
+					
+					private void textChanged() 
+					{
+						Long Bin = Long.parseLong(CalDisplayResult.getText());
+						String Binstring = Long.toBinaryString(Bin);
+						BINtextField.setText(String.format("%2s",Binstring ));
+					}
+				};
+				Long Bin = Long.parseLong(CalDisplayResult.getText());
+				String Binstring = Long.toBinaryString(Bin);
+				BINtextField.setText(String.format("%2s",Binstring ));
+				CalDisplayResult.getDocument().addDocumentListener(BINdl);
 				BINtextField.setColumns(10);
 				BINtextField.setBounds(83, 233, 367, 20);
 				contentPane.add(BINtextField);
