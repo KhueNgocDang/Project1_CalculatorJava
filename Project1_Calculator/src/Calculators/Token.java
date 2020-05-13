@@ -8,7 +8,6 @@ public class Token {
 	enum TokenType {NUMBER,OPERATOR,BRACKET_LEFT,BRACKET_RIGHT};
 	OpType otype;
 	TokenType ttype;
-	static final String IDENTIFIER = "MyClass";
 	
 	Token(char o, OpType t, int prec)
 	{
