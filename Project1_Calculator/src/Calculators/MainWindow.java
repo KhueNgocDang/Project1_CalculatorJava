@@ -10,9 +10,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JMenu;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JTextField;
-import javax.swing.JToggleButton;
 import javax.swing.event.*;
 
 import java.awt.event.ActionListener;
@@ -45,7 +43,7 @@ public class MainWindow extends JFrame {
 	double result;
 	int mark=0;
 	int mark2=0;
-	int mark3 = 0;
+	int mode = 10;
 	String operator = "=";
 	
 	private Object math;
@@ -74,12 +72,31 @@ public class MainWindow extends JFrame {
 	private JButton btnMultiplyButton;
 	private JButton btnDivideButton;
 	private JButton btnEqualButton;
+	//Programmer Operator Button
+	private JButton btnModButton;
+	private JButton btnLeftShiftButton;
+	private JButton btnRightShiftButton;
+	private JButton btnANDButton;
+	private JButton btnORButton;
+	private JButton btnNANDButton;
+	private JButton btnNORButton;
+	private JButton btnXORButton;
+	//Hex button
+	private JButton btnHexAButton;
+	private JButton btnHexBButton;
+	private JButton btnHexCButton;
+	private JButton btnHexDButton;
+	private JButton btnHexEButton;
+	private JButton btnHexFButton;
 	//Clear and Clear Entry Button
 	private JButton btnClearEntryButton;
 	private JButton btnClearButton;
 	private JButton btnDeleteButton;
 	//Stack
 	static Stack<Double> numbers = new Stack<Double>();
+	static Stack<Long> progLong = new Stack<Long>();
+	//
+
 	
 	/**
 	 * Launch the application.
@@ -109,9 +126,93 @@ public class MainWindow extends JFrame {
 		secondnum = 0;
 		mark=0;
 		mark2=0;
-		mark3 = 0;
+		mode = 10;
+	}
+	public void NumberButtonPressed(JButton Button) 
+	{
+		Button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String iNum;
+				if(mark==1) iNum = Button.getText();
+				else iNum = CalDisplayResult.getText() + Button.getText();
+				CalDisplayResult.setText(iNum);
+				mark = 0;
+			}
+		});
 	}
 	
+	public void NumbModeSelector(int numbmode) 
+	{
+		
+		btnZeroButton.setEnabled(true);
+		btnButtonOne.setEnabled(true);
+		switch(numbmode)
+		{
+			case 1:	btnHexAButton.setEnabled(false);
+					btnHexBButton.setEnabled(false);
+					btnHexCButton.setEnabled(false);
+					btnHexDButton.setEnabled(false);
+					btnHexEButton.setEnabled(false);
+					btnHexFButton.setEnabled(false);
+					btnButtonNine.setEnabled(false);
+					btnButtonEight.setEnabled(false);
+					btnButtonSeven.setEnabled(false);
+					btnButtonSix.setEnabled(false);
+					btnButtonFive.setEnabled(false);
+					btnButtonFour.setEnabled(false);
+					btnButtonThree.setEnabled(false);
+					btnButtonTwo.setEnabled(false);
+					mode = 2 ;break;
+					
+			case 2:	btnHexAButton.setEnabled(false);
+					btnHexBButton.setEnabled(false);
+					btnHexCButton.setEnabled(false);
+					btnHexDButton.setEnabled(false);
+					btnHexEButton.setEnabled(false);
+					btnHexFButton.setEnabled(false);
+					btnButtonNine.setEnabled(false);
+					btnButtonEight.setEnabled(false);
+					btnButtonSeven.setEnabled(true);
+					btnButtonSix.setEnabled(true);
+					btnButtonFive.setEnabled(true);
+					btnButtonFour.setEnabled(true);
+					btnButtonThree.setEnabled(true);
+					btnButtonTwo.setEnabled(true);
+					mode = 8 ;break;
+					
+			case 3:	btnHexAButton.setEnabled(false);
+					btnHexBButton.setEnabled(false);
+					btnHexCButton.setEnabled(false);
+					btnHexDButton.setEnabled(false);
+					btnHexEButton.setEnabled(false);
+					btnHexFButton.setEnabled(false);
+					btnButtonNine.setEnabled(true);
+					btnButtonEight.setEnabled(true);
+					btnButtonSeven.setEnabled(true);
+					btnButtonSix.setEnabled(true);
+					btnButtonFive.setEnabled(true);
+					btnButtonFour.setEnabled(true);
+					btnButtonThree.setEnabled(true);
+					btnButtonTwo.setEnabled(true);
+					mode = 10 ;break;
+					
+			case 4: btnHexAButton.setEnabled(true);
+					btnHexBButton.setEnabled(true);
+					btnHexCButton.setEnabled(true);
+					btnHexDButton.setEnabled(true);
+					btnHexEButton.setEnabled(true);
+					btnHexFButton.setEnabled(true);
+					btnButtonNine.setEnabled(true);
+					btnButtonEight.setEnabled(true);
+					btnButtonSeven.setEnabled(true);
+					btnButtonSix.setEnabled(true);
+					btnButtonFive.setEnabled(true);
+					btnButtonFour.setEnabled(true);
+					btnButtonThree.setEnabled(true);
+					btnButtonTwo.setEnabled(true);
+					mode = 16 ;break;
+		}
+	}
 	//Create Display text field to display result and formula
 	public void CalDisplayEngage() 
 	{
@@ -130,10 +231,11 @@ public class MainWindow extends JFrame {
 		CalDisplayResult.setColumns(10);
 		
 	}
-	
+	//Shunting_yard_algorithm
+
 	//Create basic number button to be use and reuse in other modes of the calculator
 	public void BasicNumberButtonInitiate() 
-	{
+	{	
 		btnZeroButton = new JButton("0");
 		NumberButtonPressed(btnZeroButton);
 		contentPane.add(btnZeroButton);
@@ -192,6 +294,7 @@ public class MainWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				CalDisplayInput.setText("");
 				CalDisplayResult.setText("0");
+				progLong.clear();
 				numbers.clear();
 				firstnum = 0;
 				secondnum = 0;
@@ -237,17 +340,61 @@ public class MainWindow extends JFrame {
 		EqualButtonPressed(btnEqualButton);
 		contentPane.add(btnEqualButton);
 	}
-	public void NumberButtonPressed(JButton Button) 
+	
+	public void programmerOperatorButtonInitiate() 
 	{
-		Button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String iNum;
-				if(mark==1) iNum = Button.getText();
-				else iNum = CalDisplayResult.getText() + Button.getText();
-				CalDisplayResult.setText(iNum);
-				mark = 0;
-			}
-		});
+		btnPlusButton = new JButton("+");
+		BitwiseOperatorButtonPressed(btnPlusButton,8);
+		contentPane.add(btnPlusButton);
+		
+		btnMinusButton = new JButton("-");
+		BitwiseOperatorButtonPressed(btnMinusButton,9);
+		contentPane.add(btnMinusButton);
+		
+		btnMultiplyButton = new JButton("×");
+		BitwiseOperatorButtonPressed(btnMultiplyButton,10);
+		contentPane.add(btnMultiplyButton);
+
+		btnDivideButton = new JButton("÷");
+		OperatorButtonPressed(btnDivideButton,11);
+		contentPane.add(btnDivideButton);
+		
+		btnEqualButton = new JButton("=");
+		EqualBitwiseButtonPressed(btnEqualButton);
+		contentPane.add(btnEqualButton);
+		
+		btnModButton = new JButton("%");
+		BitwiseOperatorButtonPressed(btnModButton,12);
+		contentPane.add(btnModButton);
+		
+		btnLeftShiftButton = new JButton("<<");
+		BitwiseOperatorButtonPressed(btnLeftShiftButton,6);
+		contentPane.add(btnLeftShiftButton);
+		
+		btnRightShiftButton = new JButton(">>");
+		BitwiseOperatorButtonPressed(btnRightShiftButton,7);
+		contentPane.add(btnRightShiftButton);
+		
+		btnANDButton = new JButton("AND");
+		BitwiseOperatorButtonPressed(btnANDButton,1);
+		contentPane.add(btnANDButton);;
+		
+		btnORButton = new JButton("OR");
+		BitwiseOperatorButtonPressed(btnORButton,2);
+		contentPane.add(btnORButton);
+		
+		btnNANDButton = new JButton("NAND");
+		BitwiseOperatorButtonPressed(btnNANDButton,3);
+		contentPane.add(btnNANDButton);
+		
+		btnNORButton = new JButton("NOR");
+		BitwiseOperatorButtonPressed(btnNORButton,4);
+		contentPane.add(btnNORButton);
+		
+		btnXORButton = new JButton("XOR");
+		BitwiseOperatorButtonPressed(btnXORButton,5);
+		contentPane.add(btnXORButton);
+	
 	}
 	
 	public void EulerNumber(JButton Button, int exptype) 
@@ -255,7 +402,6 @@ public class MainWindow extends JFrame {
 		Button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				double exp = 0 ;
-				
 				switch(exptype) 
 				{
 					case 1: exp = 1; break;
@@ -303,6 +449,215 @@ public class MainWindow extends JFrame {
 		});
 	}
 	
+	public void BitwiseOperatorButtonPressed(JButton Button, int OpType) 
+	{
+		Button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Long firstLong;
+				Long secondLong;
+				Long resultLong;
+				switch(OpType) 
+				{
+				case 1: operator ="AND";break;
+				case 2: operator = "OR";break;
+				case 3: operator ="NAND";break;
+				case 4: operator ="NOR";break;
+				case 5: operator ="XOR";break;
+				case 6: operator ="LSH";break;
+				case 7: operator ="RSH";break;
+				case 8: operator ="+";break;
+				case 9: operator = "-";break;
+				case 10: operator ="*";break;
+				case 11: operator ="/";break;
+				case 12: operator ="mod";break;
+				}
+				String answer;
+				if(mark == 0) 
+				{
+					String iNum = CalDisplayResult.getText()+operator;
+					Long pushnum = Long.parseLong(CalDisplayResult.getText(), mode);
+					progLong.push(pushnum);
+					if(CalDisplayInput.getText()==null) 
+						{
+						CalDisplayInput.setText(iNum);
+						}
+					else CalDisplayInput.setText(CalDisplayInput.getText()+iNum);
+				}
+				
+				if(progLong.size()==2)switch(operator) 
+				{
+				case "+":
+					firstLong = progLong.pop();
+					secondLong = progLong.pop();
+					progLong.push(firstLong + secondLong);
+					CalDisplayInput.setText(firstLong + operator + secondLong);
+					break;
+				case "-":
+					firstLong = progLong.pop();
+					secondLong = progLong.pop();
+					progLong.push(firstLong - secondLong);
+					CalDisplayInput.setText(firstLong + operator + secondLong);
+					break;
+				case "*":
+					firstLong = progLong.pop();
+					secondLong = progLong.pop();
+					progLong.push(firstLong * secondLong);
+					CalDisplayInput.setText(firstLong + operator + secondLong);
+					break;
+				case "/":
+					firstLong = progLong.pop();
+					secondLong = progLong.pop();
+					progLong.push(firstLong / secondLong);
+					CalDisplayInput.setText(firstLong + operator + secondLong);
+					break;
+				case "mod":
+					firstLong = progLong.pop();
+					secondLong = progLong.pop();
+					progLong.push(firstLong % secondLong);
+					CalDisplayInput.setText(firstLong + operator + secondLong);
+				case "AND":
+					firstLong = progLong.pop();
+					secondLong = progLong.pop();
+					progLong.push(firstLong & secondLong);
+					CalDisplayInput.setText(firstLong + operator + secondLong);
+					break;
+				case "NAND":
+					firstLong = progLong.pop();
+					secondLong = progLong.pop();
+					progLong.push(~(firstLong & secondLong));
+					CalDisplayInput.setText(firstLong + operator + secondLong);
+					break;
+				case "NOR":
+					firstLong = progLong.pop();
+					secondLong = progLong.pop();
+					progLong.push(~(firstLong | secondLong));
+					CalDisplayInput.setText(firstLong + operator + secondLong);
+					break;
+				case "XOR":
+					firstLong = progLong.pop();
+					secondLong = progLong.pop();
+					progLong.push(firstLong ^ secondLong);
+					CalDisplayInput.setText(firstLong + operator + secondLong);
+					break;
+				case "LSH":
+					firstLong = progLong.pop();
+					secondLong = progLong.pop();
+					progLong.push( secondLong <<  firstLong );
+					CalDisplayInput.setText(firstLong + operator + secondLong);
+					break;
+				case "RSH":
+					firstLong = progLong.pop();
+					secondLong = progLong.pop();
+					progLong.push( secondLong  >>  firstLong);
+					CalDisplayInput.setText(firstLong + operator + secondLong);
+					break;
+				}
+				resultLong = progLong.lastElement();
+				answer = Long.toString(resultLong);
+				if(mark2 == 1) CalDisplayResult.setText(answer);
+				mark = 1;
+				mark2 = 1;
+			}
+		});
+	}
+	
+	public void EqualBitwiseButtonPressed(JButton Button) 
+	{
+		Button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Long firstLong;
+				Long secondLong;
+				Long resultLong;
+				String answer;
+				if(mark == 0) 
+				{
+					String iNum = CalDisplayResult.getText()+operator;
+					Long pushnum = Long.parseLong(CalDisplayResult.getText(),mode);
+					progLong.push(pushnum);
+					if(CalDisplayInput.getText()==null) 
+						{
+						CalDisplayInput.setText(iNum);
+						}
+					else CalDisplayInput.setText(CalDisplayInput.getText()+iNum);
+				}
+				mark = 1;
+				if(progLong.size()==2)switch(operator)
+				{
+				case "+":
+					firstLong = progLong.pop();
+					secondLong = progLong.pop();
+					progLong.push(firstLong + secondLong);
+					CalDisplayInput.setText(firstLong + operator + secondLong);
+					break;
+				case "-":
+					firstLong = progLong.pop();
+					secondLong = progLong.pop();
+					progLong.push(firstLong - secondLong);
+					CalDisplayInput.setText(firstLong + operator + secondLong);
+					break;
+				case "*":
+					firstLong = progLong.pop();
+					secondLong = progLong.pop();
+					progLong.push(firstLong * secondLong);
+					CalDisplayInput.setText(firstLong + operator + secondLong);
+					break;
+				case "/":
+					firstLong = progLong.pop();
+					secondLong = progLong.pop();
+					progLong.push(firstLong / secondLong);
+					CalDisplayInput.setText(firstLong + operator + secondLong);
+					break;
+				case "mod":
+					firstLong = progLong.pop();
+					secondLong = progLong.pop();
+					progLong.push(firstLong % secondLong);
+					CalDisplayInput.setText(firstLong + operator + secondLong);
+				case "AND":
+					firstLong = progLong.pop();
+					secondLong = progLong.pop();
+					progLong.push(firstLong & secondLong);
+					CalDisplayInput.setText(firstLong + operator + secondLong);
+					break;
+				case "NAND":
+					firstLong = progLong.pop();
+					secondLong = progLong.pop();
+					progLong.push(~(firstLong & secondLong));
+					CalDisplayInput.setText(firstLong + operator + secondLong);
+					break;
+				case "NOR":
+					firstLong = progLong.pop();
+					secondLong = progLong.pop();
+					progLong.push(~(firstLong | secondLong));
+					CalDisplayInput.setText(firstLong + operator + secondLong);
+					break;
+				case "XOR":
+					firstLong = progLong.pop();
+					secondLong = progLong.pop();
+					progLong.push(firstLong ^ secondLong);
+					CalDisplayInput.setText(firstLong + operator + secondLong);
+					break;
+				case "LSH":
+					firstLong = progLong.pop();
+					secondLong = progLong.pop();
+					progLong.push( secondLong <<  firstLong);
+					CalDisplayInput.setText(firstLong + operator + secondLong);
+					break;
+				case "RSH":
+					firstLong = progLong.pop();
+					secondLong = progLong.pop();
+					progLong.push(secondLong >> firstLong );
+					CalDisplayInput.setText(firstLong + operator + secondLong);
+					break;
+				}
+				resultLong = progLong.lastElement();
+				answer = Long.toString(resultLong);
+				if(mark2 == 1) CalDisplayResult.setText(answer);
+				CalDisplayResult.setText(answer);
+				operator = "=";
+			}
+		});
+	}
+	
 	public void OperatorButtonPressed(JButton Button,int OpType) 
 	{
 		Button.addActionListener(new ActionListener() {
@@ -318,66 +673,9 @@ public class MainWindow extends JFrame {
 				case 6: operator = "base log";break;
 				case 7: operator = "mod";break;
 				}
-				String answer;
-				if(mark == 0) 
-				{
-					String iNum = CalDisplayResult.getText()+operator;
-					double pushnum = Double.parseDouble(CalDisplayResult.getText());
-					numbers.push(pushnum);
-					if(CalDisplayInput.getText()==null) 
-						{
-						CalDisplayInput.setText(iNum);
-						}
-					else CalDisplayInput.setText(CalDisplayInput.getText()+iNum);
-				}
-				if(numbers.size()==2)switch(operator) 
-				{
-				case "mod":
-					firstnum = numbers.pop();
-					secondnum = numbers.pop();
-					numbers.push(firstnum % secondnum);
-					break;
-				case "+":
-					firstnum = numbers.pop();
-					secondnum = numbers.pop();
-					numbers.push(firstnum + secondnum);
-					break;
-				case "-":
-					firstnum = numbers.pop();
-					secondnum = numbers.pop();
-					numbers.push(firstnum - secondnum);
-					break;
-				case "*":
-					firstnum = numbers.pop();
-					secondnum = numbers.pop();
-					numbers.push(firstnum * secondnum);
-					break;
-				case "/":
-					firstnum = numbers.pop();
-					secondnum = numbers.pop();
-					numbers.push(firstnum / secondnum);
-					break;
-				case "^":
-					firstnum = numbers.pop();
-					secondnum = numbers.pop();
-					numbers.push(Math.pow(firstnum,secondnum));
-					break;
-				case "yroot":
-					firstnum = numbers.pop();
-					secondnum = numbers.pop();
-					numbers.push(Math.pow(firstnum, 1/secondnum));
-					break;
-				case "base log":
-					firstnum = numbers.pop();
-					secondnum = numbers.pop();
-					numbers.push(Math.log(firstnum)/Math.log(secondnum));
-					break;
-				}
-				result = numbers.lastElement();
-				answer = String.format("%.2f",result);
-				if(mark2 == 1) CalDisplayResult.setText(answer);
-				mark = 1;
-				mark2 = 1;
+				String iNum = CalDisplayResult.getText() + operator.toString();
+				CalDisplayResult.setText(iNum);
+				mark = 0;
 			}
 		});
 	}
@@ -786,6 +1084,7 @@ public class MainWindow extends JFrame {
 		
 	public void initiateProgrammerCal(JMenuItem ProgrammerCal) 
 	{
+		
 		ProgrammerCal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				setTitle("Programmer Calculator - Project 1");
@@ -811,14 +1110,21 @@ public class MainWindow extends JFrame {
 				btnButtonEight.setBounds(229, 393, 74, 32);
 				btnButtonNine.setBounds(302, 393, 74, 32);
 				
-				
 		//Operator Buttons 
-				BasicOperatorButtonInitiate();	
+				programmerOperatorButtonInitiate();	
 				btnDivideButton.setBounds(375, 362, 74, 32);
 				btnMultiplyButton.setBounds(375, 393, 74, 32);
 				btnMinusButton.setBounds(375, 424, 74, 32);
 				btnPlusButton.setBounds(375, 455, 74, 32);
 				btnEqualButton.setBounds(375, 486, 74, 32);
+				btnANDButton.setBounds(10, 331, 74, 32);
+				btnORButton.setBounds(10, 362, 74, 32);
+				btnNANDButton.setBounds(10, 424, 74, 32);
+				btnNORButton.setBounds(10, 455, 74, 32);
+				btnXORButton.setBounds(10, 486, 74, 32);
+				btnRightShiftButton.setBounds(229, 331, 74, 32);
+				btnLeftShiftButton.setBounds(156, 331, 74, 32);
+				btnModButton.setBounds(302, 486, 74, 32);
 				
 		//Clear, CLear Entry  and Delete Button
 				Clear_DeleteButton();
@@ -831,7 +1137,7 @@ public class MainWindow extends JFrame {
 					public void actionPerformed(ActionEvent e) {
 						if(CalDisplayResult.getText()!=null) 
 						{
-							double ops = Double.parseDouble(String.valueOf(CalDisplayResult.getText()));
+							Long ops = Long.parseLong(String.valueOf(CalDisplayResult.getText()));
 							ops = ops *(-1);
 							CalDisplayResult.setText(String.valueOf(ops));
 						}
@@ -840,20 +1146,7 @@ public class MainWindow extends JFrame {
 				btnNegateButton.setBounds(156, 486, 74, 32);
 				contentPane.add(btnNegateButton);
 				
-				JButton btnHexAButton = new JButton("A");
-				btnHexAButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						CalDisplayResult.setText(String.valueOf(Math.PI));
-					}
-				});
-				btnHexAButton.setBounds(83, 331, 74, 32);
-				contentPane.add(btnHexAButton);
-				
-				JButton btnLeftShiftButton = new JButton("<<");
-				EulerNumber(btnLeftShiftButton,1);
-				btnLeftShiftButton.setBounds(156, 331, 74, 32);
-				contentPane.add(btnLeftShiftButton);	
-				
+
 				JButton btnOpeningParenthesis = new JButton("(");
 				btnOpeningParenthesis.setBounds(156, 362, 74, 32);
 				contentPane.add(btnOpeningParenthesis);
@@ -862,66 +1155,35 @@ public class MainWindow extends JFrame {
 				btnClosingParenthesis.setBounds(229, 362, 74, 32);
 				contentPane.add(btnClosingParenthesis);
 				
-				JButton btnPercentageButton = new JButton("%");
-				GetFactorial(btnPercentageButton);
-				
-				btnPercentageButton.setBounds(302, 486, 74, 32);
-				contentPane.add(btnPercentageButton);
-				
-				JButton btnANDButton = new JButton("AND");
-				GetPercentage(btnANDButton);
-				btnANDButton.setBounds(10, 331, 74, 32);
-				contentPane.add(btnANDButton);;
-				
-				JButton btnORButton = new JButton("OR");
-				powfunc(btnORButton, 2);
-				btnORButton.setBounds(10, 362, 74, 32);
-				contentPane.add(btnORButton);
-				
 				JButton btnNOTButton = new JButton("NOT");
 				OperatorButtonPressed(btnNOTButton,1);
 				btnNOTButton.setBounds(10, 393, 74, 32);
 				contentPane.add(btnNOTButton);
 				
-				JButton btnNANDButton = new JButton("NAND");
-				powfunc(btnNANDButton, 4);
-				btnNANDButton.setBounds(10, 424, 74, 32);
-				contentPane.add(btnNANDButton);
-				
-				JButton btnNORButton = new JButton("NOR");
-				powfunc(btnNORButton, 7);
-				btnNORButton.setBounds(10, 455, 74, 32);
-				contentPane.add(btnNORButton);
-				
-				JButton btnXORButton = new JButton("XOR");
-				powfunc(btnXORButton, 8);
-				btnXORButton.setBounds(10, 486, 74, 32);
-				contentPane.add(btnXORButton);
-				
-				JButton btnRightShiftButton = new JButton(">>");
-				btnRightShiftButton.setBounds(229, 331, 74, 32);
-				contentPane.add(btnRightShiftButton);
-				
-				JButton btnHexBButton = new JButton("B");
+				btnHexAButton = new JButton("A");
+				btnHexAButton.setBounds(83, 331, 74, 32);
+				contentPane.add(btnHexAButton);
+
+				btnHexBButton = new JButton("B");
 				btnHexBButton.setBounds(83, 362, 74, 32);
 				contentPane.add(btnHexBButton);
 				
-				JButton btnHexDButton = new JButton("D");
+				btnHexDButton = new JButton("D");
 				powfunc(btnHexDButton, 3);
 				btnHexDButton.setBounds(83, 424, 74, 32);
 				contentPane.add(btnHexDButton);
 				
-				JButton btnHexCButton = new JButton("C");
+				btnHexCButton = new JButton("C");
 				OperatorButtonPressed(btnHexCButton,2);
 				btnHexCButton.setBounds(83, 393, 74, 32);
 				contentPane.add(btnHexCButton);
 				
-				JButton btnHexEButton = new JButton("E");
+				btnHexEButton = new JButton("E");
 				OperatorButtonPressed(btnHexEButton,3);
 				btnHexEButton.setBounds(83, 455, 74, 32);
 				contentPane.add(btnHexEButton);
 				
-				JButton btnHexFButton = new JButton("F");
+				btnHexFButton = new JButton("F");
 				EulerNumber(btnHexFButton,2);
 				btnHexFButton.setBounds(83, 486, 74, 32);
 				contentPane.add(btnHexFButton);
@@ -1039,12 +1301,12 @@ public class MainWindow extends JFrame {
 					
 					private void textChanged() 
 					{
-						Long Bin = Long.parseLong(CalDisplayResult.getText());
+						Long Bin = Long.parseUnsignedLong(CalDisplayResult.getText());
 						String Binstring = Long.toBinaryString(Bin);
-						BINtextField.setText(String.format("%2s",Binstring ));
+						BINtextField.setText(String.format(Binstring));
 					}
 				};
-				Long Bin = Long.parseLong(CalDisplayResult.getText());
+				Long Bin = Long.parseUnsignedLong(CalDisplayResult.getText());
 				String Binstring = Long.toBinaryString(Bin);
 				BINtextField.setText(String.format("%2s",Binstring ));
 				CalDisplayResult.getDocument().addDocumentListener(BINdl);
@@ -1077,18 +1339,46 @@ public class MainWindow extends JFrame {
 				contentPane.add(RotateThrCarCirShift);
 				
 				JRadioButton OctButton = new JRadioButton("OCT");
+				OctButton.addActionListener(new ActionListener() 
+				{
+					public void actionPerformed(ActionEvent ae) 
+					{
+						NumbModeSelector(2);
+					}
+				});
 				OctButton.setBounds(10, 201, 53, 23);
 				contentPane.add(OctButton);
 				
 				JRadioButton BinButton = new JRadioButton("BIN");
+				BinButton.addActionListener(new ActionListener() 
+				{
+					public void actionPerformed(ActionEvent ae) 
+					{
+						NumbModeSelector(1);
+					}
+				});
 				BinButton.setBounds(10, 232, 53, 23);
 				contentPane.add(BinButton);
 				
 				JRadioButton HEXButton = new JRadioButton("HEX");
+				HEXButton.addActionListener(new ActionListener() 
+				{
+					public void actionPerformed(ActionEvent ae) 
+					{
+						NumbModeSelector(4);
+					}
+				});
 				HEXButton.setBounds(10, 171, 53, 23);
 				contentPane.add(HEXButton);
 				
 				JRadioButton DECButton = new JRadioButton("DEC");
+				DECButton.addActionListener(new ActionListener() 
+				{
+					public void actionPerformed(ActionEvent ae) 
+					{
+						NumbModeSelector(3);
+					}
+				});
 				DECButton.setBounds(10, 140, 53, 23);
 				contentPane.add(DECButton);
 				
