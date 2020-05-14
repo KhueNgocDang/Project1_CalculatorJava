@@ -1,61 +1,80 @@
 package Calculators;
 
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Stack;
 
 
 
 public class EvaluateString 
 {
-	public static double evaluate(String expression) 
+	static LinkedList<Token> InfixQueue = new LinkedList<Token>();
+	static LinkedList<Token> PostfixQueue = new LinkedList<Token>();
+	
+	static String display(LinkedList<?> l)
 	{
-		char[] token = expression.toCharArray();
-		Stack<Double> numbers = new Stack<Double>();
-		Stack<Character> operators = new Stack<Character>();
-		for(int i = 0; i < token.length; i++)
+		String s = new String("<html>");
+		for (ListIterator<?> it = l.listIterator(0); it.hasNext(); ) 
+		{
+			Object t = it.next();
+			String tts=t.toString();
+			if (tts.equals("*")) s+="&times;";
+			else if (tts.equals("/")) s+="&divide;";
+			else if (tts.equals("-")) s+="&minus;";
+			else s+=tts;
+			s+="&nbsp;";
+		}
+		return s+"</html>";
+	}
+	
+	public static String TokenizeInfix(String expression) 
+	{
+		char curchar;
+		String numstr;
+		InfixQueue.clear();
+		for(int i = 0; i < expression.length(); i++)
 		{	
-			switch(token[i]) 
+			curchar = expression.charAt(i);
+			switch(curchar) 
 			{
 			case ' ' : continue;
         	case '0' :case '1' :case '2' :case '3' :case '4' :
         	case '5' :case '6' :case '7' :case '8' :case '9' :case '.':
         		{
-        			StringBuffer numstr = new StringBuffer();
-        			while (i<expression.length()&&isNumeric(token[i])) 
-        				numstr.append(token[i++]);
-        			numbers.push(Double.parseDouble(numstr.toString()));
+    				numstr=new String();
+    				numstr=numstr+Character.toString(curchar);
+    				i++;
+    				while (i<expression.length() && isNumeric(expression.charAt(i)))
+    					{numstr=numstr+Character.toString(expression.charAt(i));i++;}
+    				i--;
+    				InfixQueue.addLast(new Token(new Float(numstr).floatValue()));
 				}break;
         	case '+': case '-': 
-        		{
-        			/*if(numbers.empty()||
-        			//		//!isNumeric(expression.charAt(i-1))||
-        							 expression.charAt(i-1) == '(')
-        			//	numbers.push(Unary(token[i],numbers.pop()));
-        			else */
-        			//{
-        				while (!operators.empty()&&Precedence(token[i],operators.peek()))
-        					numbers.push(Operand(operators.pop(),numbers.pop(),numbers.pop()));
-        				operators.push(token[i]);
-        			//}
-        		}break;
-        	case '^':case '*': case '/':
-        		{
-				while (!operators.empty()&&Precedence(token[i],operators.peek()))
-					numbers.push(Operand(operators.pop(),numbers.pop(),numbers.pop()));
-				operators.push(token[i]);
-        		}break;
-        	case '(' : operators.push(token[i]);break;
-        	case ')' : 
-        		{
-				while (operators.peek()!= '(')
-					numbers.push(Operand(operators.pop(),numbers.pop(),numbers.pop()));
-				operators.pop();
-        		}break;
+        	{
+    			//if (//InfixQueue.isEmpty() || 
+    					//InfixQueue.getLast().ttype==Token.TokenType.OPERATOR || 
+    			//			InfixQueue.getLast().ttype==Token.TokenType.BRACKET_LEFT)
+			//		InfixQueue.addLast(new Token(curchar, Token.OpType.UNARY_PREFIX, 100));
+			//	else 
+					InfixQueue.addLast(new Token(curchar, Token.OpType.BINARY_LEFT_ASSOC, 50));
+    		}break;
+        	case '^':
+        		InfixQueue.addLast(new Token(curchar, Token.OpType.BINARY_RIGHT_ASSOC, 100));
+        		break;
+        	case '*': case '/':
+        		InfixQueue.addLast(new Token(curchar, Token.OpType.BINARY_LEFT_ASSOC, 60));
+        		break;
+        	case '(' : InfixQueue.addLast(new Token(Token.TokenType.BRACKET_LEFT));break;
+        	case ')' : InfixQueue.addLast(new Token(Token.TokenType.BRACKET_RIGHT));break;
+        	default: {
+				InfixQueue.clear();
+				return("Unexpected character '"+curchar+"'");
+				}
 			}
 		}
-		while (!operators.empty())
-			numbers.push(Operand(operators.pop(),numbers.pop(),numbers.pop()));
-		return numbers.pop();	
+		return display(InfixQueue);
 	}
 	
 	public static boolean isNumeric(char ch) 
@@ -64,43 +83,128 @@ public class EvaluateString
 		return false;
 	}
 	
-	public static boolean Precedence(char op1, char op2) 
+	public static String ConvertToPostfix() 
 	{
-		if(op2=='('||op2 == ')') return false;
-		if((op1=='*'||op1=='/')&&(op2=='+'||op2=='-'))return false;
-		if((op1=='^'||op1=='l')&&(op2=='+'||op2=='-'||op2=='*'||op2=='/'))return false;
-		else return true;
-	}
-	
-	public static double Operand(char op, double b, double a) 
-	{
-		switch(op) 
+		if (InfixQueue.size()==0) return "";
+		LinkedList<Token> OperatorStack = new LinkedList<Token>();
+		LinkedList<Token> infixQueue = new LinkedList<Token>(InfixQueue);
+		Token t;
+		PostfixQueue.clear();
+		OperatorStack.clear();
+		while (infixQueue.size()>0) 
 		{
-		case'+':return a+b;
-		case'-':return a-b;
-		case'*':return a*b;
-		case'/':if(b==0) throw new UnsupportedOperationException("Syntax Error");
-				return a/b;
-		case'^':return Math.pow(a,b);
+			t = infixQueue.removeFirst();
+			switch(t.ttype)
+			{
+				case NUMBER:
+					PostfixQueue.addLast(t);break;
+				case OPERATOR:
+					switch(t.otype) 
+					{
+						case UNARY_POSTFIX:OperatorStack.addLast(t);break;
+						case UNARY_PREFIX:PostfixQueue.addLast(t);break;
+						case BINARY_LEFT_ASSOC:
+							while (!OperatorStack.isEmpty() && OperatorStack.getLast().precidence > t.precidence) 
+								PostfixQueue.addLast(OperatorStack.removeLast());
+							OperatorStack.addLast(t);
+							break;
+						case BINARY_RIGHT_ASSOC:
+							while (!OperatorStack.isEmpty() && OperatorStack.getLast().precidence > t.precidence) 
+								PostfixQueue.addLast(OperatorStack.removeLast());
+							OperatorStack.addLast(t);
+							break;
+					}break;
+				case BRACKET_LEFT:OperatorStack.addLast(t);break;
+				case BRACKET_RIGHT:
+					while (OperatorStack.getLast().ttype != Token.TokenType.BRACKET_LEFT) 
+						PostfixQueue.addLast(OperatorStack.removeLast());
+					OperatorStack.removeLast();
+						break;
+				default:
+					break;
+			}
 		}
-		return 0;
-	}
-	
-	public static double Unary(char op, double a) 
-	{
-		switch(op) 
+		while (!OperatorStack.isEmpty()) 
 		{
-		case'+':return +a;
-		case'-':return -a;
+			if (OperatorStack.getLast().ttype!=Token.TokenType.OPERATOR) 
+			{
+				PostfixQueue.clear();
+				return("Non-operator on shunting stack");
+			}
+			else PostfixQueue.addLast(OperatorStack.removeLast());
 		}
-		return 0;
+		//return display(PostfixQueue);
+		return display(PostfixQueue);
 	}
 	
+	public static float Evaluate() 
+	{
+		if (PostfixQueue.size()==0) return 0;
+		Token t;
+		float a1;
+		LinkedList<Token> postfixQueue = new LinkedList<Token>(PostfixQueue);
+		Stack<Float> rpevalStack = new Stack<Float>();
+		//rpevalStack.clear();
+		while (!postfixQueue.isEmpty()) 
+		{
+			t=postfixQueue.removeFirst();
+			switch(t.ttype) 
+			{
+			case NUMBER:rpevalStack.push(t.val);break;
+			case OPERATOR:
+				if(rpevalStack.isEmpty()) {postfixQueue.addLast(t);break;}
+				a1 = rpevalStack.pop();
+				switch(t.op) 
+				{
+					case '+': switch(t.otype) 
+						{
+						case BINARY_LEFT_ASSOC:
+							if(rpevalStack.isEmpty())
+								rpevalStack.push(a1); 
+								else rpevalStack.push(rpevalStack.pop()+a1);break;
+						case UNARY_PREFIX:rpevalStack.push(+rpevalStack.pop());break;
+						default:break;
+					}break;
+					case '-':
+						switch(t.otype) 
+						{
+						case BINARY_LEFT_ASSOC:
+							if(rpevalStack.isEmpty())rpevalStack.push(-a1); 
+								else rpevalStack.push(rpevalStack.pop()-a1);break;
+						case UNARY_PREFIX:rpevalStack.push(-rpevalStack.pop());break;
+						default:break;
+						}break;
+					case '*':rpevalStack.push(a1*rpevalStack.pop());break;
+					case '/':rpevalStack.push(rpevalStack.pop()/a1);break;
+					case '^':rpevalStack.push(new Float(Math.pow(rpevalStack.pop(),a1)));break;
+				}break;
+			default:break;
+			}
+		}
+		return rpevalStack.pop().floatValue();
+	}
+	
+	private static 
+	//String 
+	float
+	Eval(String str) 
+	{
+		//return
+				TokenizeInfix(str);
+		//return ConvertToPostfix();
+		ConvertToPostfix();return Evaluate();
+				
+	}
+
 	public static void main(String[] args) 
     { 
-        System.out.println(EvaluateString.evaluate("10.5 + 2 ^ 6")); 
-        System.out.println(EvaluateString.evaluate("100 * 2 + 12")); 
-        System.out.println(EvaluateString.evaluate("100.8^9 * ( 2 + 12 )")); 
-        System.out.println(EvaluateString.evaluate("100 * ( 2 + 12 ) / 14")); 
+		
+      // System.out.println(EvaluateString.Eval("10.5 + 2 ^ 6")); 
+        System.out.print(EvaluateString.Eval(" 10.5+----2^6"));
+        System.out.print(EvaluateString.Eval(" -2"));
+        System.out.print(" -2");
+       // System.out.println(EvaluateString.Eval("100 * 2 + 12")); 
+        //System.out.println(EvaluateString.Eval("100.8^9 * ( 2 + 12 )")); 
+       // System.out.println(EvaluateString.Eval("100 * ( 2 + 12 ) / 14")); 
     } 
 }
