@@ -162,7 +162,7 @@ public class EvaluateString
 							if(rpevalStack.isEmpty())
 								rpevalStack.push(a1); 
 								else rpevalStack.push(rpevalStack.pop()+a1);break;
-						case UNARY_PREFIX:rpevalStack.push(+rpevalStack.pop());break;
+						//case UNARY_PREFIX:rpevalStack.push(+rpevalStack.pop());break;
 						default:break;
 					}break;
 					case '-':
@@ -171,7 +171,7 @@ public class EvaluateString
 						case BINARY_LEFT_ASSOC:
 							if(rpevalStack.isEmpty())rpevalStack.push(-a1); 
 								else rpevalStack.push(rpevalStack.pop()-a1);break;
-						case UNARY_PREFIX:rpevalStack.push(-rpevalStack.pop());break;
+						//case UNARY_PREFIX:rpevalStack.push(-rpevalStack.pop());break;
 						default:break;
 						}break;
 					case '*':rpevalStack.push(a1*rpevalStack.pop());break;
