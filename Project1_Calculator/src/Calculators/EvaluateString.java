@@ -2,7 +2,6 @@ package Calculators;
 
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.ListIterator;
 import java.util.Stack;
 
@@ -31,46 +30,49 @@ public class EvaluateString
 	
 	public static String TokenizeInfix(String expression) 
 	{
-		char curchar;
+		char[] token = expression.toCharArray();
 		String numstr;
 		InfixQueue.clear();
-		for(int i = 0; i < expression.length(); i++)
+		for(int i = 0; i < token.length; i++)
 		{	
-			curchar = expression.charAt(i);
-			switch(curchar) 
+			switch(token[i]) 
 			{
 			case ' ' : continue;
-        	case '0' :case '1' :case '2' :case '3' :case '4' :
+        	case '0' :case '1' :case '2' :case '3' :case '4' :case 'u':
         	case '5' :case '6' :case '7' :case '8' :case '9' :case '.':
         		{
     				numstr=new String();
-    				numstr=numstr+Character.toString(curchar);
+    				if(token[i]=='u') numstr=numstr+'-';
+    				else
+    				numstr=numstr+Character.toString(token[i]);
     				i++;
     				while (i<expression.length() && isNumeric(expression.charAt(i)))
     					{numstr=numstr+Character.toString(expression.charAt(i));i++;}
     				i--;
     				InfixQueue.addLast(new Token(new Float(numstr).floatValue()));
 				}break;
+        	
         	case '+': case '-': 
         	{
-    			//if (//InfixQueue.isEmpty() || 
+    			if (InfixQueue.isEmpty() || 
     					//InfixQueue.getLast().ttype==Token.TokenType.OPERATOR || 
-    			//			InfixQueue.getLast().ttype==Token.TokenType.BRACKET_LEFT)
-			//		InfixQueue.addLast(new Token(curchar, Token.OpType.UNARY_PREFIX, 100));
-			//	else 
-					InfixQueue.addLast(new Token(curchar, Token.OpType.BINARY_LEFT_ASSOC, 50));
+    						InfixQueue.getLast().ttype==Token.TokenType.BRACKET_LEFT) 
+    				{token[i]='u';i--;}
+				//InfixQueue.addLast(new Token('u', Token.OpType.UNARY_PREFIX, 100));
+				else 
+					InfixQueue.addLast(new Token(token[i], Token.OpType.BINARY_LEFT_ASSOC, 50));
     		}break;
         	case '^':
-        		InfixQueue.addLast(new Token(curchar, Token.OpType.BINARY_RIGHT_ASSOC, 100));
+        		InfixQueue.addLast(new Token(token[i], Token.OpType.BINARY_RIGHT_ASSOC, 100));
         		break;
         	case '*': case '/':
-        		InfixQueue.addLast(new Token(curchar, Token.OpType.BINARY_LEFT_ASSOC, 60));
+        		InfixQueue.addLast(new Token(token[i], Token.OpType.BINARY_LEFT_ASSOC, 60));
         		break;
         	case '(' : InfixQueue.addLast(new Token(Token.TokenType.BRACKET_LEFT));break;
         	case ')' : InfixQueue.addLast(new Token(Token.TokenType.BRACKET_RIGHT));break;
         	default: {
 				InfixQueue.clear();
-				return("Unexpected character '"+curchar+"'");
+				return("Unexpected character '"+token[i]+"'");
 				}
 			}
 		}
@@ -79,7 +81,7 @@ public class EvaluateString
 	
 	public static boolean isNumeric(char ch) 
 	{
-		if(Character.isDigit(ch)||ch =='.') return true;
+		if(Character.isDigit(ch)||ch =='.'||ch =='u') return true;
 		return false;
 	}
 	
@@ -137,9 +139,9 @@ public class EvaluateString
 		return display(PostfixQueue);
 	}
 	
-	public static float Evaluate() 
+	public static String Evaluate() 
 	{
-		if (PostfixQueue.size()==0) return 0;
+		if (PostfixQueue.size()==0) return "";
 		Token t;
 		float a1;
 		LinkedList<Token> postfixQueue = new LinkedList<Token>(PostfixQueue);
@@ -181,28 +183,22 @@ public class EvaluateString
 			default:break;
 			}
 		}
-		return rpevalStack.pop().floatValue();
+		return rpevalStack.pop().toString();
 	}
 	
-	private static 
-	//String 
-	float
-	Eval(String str) 
+	static String Eval(String str) 
 	{
-		//return
 				TokenizeInfix(str);
-		//return ConvertToPostfix();
-		ConvertToPostfix();return Evaluate();
-				
+				ConvertToPostfix();
+				return Evaluate();
 	}
 
 	public static void main(String[] args) 
     { 
 		
       // System.out.println(EvaluateString.Eval("10.5 + 2 ^ 6")); 
-        System.out.print(EvaluateString.Eval(" 10.5+----2^6"));
-        System.out.print(EvaluateString.Eval(" -2"));
-        System.out.print(" -2");
+       // System.out.print(EvaluateString.Eval(" 10.5+----2^6"));
+        System.out.print(EvaluateString.Eval(" 10.5+-(-2)^6"));
        // System.out.println(EvaluateString.Eval("100 * 2 + 12")); 
         //System.out.println(EvaluateString.Eval("100.8^9 * ( 2 + 12 )")); 
        // System.out.println(EvaluateString.Eval("100 * ( 2 + 12 ) / 14")); 
