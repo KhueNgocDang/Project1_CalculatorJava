@@ -28,16 +28,30 @@ public class EvaluateString
 		return s+"</html>";
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static String TokenizeInfix(String expression) 
 	{
 		char[] token = expression.toCharArray();
-		String numstr;
+		String numstr,func;
 		InfixQueue.clear();
 		for(int i = 0; i < token.length; i++)
 		{	
 			switch(token[i]) 
 			{
 			case ' ' : continue;
+			case 'a':case 'b':case 'c':case 'd':case 'e':case 'f':
+			case 'g':case 'h':case 'i':case 'k':case 'l':case 'm':
+			case 'n':case 'o':case 'p':case 'q':case 'r':case 's':
+			case 't':case 'v':case 'w':case 'x':case 'y':
+			case 'z':{
+				func=new String();
+				//if(token[i]=='u') func=func+'-';
+				//else
+					func=func+Character.toString(token[i]);
+				while (i<expression.length() && isLetter(expression.charAt(i)))
+					{func=func+Character.toString(expression.charAt(i));i++;}				
+				InfixQueue.addLast(new Token(func, Token.OpType.BINARY_RIGHT_ASSOC, 100));
+			}break;
         	case '0' :case '1' :case '2' :case '3' :case '4' :case 'u':
         	case '5' :case '6' :case '7' :case '8' :case '9' :case '.':
         		{
@@ -54,19 +68,20 @@ public class EvaluateString
         	
         	case '+': case '-': 
         	{
+        		
     			if (InfixQueue.isEmpty() || 
     					//InfixQueue.getLast().ttype==Token.TokenType.OPERATOR || 
     						InfixQueue.getLast().ttype==Token.TokenType.BRACKET_LEFT) 
     				{token[i]='u';i--;}
 				//InfixQueue.addLast(new Token('u', Token.OpType.UNARY_PREFIX, 100));
 				else 
-					InfixQueue.addLast(new Token(token[i], Token.OpType.BINARY_LEFT_ASSOC, 50));
+					InfixQueue.addLast(new Token(String.valueOf(token[i]), Token.OpType.BINARY_LEFT_ASSOC, 50));
     		}break;
-        	case '^':
-        		InfixQueue.addLast(new Token(token[i], Token.OpType.BINARY_RIGHT_ASSOC, 100));
+        	case '^':case '√':
+        		InfixQueue.addLast(new Token(String.valueOf(token[i]), Token.OpType.BINARY_RIGHT_ASSOC, 100));
         		break;
         	case '*': case '/':
-        		InfixQueue.addLast(new Token(token[i], Token.OpType.BINARY_LEFT_ASSOC, 60));
+        		InfixQueue.addLast(new Token(String.valueOf(token[i]), Token.OpType.BINARY_LEFT_ASSOC, 60));
         		break;
         	case '(' : InfixQueue.addLast(new Token(Token.TokenType.BRACKET_LEFT));break;
         	case ')' : InfixQueue.addLast(new Token(Token.TokenType.BRACKET_RIGHT));break;
@@ -79,6 +94,11 @@ public class EvaluateString
 		return display(InfixQueue);
 	}
 	
+	private static boolean isLetter(char charAt) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 	public static boolean isNumeric(char ch) 
 	{
 		if(Character.isDigit(ch)||ch =='.'||ch =='u') return true;
@@ -139,6 +159,7 @@ public class EvaluateString
 		return display(PostfixQueue);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static String Evaluate() 
 	{
 		if (PostfixQueue.size()==0) return "";
@@ -158,7 +179,7 @@ public class EvaluateString
 				a1 = rpevalStack.pop();
 				switch(t.op) 
 				{
-					case '+': switch(t.otype) 
+					case "+": switch(t.otype) 
 						{
 						case BINARY_LEFT_ASSOC:
 							if(rpevalStack.isEmpty())
@@ -167,7 +188,7 @@ public class EvaluateString
 						//case UNARY_PREFIX:rpevalStack.push(+rpevalStack.pop());break;
 						default:break;
 					}break;
-					case '-':
+					case "-":
 						switch(t.otype) 
 						{
 						case BINARY_LEFT_ASSOC:
@@ -176,9 +197,10 @@ public class EvaluateString
 						//case UNARY_PREFIX:rpevalStack.push(-rpevalStack.pop());break;
 						default:break;
 						}break;
-					case '*':rpevalStack.push(a1*rpevalStack.pop());break;
-					case '/':rpevalStack.push(rpevalStack.pop()/a1);break;
-					case '^':rpevalStack.push(new Float(Math.pow(rpevalStack.pop(),a1)));break;
+					case "*":rpevalStack.push(a1*rpevalStack.pop());break;
+					case "/":rpevalStack.push(rpevalStack.pop()/a1);break;
+					case "^":rpevalStack.push(new Float(Math.pow(rpevalStack.pop(),a1)));break;
+					case "√":rpevalStack.push(new Float(Math.pow(a1,1/rpevalStack.pop())));break;
 				}break;
 			default:break;
 			}

@@ -1,15 +1,15 @@
 package Calculators;
 
 public class Token {
-	char op;
+	String op;
 	float val;
 	int precidence;
 	enum OpType {UNARY_PREFIX,UNARY_POSTFIX,BINARY_LEFT_ASSOC,BINARY_RIGHT_ASSOC};
-	enum TokenType {NUMBER,OPERATOR,BRACKET_LEFT,BRACKET_RIGHT};
+	enum TokenType {NUMBER,OPERATOR,FUNC,BRACKET_LEFT,BRACKET_RIGHT};
 	OpType otype;
 	TokenType ttype;
 	
-	Token(char o, OpType t, int prec)
+	Token(String o, OpType t, int prec)
 	{
 		op = o;
 		ttype = TokenType.OPERATOR;
