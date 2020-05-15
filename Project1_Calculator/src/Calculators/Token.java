@@ -3,6 +3,7 @@ package Calculators;
 public class Token {
 	String op;
 	float val;
+	String func;
 	int precidence;
 	enum OpType {UNARY_PREFIX,UNARY_POSTFIX,BINARY_LEFT_ASSOC,BINARY_RIGHT_ASSOC};
 	enum TokenType {NUMBER,OPERATOR,FUNC,BRACKET_LEFT,BRACKET_RIGHT};
@@ -15,6 +16,12 @@ public class Token {
 		ttype = TokenType.OPERATOR;
 		otype = t;
 		precidence = prec;
+	}
+	
+	Token(String f)
+	{
+		ttype = TokenType.FUNC;
+		func = f;
 	}
 	
 	Token(float f)
@@ -32,7 +39,8 @@ public class Token {
 	{
 		switch(ttype) 
 		{
-		case OPERATOR: return String.valueOf(op);
+		case OPERATOR: return op;
+		case FUNC: return func;
 		case NUMBER: 
 			{
 				if(Math.floor(val)==val) return new Integer((int)val).toString();

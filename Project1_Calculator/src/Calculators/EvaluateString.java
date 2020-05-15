@@ -45,12 +45,20 @@ public class EvaluateString
 			case 't':case 'v':case 'w':case 'x':case 'y':
 			case 'z':{
 				func=new String();
-				//if(token[i]=='u') func=func+'-';
-				//else
-					func=func+Character.toString(token[i]);
+				func=func+Character.toString(token[i]);
+				i++;
 				while (i<expression.length() && isLetter(expression.charAt(i)))
-					{func=func+Character.toString(expression.charAt(i));i++;}				
-				InfixQueue.addLast(new Token(func, Token.OpType.BINARY_RIGHT_ASSOC, 100));
+					{func=func+Character.toString(expression.charAt(i));i++;}
+				i--;
+				switch(func) 
+				{
+				case"cuber":case"sqrr":case"cube":case"sqr":case"log":case"ln":
+				case"sin":case"cos":case"tan":case"euler":
+					InfixQueue.addLast(new Token(func.toString()));break;
+				case"logb":
+					InfixQueue.addLast(new Token(func.toString(), Token.OpType.BINARY_RIGHT_ASSOC, 100));
+        		break;
+				}
 			}break;
         	case '0' :case '1' :case '2' :case '3' :case '4' :case 'u':
         	case '5' :case '6' :case '7' :case '8' :case '9' :case '.':
@@ -91,11 +99,12 @@ public class EvaluateString
 				}
 			}
 		}
-		return display(InfixQueue);
+		//return display(InfixQueue);
+		return InfixQueue.toString();
 	}
 	
-	private static boolean isLetter(char charAt) {
-		// TODO Auto-generated method stub
+	private static boolean isLetter(char ch) {
+		if(Character.isLetter(ch)) return true;
 		return false;
 	}
 
@@ -136,6 +145,7 @@ public class EvaluateString
 							OperatorStack.addLast(t);
 							break;
 					}break;
+				case FUNC: PostfixQueue.addLast(t);break;
 				case BRACKET_LEFT:OperatorStack.addLast(t);break;
 				case BRACKET_RIGHT:
 					while (OperatorStack.getLast().ttype != Token.TokenType.BRACKET_LEFT) 
@@ -201,7 +211,20 @@ public class EvaluateString
 					case "/":rpevalStack.push(rpevalStack.pop()/a1);break;
 					case "^":rpevalStack.push(new Float(Math.pow(rpevalStack.pop(),a1)));break;
 					case "√":rpevalStack.push(new Float(Math.pow(a1,1/rpevalStack.pop())));break;
+					case "logb":rpevalStack.push(new Float(Math.log(a1)/Math.log(rpevalStack.pop())));break;
 				}break;
+			case FUNC: 
+				if(rpevalStack.isEmpty()) {postfixQueue.addLast(t);break;}
+				a1 = rpevalStack.pop();
+				switch(t.func) 
+				{
+					case "log":rpevalStack.push(new Float(Math.log10(a1)));break;
+					case "ln":rpevalStack.push(new Float(Math.log(a1)));break;
+					case "cuber":rpevalStack.push(new Float(Math.cbrt(a1)));break;
+					case "sqrr":rpevalStack.push(new Float(Math.sqrt(a1)));break;
+					case "cube":rpevalStack.push(new Float(Math.pow(3,a1)));break;
+					case "sqr":rpevalStack.push(new Float(Math.pow(2,a1)));break;
+				}
 			default:break;
 			}
 		}
@@ -209,9 +232,13 @@ public class EvaluateString
 	}
 	
 	static String Eval(String str) 
-	{
+	{//
+		//return
 				TokenizeInfix(str);
+				//
+				//return
 				ConvertToPostfix();
+	//
 				return Evaluate();
 	}
 
@@ -220,8 +247,8 @@ public class EvaluateString
 		
       // System.out.println(EvaluateString.Eval("10.5 + 2 ^ 6")); 
        // System.out.print(EvaluateString.Eval(" 10.5+----2^6"));
-        System.out.print(EvaluateString.Eval(" 10.5+-(-2)^6"));
-       // System.out.println(EvaluateString.Eval("100 * 2 + 12")); 
+        //System.out.print(EvaluateString.Eval(" 10.5+-(-2)^6"));
+        System.out.println(EvaluateString.Eval("3√8")); 
         //System.out.println(EvaluateString.Eval("100.8^9 * ( 2 + 12 )")); 
        // System.out.println(EvaluateString.Eval("100 * ( 2 + 12 ) / 14")); 
     } 
