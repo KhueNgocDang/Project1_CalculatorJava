@@ -3,12 +3,15 @@ package Calculators;
 public class Token {
 	String op;
 	float val;
+	long valprog;
 	String func;
 	int precidence;
-	enum OpType {UNARY_PREFIX,UNARY_POSTFIX,BINARY_LEFT_ASSOC,BINARY_RIGHT_ASSOC};
+	enum OpType {BINARY_LEFT_ASSOC,BINARY_RIGHT_ASSOC};
 	enum TokenType {NUMBER,OPERATOR,FUNC,BRACKET_LEFT,BRACKET_RIGHT};
+	enum FuncType{PREFIX,POSTFIX};
 	OpType otype;
 	TokenType ttype;
+	FuncType ftype;
 	
 	Token(String o, OpType t, int prec)
 	{
@@ -30,11 +33,18 @@ public class Token {
 		val = f;
 	}
 	
+	Token(long f)
+	{
+		ttype = TokenType.NUMBER;
+		valprog = f;
+	}
+	
 	Token(TokenType t)
 	{
 		if (t == TokenType.BRACKET_LEFT|| t == TokenType.BRACKET_RIGHT) ttype = t;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public String toString() 
 	{
 		switch(ttype) 

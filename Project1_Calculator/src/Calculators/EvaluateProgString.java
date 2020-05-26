@@ -1,20 +1,13 @@
 package Calculators;
 
-
 import java.util.LinkedList;
 import java.util.Stack;
 
-
-
-public class EvaluateString 
-{
+public class EvaluateProgString {
 	static LinkedList<Token> InfixQueue = new LinkedList<Token>();
 	static LinkedList<Token> PostfixQueue = new LinkedList<Token>();
-	
-	public static float factorial(float n) 
-	{
-		return(n==1||n==0) ? 1:n*factorial(n-1);
-	}
+	static char[] num= {'A','B','C','D','E','F',
+			'0','1','2','3','4','5','6','7','8','9'};
 	
 	@SuppressWarnings("deprecation")
 	public static String TokenizeInfix(String expression) 
@@ -28,10 +21,9 @@ public class EvaluateString
 			{
 			case ' ' : continue;
 			case 'a':case 'b':case 'c':case 'd':case 'e':case 'f':
-			case 'g':case 'h':case 'i':case 'k':case 'l':case 'm':
-			case 'n':case 'o':case 'p':case 'q':case 'r':case 's':
-			case 't':case 'v':case 'w':case 'x':case 'y':case 'π':
-			case 'z':{
+			case 'l':case 'h':case 'n':case 'o':case 'r':case 's':
+			case 't':case 'v':case 'w':case 'x':case 'y':case 'z':
+			{
 				func=new String();
 				func=func+Character.toString(token[i]);
 				i++;
@@ -40,22 +32,18 @@ public class EvaluateString
 				i--;
 				switch(func) 
 				{
-				case"cuber":case"sqrr":case"cube":case"sqr":case"log":case"ln":
-				case"sin":case"cos":case"tan":
-					InfixQueue.addLast(new Token(func.toString()));break;
-				case"e":
-					InfixQueue.addLast(new Token(new Float(Math.exp(1))));break;
-				case"π":        		
-					InfixQueue.addLast(new Token(new Float(Math.PI)));break;
-				case"logb":
-					InfixQueue.addLast(new Token(func.toString(), Token.OpType.BINARY_RIGHT_ASSOC, 100));
+				case"and":case"or":case"not":case"nand":case"nor":case"xor":
+				case"lsh":case"rsh": case"mod":
+					InfixQueue.addLast(new Token(func.toString(), Token.OpType.BINARY_RIGHT_ASSOC, 50));
         		break;
 				}
 			}break;
+			case 'A' :case 'B' :case 'C' :case 'D' :case 'E' :case 'F':
         	case '0' :case '1' :case '2' :case '3' :case '4' :case 'u':
         	case '5' :case '6' :case '7' :case '8' :case '9' :case '.':
         		{
     				numstr=new String();
+    				long nums = 0 ;
     				if(token[i]=='u') numstr=numstr+'-';
     				else
     				numstr=numstr+Character.toString(token[i]);
@@ -63,7 +51,8 @@ public class EvaluateString
     				while (i<expression.length() && isNumeric(expression.charAt(i)))
     					{numstr=numstr+Character.toString(expression.charAt(i));i++;}
     				i--;
-    				InfixQueue.addLast(new Token(new Float(numstr).floatValue()));
+    				nums = Long.decode(numstr);
+					InfixQueue.addLast(new Token(new Long(nums).longValue()));
 				}break;
         	
         	case '+': case '-': 
@@ -77,11 +66,8 @@ public class EvaluateString
 				else 
 					InfixQueue.addLast(new Token(String.valueOf(token[i]), Token.OpType.BINARY_LEFT_ASSOC, 50));
     		}break;
-        	case'!':case'%':					
+        	case'%':					
         		InfixQueue.addLast(new Token(String.valueOf(token[i])));break;
-        	case '^':case '√':
-        		InfixQueue.addLast(new Token(String.valueOf(token[i]), Token.OpType.BINARY_RIGHT_ASSOC, 100));
-        		break;
         	case '*': case '/':
         		InfixQueue.addLast(new Token(String.valueOf(token[i]), Token.OpType.BINARY_LEFT_ASSOC, 60));
         		break;
@@ -92,22 +78,25 @@ public class EvaluateString
 				return("Unexpected character '"+token[i]+"'");
 				}
 			}
+			
 		}
 		//return display(InfixQueue);
 		return InfixQueue.toString();
 	}
-	
+
+	private static boolean isNumeric( char ch) 
+	{
+		for(char s: num) 
+		{
+			if(s == ch) return true;
+		}
+		return false;
+	}
+
 	private static boolean isLetter(char ch) {
 		if(Character.isLetter(ch)) return true;
 		return false;
 	}
-
-	public static boolean isNumeric(char ch) 
-	{
-		if(Character.isDigit(ch)||ch =='.'||ch =='u') return true;
-		return false;
-	}
-	
 	public static String ConvertToPostfix() 
 	{
 		if (InfixQueue.size()==0) return "";
@@ -162,21 +151,20 @@ public class EvaluateString
 		return PostfixQueue.toString();
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static String Evaluate() 
 	{
-		if (PostfixQueue.size()==0) return "";
+		if (PostfixQueue.size()==0) return "0";
 		Token t;
-		float a1;
+		long a1;
 		LinkedList<Token> postfixQueue = new LinkedList<Token>(PostfixQueue);
-		Stack<Float> rpevalStack = new Stack<Float>();
+		Stack<Long> rpevalStack = new Stack<Long>();
 		//rpevalStack.clear();
 		while (!postfixQueue.isEmpty()) 
 		{
 			t=postfixQueue.removeFirst();
 			switch(t.ttype) 
 			{
-			case NUMBER:rpevalStack.push(t.val);break;
+			case NUMBER:rpevalStack.push(t.valprog);break;
 			case OPERATOR:
 				if(rpevalStack.isEmpty()) {postfixQueue.addLast(t);break;}
 				a1 = rpevalStack.pop();
@@ -202,22 +190,12 @@ public class EvaluateString
 						}break;
 					case "*":rpevalStack.push(a1*rpevalStack.pop());break;
 					case "/":rpevalStack.push(rpevalStack.pop()/a1);break;
-					case "^":rpevalStack.push(new Float(Math.pow(rpevalStack.pop(),a1)));break;
-					case "√":rpevalStack.push(new Float(Math.pow(a1,1/rpevalStack.pop())));break;
-					case "logb":rpevalStack.push(new Float(Math.log(a1)/Math.log(rpevalStack.pop())));break;
-				}break;
+					}break;
 			case FUNC: 
 				if(rpevalStack.isEmpty()) {postfixQueue.addLast(t);break;}
 				a1 = rpevalStack.pop();
 				switch(t.func) 
 				{
-					case "log":rpevalStack.push(new Float(Math.log10(a1)));break;
-					case "ln":rpevalStack.push(new Float(Math.log(a1)));break;
-					case "cuber":rpevalStack.push(new Float(Math.cbrt(a1)));break;
-					case "sqrr":rpevalStack.push(new Float(Math.sqrt(a1)));break;
-					case "cube":rpevalStack.push(new Float(Math.pow(3,a1)));break;
-					case "sqr":rpevalStack.push(new Float(Math.pow(2,a1)));break;
-					case "!":rpevalStack.push(new Float(factorial(a1)));break;
 					case "%":rpevalStack.push(a1/100);break;
 				}
 			default:break;
@@ -226,7 +204,7 @@ public class EvaluateString
 		return rpevalStack.pop().toString();
 	}
 	
-	static String Eval(String str) 
+	static String Eval(String str,int mode) 
 	{//
 		//return
 				TokenizeInfix(str);
@@ -234,7 +212,17 @@ public class EvaluateString
 				//return
 				ConvertToPostfix();
 	//
-				return Evaluate();
+				String sout = null;
+				String s = Evaluate();
+				long out = Long.parseLong(s);
+				switch(mode) 
+				{
+					case 2:sout = Long.toBinaryString(out);break;
+					case 8:sout = Long.toOctalString(out);break;
+					case 10:sout = Long.toString(out);break;
+					case 16:sout = Long.toHexString(out);break;
+				}
+				return sout;
 	}
 
 	public static void main(String[] args) 
@@ -243,7 +231,7 @@ public class EvaluateString
       // System.out.println(EvaluateString.Eval("10.5 + 2 ^ 6")); 
        // System.out.print(EvaluateString.Eval(" 10.5+----2^6"));
         //System.out.print(EvaluateString.Eval(" 10.5+-(-2)^6"));
-        System.out.println(EvaluateString.Eval("9!+(2*π)^2+38-65/e")); 
+        System.out.println(EvaluateProgString.Eval("5a+b",16)); 
         //System.out.println(EvaluateString.Eval("100.8^9 * ( 2 + 12 )")); 
        // System.out.println(EvaluateString.Eval("100 * ( 2 + 12 ) / 14")); 
     } 

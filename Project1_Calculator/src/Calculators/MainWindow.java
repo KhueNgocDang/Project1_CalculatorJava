@@ -36,6 +36,13 @@ import javax.swing.text.AbstractDocument.Content;
 import javax.swing.JTextPane;
 import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
+import java.awt.GridLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import java.awt.FlowLayout;
+import javax.swing.JToggleButton;
 
 public class MainWindow extends JFrame {
 	EvaluateString  Evaluate= new EvaluateString();
@@ -114,9 +121,6 @@ public class MainWindow extends JFrame {
 			}
 		});
 	}
-	
-
-
 	
 	//Refresh content pane before moving to new calculator mode
 	public void RefreshCal() 
@@ -396,13 +400,36 @@ public class MainWindow extends JFrame {
 		BitwiseOperatorButtonPressed(btnXORButton,5);
 		contentPane.add(btnXORButton);
 	
+		btnHexAButton = new JButton("A");
+		NumberButtonPressed(btnHexAButton);
+		contentPane.add(btnHexAButton);
+
+		btnHexBButton = new JButton("B");
+		NumberButtonPressed(btnHexBButton);
+		contentPane.add(btnHexBButton);
+		
+		btnHexDButton = new JButton("D");
+		NumberButtonPressed(btnHexDButton);
+		contentPane.add(btnHexDButton);
+		
+		btnHexCButton = new JButton("C");
+		NumberButtonPressed(btnHexCButton);
+		contentPane.add(btnHexCButton);
+		
+		btnHexEButton = new JButton("E");
+		NumberButtonPressed(btnHexEButton);
+		contentPane.add(btnHexEButton);
+		
+		btnHexFButton = new JButton("F");
+		NumberButtonPressed(btnHexFButton);
+		contentPane.add(btnHexFButton);
 	}
 	
 	public void EulerNumber(JButton Button, int exptype) 
 	{
 		Button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				CalDisplayInput.setText(CalDisplayInput.getText() +"e^(");
+				CalDisplayInput.setText(CalDisplayInput.getText() +"e");
 			}
 		});
 	}
@@ -418,13 +445,6 @@ public class MainWindow extends JFrame {
 	
 	public void GetReciprocal(JButton Button) 
 	{
-		Button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				double ops = Double.parseDouble(String.valueOf(CalDisplayResult.getText()));
-				ops =1/ops;
-				CalDisplayResult.setText(String.valueOf(ops));
-			}
-		});
 	}
 	
 	public void GetFactorial(JButton Button) 
@@ -440,110 +460,22 @@ public class MainWindow extends JFrame {
 	{
 		Button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Long firstLong;
-				Long secondLong;
-				Long resultLong;
 				switch(OpType) 
 				{
-				case 1: operator ="AND";break;
-				case 2: operator = "OR";break;
-				case 3: operator ="NAND";break;
-				case 4: operator ="NOR";break;
-				case 5: operator ="XOR";break;
-				case 6: operator ="LSH";break;
-				case 7: operator ="RSH";break;
+				case 1: operator ="and";break;
+				case 2: operator = "or";break;
+				case 3: operator ="nand";break;
+				case 4: operator ="nor";break;
+				case 5: operator ="xor";break;
+				case 6: operator ="lsh";break;
+				case 7: operator ="rsh";break;
 				case 8: operator ="+";break;
 				case 9: operator = "-";break;
 				case 10: operator ="*";break;
 				case 11: operator ="/";break;
 				case 12: operator ="mod";break;
 				}
-				String answer;
-				if(mark == 0) 
-				{
-					String iNum = CalDisplayResult.getText()+operator;
-					Long pushnum = Long.parseLong(CalDisplayResult.getText(), mode);
-					progLong.push(pushnum);
-					if(CalDisplayInput.getText()==null) 
-						{
-						CalDisplayInput.setText(iNum);
-						}
-					else CalDisplayInput.setText(CalDisplayInput.getText()+iNum);
-				}
-				
-				if(progLong.size()==2)switch(operator) 
-				{
-				case "+":
-					firstLong = progLong.pop();
-					secondLong = progLong.pop();
-					progLong.push(firstLong + secondLong);
-					CalDisplayInput.setText(firstLong + operator + secondLong);
-					break;
-				case "-":
-					firstLong = progLong.pop();
-					secondLong = progLong.pop();
-					progLong.push(firstLong - secondLong);
-					CalDisplayInput.setText(firstLong + operator + secondLong);
-					break;
-				case "*":
-					firstLong = progLong.pop();
-					secondLong = progLong.pop();
-					progLong.push(firstLong * secondLong);
-					CalDisplayInput.setText(firstLong + operator + secondLong);
-					break;
-				case "/":
-					firstLong = progLong.pop();
-					secondLong = progLong.pop();
-					progLong.push(firstLong / secondLong);
-					CalDisplayInput.setText(firstLong + operator + secondLong);
-					break;
-				case "mod":
-					firstLong = progLong.pop();
-					secondLong = progLong.pop();
-					progLong.push(firstLong % secondLong);
-					CalDisplayInput.setText(firstLong + operator + secondLong);
-				case "AND":
-					firstLong = progLong.pop();
-					secondLong = progLong.pop();
-					progLong.push(firstLong & secondLong);
-					CalDisplayInput.setText(firstLong + operator + secondLong);
-					break;
-				case "NAND":
-					firstLong = progLong.pop();
-					secondLong = progLong.pop();
-					progLong.push(~(firstLong & secondLong));
-					CalDisplayInput.setText(firstLong + operator + secondLong);
-					break;
-				case "NOR":
-					firstLong = progLong.pop();
-					secondLong = progLong.pop();
-					progLong.push(~(firstLong | secondLong));
-					CalDisplayInput.setText(firstLong + operator + secondLong);
-					break;
-				case "XOR":
-					firstLong = progLong.pop();
-					secondLong = progLong.pop();
-					progLong.push(firstLong ^ secondLong);
-					CalDisplayInput.setText(firstLong + operator + secondLong);
-					break;
-				case "LSH":
-					firstLong = progLong.pop();
-					secondLong = progLong.pop();
-					progLong.push( secondLong <<  firstLong );
-					CalDisplayInput.setText(firstLong + operator + secondLong);
-					break;
-				case "RSH":
-					firstLong = progLong.pop();
-					secondLong = progLong.pop();
-					progLong.push( secondLong  >>  firstLong);
-					CalDisplayInput.setText(firstLong + operator + secondLong);
-					break;
-				}
-				resultLong = progLong.lastElement();
-				answer = Long.toString(resultLong);
-				if(mark2 == 1) CalDisplayResult.setText(answer);
-				mark = 1;
-				mark2 = 1;
+				CalDisplayInput.setText(CalDisplayInput.getText()+operator.toString());
 			}
 		});
 	}
@@ -552,95 +484,20 @@ public class MainWindow extends JFrame {
 	{
 		Button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Long firstLong;
-				Long secondLong;
-				Long resultLong;
-				String answer;
-				if(mark == 0) 
-				{
-					String iNum = CalDisplayResult.getText()+operator;
-					Long pushnum = Long.parseLong(CalDisplayResult.getText(),mode);
-					progLong.push(pushnum);
-					if(CalDisplayInput.getText()==null) 
-						{
-						CalDisplayInput.setText(iNum);
-						}
-					else CalDisplayInput.setText(CalDisplayInput.getText()+iNum);
-				}
-				mark = 1;
-				if(progLong.size()==2)switch(operator)
-				{
-				case "+":
-					firstLong = progLong.pop();
-					secondLong = progLong.pop();
-					progLong.push(firstLong + secondLong);
-					CalDisplayInput.setText(firstLong + operator + secondLong);
-					break;
-				case "-":
-					firstLong = progLong.pop();
-					secondLong = progLong.pop();
-					progLong.push(firstLong - secondLong);
-					CalDisplayInput.setText(firstLong + operator + secondLong);
-					break;
-				case "*":
-					firstLong = progLong.pop();
-					secondLong = progLong.pop();
-					progLong.push(firstLong * secondLong);
-					CalDisplayInput.setText(firstLong + operator + secondLong);
-					break;
-				case "/":
-					firstLong = progLong.pop();
-					secondLong = progLong.pop();
-					progLong.push(firstLong / secondLong);
-					CalDisplayInput.setText(firstLong + operator + secondLong);
-					break;
-				case "mod":
-					firstLong = progLong.pop();
-					secondLong = progLong.pop();
-					progLong.push(firstLong % secondLong);
-					CalDisplayInput.setText(firstLong + operator + secondLong);
-				case "AND":
-					firstLong = progLong.pop();
-					secondLong = progLong.pop();
-					progLong.push(firstLong & secondLong);
-					CalDisplayInput.setText(firstLong + operator + secondLong);
-					break;
-				case "NAND":
-					firstLong = progLong.pop();
-					secondLong = progLong.pop();
-					progLong.push(~(firstLong & secondLong));
-					CalDisplayInput.setText(firstLong + operator + secondLong);
-					break;
-				case "NOR":
-					firstLong = progLong.pop();
-					secondLong = progLong.pop();
-					progLong.push(~(firstLong | secondLong));
-					CalDisplayInput.setText(firstLong + operator + secondLong);
-					break;
-				case "XOR":
-					firstLong = progLong.pop();
-					secondLong = progLong.pop();
-					progLong.push(firstLong ^ secondLong);
-					CalDisplayInput.setText(firstLong + operator + secondLong);
-					break;
-				case "LSH":
-					firstLong = progLong.pop();
-					secondLong = progLong.pop();
-					progLong.push( secondLong <<  firstLong);
-					CalDisplayInput.setText(firstLong + operator + secondLong);
-					break;
-				case "RSH":
-					firstLong = progLong.pop();
-					secondLong = progLong.pop();
-					progLong.push(secondLong >> firstLong );
-					CalDisplayInput.setText(firstLong + operator + secondLong);
-					break;
-				}
-				resultLong = progLong.lastElement();
-				answer = Long.toString(resultLong);
-				if(mark2 == 1) CalDisplayResult.setText(answer);
+				String input = CalDisplayInput.getText();
+				String answer = EvaluateProgString.Eval(input,mode);
 				CalDisplayResult.setText(answer);
-				operator = "=";
+				//String BINanswer = EvaluateProgString.Eval(input,2);
+				//BINtextField.setText(BINanswer);
+				String DECanswer = EvaluateProgString.Eval(input,10);
+				DECtextField.setText(DECanswer);
+				String OCTanswer = EvaluateProgString.Eval(input,8);
+				OCTtextField.setText(OCTanswer);
+				String HEXanswer = EvaluateProgString.Eval(input,16);
+				HEXtextField.setText(HEXanswer);
+				//HEXtextField.setText(EvaluateProgString.Eval(input,16));
+				//OCTtextField.setText(EvaluateProgString.Eval(input,8));
+				//DECtextField.setText(EvaluateProgString.Eval(input,10));
 			}
 		});
 	}
@@ -809,203 +666,216 @@ public class MainWindow extends JFrame {
 		SciencetificCal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				setTitle("Scienctific Calculator - Project 1");
-				setBounds(100, 100, 480, 475);
 				
-		//Refresh main variable
-				RefreshCal();
-				
-		//Set up Calculator display text field		
 				CalDisplayEngage();
+				//Set up Calculator display text field		
 				CalDisplayInput.setBounds(10, 11, 440, 37);
 				CalDisplayResult.setBounds(10, 59, 440, 57);
-				
-		//Number Buttons
+							
+			//Number Buttons
 				BasicNumberButtonInitiate();
-				btnZeroButton.setBounds(229, 363, 74, 32);
-				btnButtonOne.setBounds(156, 332, 74, 32);
-				btnButtonTwo.setBounds(229, 332, 74, 32);
-				btnButtonThree.setBounds(302, 332, 74, 32);
-				btnButtonFour.setBounds(156, 301, 74, 32);
-				btnButtonFive.setBounds(229, 301, 74, 32);
-				btnButtonSix.setBounds(302, 301, 74, 32);
-				btnButtonSeven.setBounds(156, 270, 74, 32);
-				btnButtonEight.setBounds(229, 270, 74, 32);
-				btnButtonNine.setBounds(302, 270, 74, 32);
-		
-		//Basic Operator Buttons
+				btnZeroButton.setBounds(229, 458, 74, 32);
+				btnButtonOne.setBounds(156, 427, 74, 32);
+				btnButtonTwo.setBounds(229, 427, 74, 32);
+				btnButtonThree.setBounds(302, 427, 74, 32);
+				btnButtonFour.setBounds(156, 396, 74, 32);
+				btnButtonFive.setBounds(229, 396, 74, 32);
+				btnButtonSix.setBounds(302, 396, 74, 32);
+				btnButtonSeven.setBounds(156, 365, 74, 32);
+				btnButtonEight.setBounds(229, 365, 74, 32);
+				btnButtonNine.setBounds(302, 365, 74, 32);
+					
+			//Basic Operator Buttons
 				BasicOperatorButtonInitiate();
-				btnDivideButton.setBounds(376, 239, 74, 32);
-				btnMultiplyButton.setBounds(376, 270, 74, 32);
-				btnMinusButton.setBounds(376, 301, 74, 32);
-				btnPlusButton.setBounds(376, 332, 74, 32);
-				btnEqualButton.setBounds(376, 363, 74, 32);
-				
-		//Clear, CLear Entry  and Delete Button
+				btnDivideButton.setBounds(375, 334, 74, 32);
+				btnMultiplyButton.setBounds(375, 365, 74, 32);
+				btnMinusButton.setBounds(375, 396, 74, 32);
+				btnPlusButton.setBounds(375, 427, 74, 32);
+				btnEqualButton.setBounds(375, 458, 74, 32);
+							
+			//Clear, CLear Entry  and Delete Button
 				Clear_DeleteButton();
-				btnClearButton.setBounds(302, 177, 74, 32);
-				btnClearEntryButton.setBounds(229, 177, 74, 32);
-				btnDeleteButton.setBounds(376, 177, 74, 32);
-				
-		//Scientific Calculator Buttons
-				JButton btnNegateButton = new JButton("+/-");
-				btnNegateButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						if(CalDisplayResult.getText()!=null) 
-						{
-							double ops = Double.parseDouble(String.valueOf(CalDisplayResult.getText()));
-							ops = ops *(-1);
-							CalDisplayResult.setText(String.valueOf(ops));
-						}
-					}
-				});
-				btnNegateButton.setBounds(156, 363, 74, 32);
-				contentPane.add(btnNegateButton);
-				
+				btnClearButton.setBounds(302, 272, 74, 32);
+				btnClearEntryButton.setBounds(229, 272, 74, 32);
+				btnDeleteButton.setBounds(375, 272, 74, 32);
+							
+			//Scientific Calculator Buttons
+				JButton btnButtonPermutation = new JButton("nPr");			
+				btnButtonPermutation.setBounds(10, 272, 74, 32);		
+				contentPane.add(btnButtonPermutation);
+							
 				btnPointButton = new JButton(".");
+							
 				btnPointButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						if(!CalDisplayResult.getText().contains(".")) 
-						{
-							CalDisplayResult.setText(CalDisplayResult.getText() + btnPointButton.getText());
-						}
-					}
-				});
-				btnPointButton.setBounds(302, 363, 74, 32);	
-				contentPane.add(btnPointButton);
-				
-				JButton btnPiButton = new JButton("π");
-				btnPiButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						CalDisplayResult.setText(String.valueOf(Math.PI));
-					}
-				});
-				btnPiButton.setBounds(83, 177, 74, 32);
-				contentPane.add(btnPiButton);
-				
-				JButton btnEulersNumberButton = new JButton("e");
-				EulerNumber(btnEulersNumberButton,1);
-				btnEulersNumberButton.setBounds(156, 177, 74, 32);
-				contentPane.add(btnEulersNumberButton);
-				
-				JButton btnExponentialButton = new JButton("exp");
-				btnExponentialButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						double a = Double.parseDouble(CalDisplayResult.getText());
-						String b = String.format("%6.3e", a);
-						CalDisplayResult.setText(b);
-					}
-				});
-				btnExponentialButton.setBounds(302, 208, 74, 32);
-				contentPane.add(btnExponentialButton);
-				
-				JButton btnAbsoluteButton = new JButton("|x|");
-				btnAbsoluteButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						double a = Double.parseDouble(CalDisplayResult.getText());
-						CalDisplayResult.setText(String.valueOf(Math.abs(a)));
-					}
-				});
-				btnAbsoluteButton.setBounds(229, 208, 74, 32);
-				contentPane.add(btnAbsoluteButton);
-				
-				JButton btnOpeningParenthesis = new JButton("(");
-				btnOpeningParenthesis.setBounds(156, 239, 74, 32);
-				contentPane.add(btnOpeningParenthesis);
-				
-				JButton btnClosingParenthesis = new JButton(")");
-				btnClosingParenthesis.setBounds(229, 239, 74, 32);
-				contentPane.add(btnClosingParenthesis);
-				
-				JButton btnFactorial = new JButton("n!");
-				GetFactorial(btnFactorial);
-				btnFactorial.setBounds(302, 239, 74, 32);
-				contentPane.add(btnFactorial);
-				
-				JButton btnReciprocalButton = new JButton("1⁄x");
-				GetReciprocal(btnReciprocalButton);
-				btnReciprocalButton.setBounds(156, 208, 74, 32);
-				contentPane.add(btnReciprocalButton);
-				
-				JButton btnPercentageButton = new JButton("%");
-				GetPercentage(btnPercentageButton);
-				btnPercentageButton.setBounds(10, 177, 74, 32);
-				contentPane.add(btnPercentageButton);
-				
-				JButton btnSquareButton = new JButton("<html>x<sup>2</sup></html>");
-				powfunc(btnSquareButton, 1);
-				btnSquareButton.setBounds(10, 208, 74, 32);;
-				contentPane.add(btnSquareButton);
-				
-				JButton btnCubeButton = new JButton("<html>x<sup>3</sup></html>");
-				powfunc(btnCubeButton, 2);
-				btnCubeButton.setBounds(10, 239, 74, 32);
-				contentPane.add(btnCubeButton);
-				
-				JButton btnXtothepowerofY = new JButton("<html>x<sup>y</sup></html>");
-				OperatorButtonPressed(btnXtothepowerofY,4);
-				btnXtothepowerofY.setBounds(10, 270, 74, 32);
-				contentPane.add(btnXtothepowerofY);
-				
-				JButton btn10tothepowerofX = new JButton("<html>10<sup>x</sup></html>");
-				powfunc(btn10tothepowerofX, 4);
-				btn10tothepowerofX.setBounds(10, 301, 74, 32);
-				contentPane.add(btn10tothepowerofX);
-				
-				JButton btnLogof10Button = new JButton("log");
-				powfunc(btnLogof10Button, 7);
-				btnLogof10Button.setBounds(10, 332, 74, 32);
-				contentPane.add(btnLogof10Button);
-				
-				JButton btnNaturalLog = new JButton("ln");
-				powfunc(btnNaturalLog, 8);
-				btnNaturalLog.setBounds(10, 363, 74, 32);
-				contentPane.add(btnNaturalLog);
-				
-				JButton btnModularButton = new JButton("mod");
-				OperatorButtonPressed(btnModularButton,7);
-				btnModularButton.setBounds(376, 208, 74, 32);
-				contentPane.add(btnModularButton);
-				
-				JButton btnSquareRootButton = new JButton("\u221A"+"x");
-				powfunc(btnSquareRootButton, 5);
-				btnSquareRootButton.setBounds(83, 208, 74, 32);
-				contentPane.add(btnSquareRootButton);
-				
-				JButton btnCubeRootButton = new JButton("\u221B"+"x");
-				powfunc(btnCubeRootButton, 6);
-				btnCubeRootButton.setBounds(83, 239, 74, 32);
-				contentPane.add(btnCubeRootButton);
-				
-				JButton btn2SquareButton = new JButton("<html>2<sup>x</sup></html>");
-				powfunc(btn2SquareButton, 3);
-				btn2SquareButton.setBounds(83, 301, 74, 32);
-				contentPane.add(btn2SquareButton);
-				
-				JButton btnYRootButton = new JButton("<html><sup>y</sup>\u221Ax</html>");
-				OperatorButtonPressed(btnYRootButton,5);
-				btnYRootButton.setBounds(83, 270, 74, 32);
-				contentPane.add(btnYRootButton);
-				
-				JButton btnLogYofXButton = new JButton("<html>log<sub>y</sub>x</html>");
-				OperatorButtonPressed(btnLogYofXButton,6);
-				btnLogYofXButton.setBounds(83, 332, 74, 32);
-				contentPane.add(btnLogYofXButton);
-				
-				JButton btnEulertothepowerofX = new JButton("<html>e<sup>x</sup></html>");
-				EulerNumber(btnEulertothepowerofX,2);
-				btnEulertothepowerofX.setBounds(83, 363, 74, 32);
-				contentPane.add(btnEulertothepowerofX);
-
-				JMenu mnNewMenu = new JMenu("New menu");
-				mnNewMenu.setBounds(10, 137, 113, 27);
-				contentPane.add(mnNewMenu);
-				
-				JMenu mnNewMenu_1 = new JMenu("New menu");
-				mnNewMenu_1.setBounds(134, 137, 113, 27);
-				contentPane.add(mnNewMenu_1);
+								
+				public void actionPerformed(ActionEvent e) {
+					if(!CalDisplayResult.getText().contains(".")) 
+									{
+										CalDisplayResult.setText(CalDisplayResult.getText() + btnPointButton.getText());
+									}
+								}
+							});
+							btnPointButton.setBounds(302, 458, 74, 32);	
+							contentPane.add(btnPointButton);
+							
+							JButton btnPiButton = new JButton("π");
+							btnPiButton.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent e) {
+									CalDisplayResult.setText(String.valueOf(Math.PI));
+								}
+							});
+							btnPiButton.setBounds(156, 458, 74, 32);
+							contentPane.add(btnPiButton);
+							
+							JButton btnEulersNumberButton = new JButton("e");
+							EulerNumber(btnEulersNumberButton,1);
+							btnEulersNumberButton.setBounds(302, 303, 74, 32);
+							contentPane.add(btnEulersNumberButton);
+							
+							JButton btnDegreeButton = new JButton("°");
+							btnDegreeButton.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent e) {
+									double a = Double.parseDouble(CalDisplayResult.getText());
+									String b = String.format("%6.3e", a);
+									CalDisplayResult.setText(b);
+								}
+							});
+							btnDegreeButton.setBounds(156, 272, 74, 32);
+							contentPane.add(btnDegreeButton);
+							
+							JButton btnAbsoluteButton = new JButton("|x|");
+							btnAbsoluteButton.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent e) {
+									double a = Double.parseDouble(CalDisplayResult.getText());
+									CalDisplayResult.setText(String.valueOf(Math.abs(a)));
+								}
+							});
+							btnAbsoluteButton.setBounds(229, 303, 74, 32);
+							contentPane.add(btnAbsoluteButton);
+							
+							JButton btnOpeningParenthesis = new JButton("(");
+							btnOpeningParenthesis.setBounds(156, 334, 74, 32);
+							contentPane.add(btnOpeningParenthesis);
+							
+							JButton btnClosingParenthesis = new JButton(")");
+							btnClosingParenthesis.setBounds(229, 334, 74, 32);
+							contentPane.add(btnClosingParenthesis);
+							
+							JButton btnFactorial = new JButton("n!");
+							GetFactorial(btnFactorial);
+							btnFactorial.setBounds(302, 334, 74, 32);
+							contentPane.add(btnFactorial);
+							
+							JButton btnPercentageButton = new JButton("%");
+							GetPercentage(btnPercentageButton);
+							btnPercentageButton.setBounds(156, 303, 74, 32);
+							contentPane.add(btnPercentageButton);
+							
+							JButton btnSquareButton = new JButton("<html>x<sup>2</sup></html>");
+							powfunc(btnSquareButton, 1);
+							btnSquareButton.setBounds(10, 303, 74, 32);;
+							contentPane.add(btnSquareButton);
+							
+							JButton btnCubeButton = new JButton("<html>x<sup>3</sup></html>");
+							powfunc(btnCubeButton, 2);
+							btnCubeButton.setBounds(10, 334, 74, 32);
+							contentPane.add(btnCubeButton);
+							
+							JButton btnXtothepowerofY = new JButton("<html>x<sup>y</sup></html>");
+							OperatorButtonPressed(btnXtothepowerofY,4);
+							btnXtothepowerofY.setBounds(10, 365, 74, 32);
+							contentPane.add(btnXtothepowerofY);
+							
+							JButton btn10tothepowerofX = new JButton("<html>10<sup>x</sup></html>");
+							powfunc(btn10tothepowerofX, 4);
+							btn10tothepowerofX.setBounds(10, 396, 74, 32);
+							contentPane.add(btn10tothepowerofX);
+							
+							JButton btnLogof10Button = new JButton("log");
+							powfunc(btnLogof10Button, 7);
+							btnLogof10Button.setBounds(10, 427, 74, 32);
+							contentPane.add(btnLogof10Button);
+							
+							JButton btnNaturalLog = new JButton("ln");
+							powfunc(btnNaturalLog, 8);
+							btnNaturalLog.setBounds(10, 458, 74, 32);
+							contentPane.add(btnNaturalLog);
+							
+							JButton btnModularButton = new JButton("mod");
+							OperatorButtonPressed(btnModularButton,7);
+							btnModularButton.setBounds(375, 303, 74, 32);
+							contentPane.add(btnModularButton);
+							
+							JButton btnSquareRootButton = new JButton("\u221A"+"x");
+							powfunc(btnSquareRootButton, 5);
+							btnSquareRootButton.setBounds(83, 303, 74, 32);
+							contentPane.add(btnSquareRootButton);
+							
+							JButton btnCubeRootButton = new JButton("\u221B"+"x");
+							powfunc(btnCubeRootButton, 6);
+							btnCubeRootButton.setBounds(83, 334, 74, 32);
+							contentPane.add(btnCubeRootButton);
+							
+							JButton btn2SquareButton = new JButton("<html>2<sup>x</sup></html>");
+							powfunc(btn2SquareButton, 3);
+							btn2SquareButton.setBounds(83, 396, 74, 32);
+							contentPane.add(btn2SquareButton);
+							
+							JButton btnYRootButton = new JButton("<html><sup>y</sup>\u221Ax</html>");
+							OperatorButtonPressed(btnYRootButton,5);
+							btnYRootButton.setBounds(83, 365, 74, 32);
+							contentPane.add(btnYRootButton);
+							
+							JButton btnLogYofXButton = new JButton("<html>log<sub>y</sub>x</html>");
+							OperatorButtonPressed(btnLogYofXButton,6);
+							btnLogYofXButton.setBounds(83, 427, 74, 32);
+							contentPane.add(btnLogYofXButton);
+							
+					JButton btnEulertothepowerofX = new JButton("<html>e<sup>x</sup></html>");
+					EulerNumber(btnEulertothepowerofX,2);
+					btnEulertothepowerofX.setBounds(83, 458, 74, 32);
+					contentPane.add(btnEulertothepowerofX);
+					
+					JButton btnCombinationButton = new JButton("nCr");
+					btnCombinationButton.setBounds(83, 272, 74, 32);
+					contentPane.add(btnCombinationButton);
+					
+					JButton btnSinButton = new JButton("Sin");
+					btnSinButton.setBounds(10, 241, 74, 32);
+					contentPane.add(btnSinButton);
+					
+					JButton btnCosButton_1 = new JButton("Cos");
+					btnCosButton_1.setBounds(83, 241, 74, 32);
+					contentPane.add(btnCosButton_1);
+					
+					JButton btnTanButton = new JButton("Tan");
+					btnTanButton.setBounds(156, 241, 74, 32);
+					contentPane.add(btnTanButton);
+					
+					JButton btnCotanButton = new JButton("Cotan");
+					btnCotanButton.setBounds(229, 241, 74, 32);
+					contentPane.add(btnCotanButton);
+					
+					JButton btnSecButton = new JButton("Sec");
+					btnSecButton.setBounds(302, 241, 74, 32);
+					contentPane.add(btnSecButton);
+					
+					JButton btnCscButton = new JButton("Csc");
+					btnCscButton.setBounds(375, 241, 74, 32);
+					contentPane.add(btnCscButton);
+					
+					JToggleButton tglbtnNewToggleButton = new JToggleButton("New toggle button");
+					tglbtnNewToggleButton.setBounds(10, 141, 123, 23);
+					contentPane.add(tglbtnNewToggleButton);
+					
+					JToggleButton tglbtnNewToggleButton_1 = new JToggleButton("New toggle button");
+					tglbtnNewToggleButton_1.setBounds(143, 141, 123, 23);
+					contentPane.add(tglbtnNewToggleButton_1);
+						
+		
 			}
-		});}
+		});
+	}
 		
 	public void initiateProgrammerCal(JMenuItem ProgrammerCal) 
 	{
@@ -1050,6 +920,12 @@ public class MainWindow extends JFrame {
 				btnRightShiftButton.setBounds(229, 331, 74, 32);
 				btnLeftShiftButton.setBounds(156, 331, 74, 32);
 				btnModButton.setBounds(302, 486, 74, 32);
+				btnHexAButton.setBounds(83, 331, 74, 32);
+				btnHexBButton.setBounds(83, 362, 74, 32);
+				btnHexDButton.setBounds(83, 424, 74, 32);
+				btnHexCButton.setBounds(83, 393, 74, 32);
+				btnHexEButton.setBounds(83, 455, 74, 32);
+				btnHexFButton.setBounds(83, 486, 74, 32);
 				
 		//Clear, CLear Entry  and Delete Button
 				Clear_DeleteButton();
@@ -1085,156 +961,22 @@ public class MainWindow extends JFrame {
 				btnNOTButton.setBounds(10, 393, 74, 32);
 				contentPane.add(btnNOTButton);
 				
-				btnHexAButton = new JButton("A");
-				btnHexAButton.setBounds(83, 331, 74, 32);
-				contentPane.add(btnHexAButton);
-
-				btnHexBButton = new JButton("B");
-				btnHexBButton.setBounds(83, 362, 74, 32);
-				contentPane.add(btnHexBButton);
-				
-				btnHexDButton = new JButton("D");
-				powfunc(btnHexDButton, 3);
-				btnHexDButton.setBounds(83, 424, 74, 32);
-				contentPane.add(btnHexDButton);
-				
-				btnHexCButton = new JButton("C");
-				OperatorButtonPressed(btnHexCButton,2);
-				btnHexCButton.setBounds(83, 393, 74, 32);
-				contentPane.add(btnHexCButton);
-				
-				btnHexEButton = new JButton("E");
-				OperatorButtonPressed(btnHexEButton,3);
-				btnHexEButton.setBounds(83, 455, 74, 32);
-				contentPane.add(btnHexEButton);
-				
-				btnHexFButton = new JButton("F");
-				EulerNumber(btnHexFButton,2);
-				btnHexFButton.setBounds(83, 486, 74, 32);
-				contentPane.add(btnHexFButton);
-				
 				HEXtextField = new JTextField();
-				DocumentListener HEXdl = new DocumentListener() 
-				{
-					@Override
-					public void removeUpdate(DocumentEvent e) 
-					{
-						
-					}
-					@Override
-					public void insertUpdate(DocumentEvent e) 
-					{
-						textChanged();
-					}
-					@Override
-					public void changedUpdate(DocumentEvent e) 
-					{}
-					
-					private void textChanged() 
-					{
-						Long Hex = Long.parseLong(CalDisplayResult.getText());
-						String Hexstring = Long.toHexString(Hex);
-						HEXtextField.setText(String.format("%2s",Hexstring ));
-					}
-				};
-				Long Hex = Long.parseLong(CalDisplayResult.getText());
-				String Hexstring = Long.toHexString(Hex);
-				HEXtextField.setText(String.format("%2s",Hexstring ));
-				CalDisplayResult.getDocument().addDocumentListener(HEXdl);
 				HEXtextField.setBounds(83, 172, 367, 20);
 				contentPane.add(HEXtextField);
 				HEXtextField.setColumns(10);
 				
 				DECtextField = new JTextField();
-				DocumentListener DECdl = new DocumentListener() 
-				{
-					@Override
-					public void removeUpdate(DocumentEvent e) 
-					{
-						
-					}
-					@Override
-					public void insertUpdate(DocumentEvent e) 
-					{
-						textChanged();
-					}
-					@Override
-					public void changedUpdate(DocumentEvent e) 
-					{}
-					
-					private void textChanged() 
-					{
-						String Decstring = CalDisplayResult.getText();
-						DECtextField.setText(String.format("%2s",Decstring));
-					}
-				};
-				String Decstring = CalDisplayResult.getText();
-				DECtextField.setText(String.format("%2s",Decstring));
-				CalDisplayResult.getDocument().addDocumentListener(DECdl);
 				DECtextField.setColumns(10);
 				DECtextField.setBounds(83, 141, 367, 20);
 				contentPane.add(DECtextField);
 				
 				OCTtextField = new JTextField();
-				DocumentListener OCTdl = new DocumentListener() 
-				{
-					@Override
-					public void removeUpdate(DocumentEvent e) 
-					{
-						
-					}
-					@Override
-					public void insertUpdate(DocumentEvent e) 
-					{
-						textChanged();
-					}
-					@Override
-					public void changedUpdate(DocumentEvent e) 
-					{}
-					
-					private void textChanged() 
-					{
-						Long Oct = Long.parseLong(CalDisplayResult.getText());
-						String Octstring = Long.toOctalString(Oct);
-						OCTtextField.setText(String.format("%2s",Octstring ));
-					}
-				};
-				Long Oct = Long.parseLong(CalDisplayResult.getText());
-				String Octstring = Double.toHexString(Oct);
-				OCTtextField.setText(String.format("%2s",Octstring ));
-				CalDisplayResult.getDocument().addDocumentListener(OCTdl);
 				OCTtextField.setColumns(10);
 				OCTtextField.setBounds(83, 202, 367, 20);
 				contentPane.add(OCTtextField);
 				
 				BINtextField = new JTextField();
-				DocumentListener BINdl = new DocumentListener() 
-				{
-					@Override
-					public void removeUpdate(DocumentEvent e) 
-					{
-						
-					}
-					@Override
-					public void insertUpdate(DocumentEvent e) 
-					{
-						textChanged();
-					}
-					@Override
-					public void changedUpdate(DocumentEvent e) 
-					{}
-					
-					private void textChanged() 
-					{
-						Long Bin = Long.parseUnsignedLong(CalDisplayResult.getText());
-						String Binstring = Long.toBinaryString(Bin);
-						BINtextField.setText(String.format(Binstring));
-					}
-				};
-				Long Bin = Long.parseUnsignedLong(CalDisplayResult.getText());
-				String Binstring = Long.toBinaryString(Bin);
-				BINtextField.setText(String.format("%2s",Binstring ));
-				CalDisplayResult.getDocument().addDocumentListener(BINdl);
 				BINtextField.setColumns(10);
 				BINtextField.setBounds(83, 233, 367, 20);
 				contentPane.add(BINtextField);
@@ -1358,17 +1100,13 @@ public class MainWindow extends JFrame {
 			}
 		});
 		mnFileMenu.add(mntmUnitConvertItem);
+		
 		contentPane = new JPanel();
 		contentPane.setBackground(UIManager.getColor("Button.background"));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		{
-		CalDisplayEngage();
-		setTitle("Scienctific Calculator - Project 1");
-		setBounds(100, 100, 480, 659);
-		
-		}
+	
 	}
 }
 
