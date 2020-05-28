@@ -1,7 +1,6 @@
   
 package Calculators;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -11,49 +10,32 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JTextField;
-import javax.swing.event.*;
 
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
 import java.awt.event.ActionEvent;
-import java.awt.event.*;
 
-import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import java.awt.Color;
 import javax.swing.UIManager;
 import javax.swing.SwingConstants;
-import javax.swing.SwingWorker;
 
 import java.awt.Font;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.Stack;
-import java.awt.SystemColor;
 
-import javax.swing.text.AbstractDocument.Content;
-import javax.swing.JTextPane;
-import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
-import java.awt.GridLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import java.awt.FlowLayout;
-import javax.swing.JToggleButton;
+import javax.swing.JLabel;
+import javax.swing.JComboBox;
 
 public class MainWindow extends JFrame {
 	EvaluateString  Evaluate= new EvaluateString();
 	
-	double firstnum = 0;
-	double secondnum = 0;
 	double result;
+	int ShiftMode=1;
 	int mark=0;
-	int mark2=0;
 	int mode = 10;
-	String operator = "=";
+	int TrigonometryMode = 0;
+	int InvRegInd = 0;
+	String operator ;
 	
 	private JPanel contentPane;
 	private JTextField CalDisplayInput;
@@ -74,6 +56,8 @@ public class MainWindow extends JFrame {
 	private JButton btnButtonEight;
 	private JButton btnButtonNine;
 	private JButton btnPointButton;
+	private JButton btnOpeningParenthesis;
+	private JButton btnClosingParenthesis;
 	//Basic Operator Button
 	private JButton btnPlusButton;
 	private JButton btnMinusButton;
@@ -85,6 +69,7 @@ public class MainWindow extends JFrame {
 	private JButton btnLeftShiftButton;
 	private JButton btnRightShiftButton;
 	private JButton btnANDButton;
+	private JButton btnNOTButton;
 	private JButton btnORButton;
 	private JButton btnNANDButton;
 	private JButton btnNORButton;
@@ -100,9 +85,7 @@ public class MainWindow extends JFrame {
 	private JButton btnClearEntryButton;
 	private JButton btnClearButton;
 	private JButton btnDeleteButton;
-	//Stack
-	static Stack<Double> numbers = new Stack<Double>();
-	static Stack<Long> progLong = new Stack<Long>();
+	
 	//
 
 	
@@ -126,11 +109,8 @@ public class MainWindow extends JFrame {
 	public void RefreshCal() 
 	{
 		contentPane.removeAll();
-		operator = "=";
-		firstnum = 0;
-		secondnum = 0;
+		operator = "/";
 		mark=0;
-		mark2=0;
 		mode = 10;
 	}
 	public void NumberButtonPressed(JButton Button) 
@@ -222,7 +202,7 @@ public class MainWindow extends JFrame {
 	public void CalDisplayEngage() 
 	{
 		CalDisplayInput = new JTextField();
-		CalDisplayInput.setText(null);
+		CalDisplayInput.setText("0");
 		CalDisplayInput.setHorizontalAlignment(SwingConstants.RIGHT);
 		CalDisplayInput.setBackground(UIManager.getColor("Button.background"));
 		contentPane.add(CalDisplayInput);
@@ -280,6 +260,15 @@ public class MainWindow extends JFrame {
 		btnButtonNine = new JButton("9");
 		NumberButtonPressed(btnButtonNine);
 		contentPane.add(btnButtonNine);
+		
+		btnOpeningParenthesis = new JButton("(");
+		NumberButtonPressed(btnOpeningParenthesis);
+		contentPane.add(btnOpeningParenthesis);
+		
+		btnClosingParenthesis = new JButton(")");
+		NumberButtonPressed(btnClosingParenthesis);
+		contentPane.add(btnClosingParenthesis);
+		
 
 	} 
 	//Create clear, clear entry and delete button to be use and reuse in other mode 
@@ -299,10 +288,49 @@ public class MainWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				CalDisplayInput.setText("");
 				CalDisplayResult.setText("0");
-				progLong.clear();
-				numbers.clear();
-				firstnum = 0;
-				secondnum = 0;
+				result = 0;
+			}
+		});
+		contentPane.add(btnClearButton);
+		
+		btnDeleteButton = new JButton("\u232b");
+		btnDeleteButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String bsp = null;
+				if(CalDisplayResult.getText().length()>0) {
+					StringBuilder strB = new StringBuilder(CalDisplayResult.getText());
+					strB.deleteCharAt(CalDisplayResult.getText().length() - 1);
+					bsp = strB.toString();
+					CalDisplayResult.setText(bsp);
+				}
+			}
+		});
+		contentPane.add(btnDeleteButton);
+	}
+	
+	public void Clear_DeleteButton_Prog() 
+	{
+		btnClearEntryButton = new JButton("CE");
+		btnClearEntryButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CalDisplayResult.setText("0");
+				HEXtextField.setText("0");
+				DECtextField.setText("0");
+				OCTtextField.setText("0");
+				BINtextField.setText("0");
+			}
+		});
+		contentPane.add(btnClearEntryButton);
+		
+		btnClearButton = new JButton("C");
+		btnClearButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CalDisplayInput.setText("");
+				CalDisplayResult.setText("0");
+				HEXtextField.setText("0");
+				DECtextField.setText("0");
+				OCTtextField.setText("0");
+				BINtextField.setText("0");
 				result = 0;
 			}
 		});
@@ -360,7 +388,7 @@ public class MainWindow extends JFrame {
 		BitwiseOperatorButtonPressed(btnMultiplyButton,10);
 		contentPane.add(btnMultiplyButton);
 
-		btnDivideButton = new JButton("÷");
+		btnDivideButton = new JButton("/");
 		OperatorButtonPressed(btnDivideButton,11);
 		contentPane.add(btnDivideButton);
 		
@@ -387,6 +415,10 @@ public class MainWindow extends JFrame {
 		btnORButton = new JButton("OR");
 		BitwiseOperatorButtonPressed(btnORButton,2);
 		contentPane.add(btnORButton);
+
+		btnNOTButton = new JButton("NOT");
+		BitwiseOperatorButtonPressed(btnNOTButton,13);
+		contentPane.add(btnNOTButton);
 		
 		btnNANDButton = new JButton("NAND");
 		BitwiseOperatorButtonPressed(btnNANDButton,3);
@@ -467,13 +499,26 @@ public class MainWindow extends JFrame {
 				case 3: operator ="nand";break;
 				case 4: operator ="nor";break;
 				case 5: operator ="xor";break;
-				case 6: operator ="lsh";break;
-				case 7: operator ="rsh";break;
+				case 6: switch(ShiftMode) 
+				{
+					case 1: operator = "alsh";break;
+					case 2: operator = "llsh";break;
+					case 3: operator = "rol(";break;
+					case 4: operator = "crol(";break;
+					}break;
+				case 7: switch(ShiftMode) 
+				{
+					case 1: operator = "arsh";break;
+					case 2: operator = "lrsh";break;
+					case 3: operator = "ror(";break;
+					case 4: operator = "cror(";break;
+				}break;
 				case 8: operator ="+";break;
 				case 9: operator = "-";break;
 				case 10: operator ="*";break;
 				case 11: operator ="/";break;
-				case 12: operator ="mod";break;
+				case 12: operator ="%";break;
+				case 13: operator ="not(";break;
 				}
 				CalDisplayInput.setText(CalDisplayInput.getText()+operator.toString());
 			}
@@ -485,19 +530,16 @@ public class MainWindow extends JFrame {
 		Button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String input = CalDisplayInput.getText();
-				String answer = EvaluateProgString.Eval(input,mode);
+				String answer = EvaluateProgString.Eval(input,mode,mode);
 				CalDisplayResult.setText(answer);
-				//String BINanswer = EvaluateProgString.Eval(input,2);
-				//BINtextField.setText(BINanswer);
-				String DECanswer = EvaluateProgString.Eval(input,10);
+				String BINanswer = EvaluateProgString.Eval(input,mode,2);
+				BINtextField.setText(BINanswer);
+				String DECanswer = EvaluateProgString.Eval(input,mode,10);
 				DECtextField.setText(DECanswer);
-				String OCTanswer = EvaluateProgString.Eval(input,8);
+				String OCTanswer = EvaluateProgString.Eval(input,mode,8);
 				OCTtextField.setText(OCTanswer);
-				String HEXanswer = EvaluateProgString.Eval(input,16);
+				String HEXanswer = EvaluateProgString.Eval(input,mode,16);
 				HEXtextField.setText(HEXanswer);
-				//HEXtextField.setText(EvaluateProgString.Eval(input,16));
-				//OCTtextField.setText(EvaluateProgString.Eval(input,8));
-				//DECtextField.setText(EvaluateProgString.Eval(input,10));
 			}
 		});
 	}
@@ -516,8 +558,32 @@ public class MainWindow extends JFrame {
 				case 5: operator = "yroot";break;
 				case 6: operator = "base log";break;
 				case 7: operator = "mod";break;
+				case 8: operator = "comb";break;
+				case 9: operator = "perm";break;
+				case 10: operator = "abs(";break;
 				}
-				CalDisplayInput.setText(CalDisplayInput.getText()+operator.toString());
+				CalDisplayInput.setText(CalDisplayInput.getText()+" "+operator.toString()+" ");
+			}
+		});
+	}
+	
+	public void TrigonometryButtonPressed(JButton Button,int OpType) 
+	{
+		Button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String trigonometry = null;
+				switch(OpType) 
+				{
+				case 0: trigonometry = "sin";break;
+				case 1: trigonometry = "cos";break;
+				case 2: trigonometry = "tan";break;
+				case 3: trigonometry = "cot";break;
+				case 4: trigonometry = "sec";break;
+				case 5: trigonometry = "csc";break;
+				}
+				if(TrigonometryMode==1) {trigonometry = trigonometry + "h";}
+				if(InvRegInd == 1) {trigonometry =  "a" + trigonometry; }
+				CalDisplayInput.setText(CalDisplayInput.getText() + trigonometry + "(");
 			}
 		});
 	}
@@ -647,14 +713,7 @@ public class MainWindow extends JFrame {
 				contentPane.add(btnSquareButton);
 				
 				JButton btnSquareRootButton = new JButton("\u221A"+"x");
-				btnSquareRootButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						double ops = Double.parseDouble(String.valueOf(CalDisplayResult.getText()));
-						ops = Math.sqrt(ops);
-						CalDisplayInput.setText("sqrt(" + CalDisplayResult.getText() + ")");
-						CalDisplayResult.setText(String.valueOf(ops));
-					}
-				});
+				powfunc(btnSquareRootButton, 5);
 				btnSquareRootButton.setBounds(156, 171, 74, 45);
 				contentPane.add(btnSquareRootButton);
 			}
@@ -666,48 +725,54 @@ public class MainWindow extends JFrame {
 		SciencetificCal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+				setTitle("Sciencetific Calculator - Project 1");
+				setBounds(100, 100, 513, 589);
+			//Refresh main variable
+				RefreshCal();
+				
+			//Set up Calculator display text field
 				
 				CalDisplayEngage();
-				//Set up Calculator display text field		
 				CalDisplayInput.setBounds(10, 11, 440, 37);
 				CalDisplayResult.setBounds(10, 59, 440, 57);
 							
 			//Number Buttons
 				BasicNumberButtonInitiate();
-				btnZeroButton.setBounds(229, 458, 74, 32);
-				btnButtonOne.setBounds(156, 427, 74, 32);
-				btnButtonTwo.setBounds(229, 427, 74, 32);
-				btnButtonThree.setBounds(302, 427, 74, 32);
-				btnButtonFour.setBounds(156, 396, 74, 32);
-				btnButtonFive.setBounds(229, 396, 74, 32);
-				btnButtonSix.setBounds(302, 396, 74, 32);
-				btnButtonSeven.setBounds(156, 365, 74, 32);
-				btnButtonEight.setBounds(229, 365, 74, 32);
-				btnButtonNine.setBounds(302, 365, 74, 32);
+				btnZeroButton.setBounds(229, 410, 74, 32);
+				btnButtonOne.setBounds(156, 379, 74, 32);
+				btnButtonTwo.setBounds(229, 379, 74, 32);
+				btnButtonThree.setBounds(302, 379, 74, 32);
+				btnButtonFour.setBounds(156, 348, 74, 32);
+				btnButtonFive.setBounds(229, 348, 74, 32);
+				btnButtonSix.setBounds(302, 348, 74, 32);
+				btnButtonSeven.setBounds(156, 317, 74, 32);
+				btnButtonEight.setBounds(229, 317, 74, 32);
+				btnButtonNine.setBounds(302, 317, 74, 32);
+				btnOpeningParenthesis.setBounds(156, 286, 74, 32);
+				btnClosingParenthesis.setBounds(229, 286, 74, 32);
 					
 			//Basic Operator Buttons
 				BasicOperatorButtonInitiate();
-				btnDivideButton.setBounds(375, 334, 74, 32);
-				btnMultiplyButton.setBounds(375, 365, 74, 32);
-				btnMinusButton.setBounds(375, 396, 74, 32);
-				btnPlusButton.setBounds(375, 427, 74, 32);
-				btnEqualButton.setBounds(375, 458, 74, 32);
+				btnDivideButton.setBounds(375, 286, 74, 32);
+				btnMultiplyButton.setBounds(375, 317, 74, 32);
+				btnMinusButton.setBounds(375, 348, 74, 32);
+				btnPlusButton.setBounds(375, 379, 74, 32);
+				btnEqualButton.setBounds(375, 410, 74, 32);
 							
 			//Clear, CLear Entry  and Delete Button
 				Clear_DeleteButton();
-				btnClearButton.setBounds(302, 272, 74, 32);
-				btnClearEntryButton.setBounds(229, 272, 74, 32);
-				btnDeleteButton.setBounds(375, 272, 74, 32);
+				btnClearButton.setBounds(302, 224, 74, 32);
+				btnClearEntryButton.setBounds(229, 224, 74, 32);
+				btnDeleteButton.setBounds(375, 224, 74, 32);
 							
 			//Scientific Calculator Buttons
-				JButton btnButtonPermutation = new JButton("nPr");			
-				btnButtonPermutation.setBounds(10, 272, 74, 32);		
+				JButton btnButtonPermutation = new JButton("nPr");
+				OperatorButtonPressed(btnButtonPermutation,9);
+				btnButtonPermutation.setBounds(10, 224, 74, 32);		
 				contentPane.add(btnButtonPermutation);
 							
 				btnPointButton = new JButton(".");
-							
-				btnPointButton.addActionListener(new ActionListener() {
-								
+				btnPointButton.addActionListener(new ActionListener() {	
 				public void actionPerformed(ActionEvent e) {
 					if(!CalDisplayResult.getText().contains(".")) 
 									{
@@ -715,164 +780,209 @@ public class MainWindow extends JFrame {
 									}
 								}
 							});
-							btnPointButton.setBounds(302, 458, 74, 32);	
-							contentPane.add(btnPointButton);
+				btnPointButton.setBounds(302, 410, 74, 32);	
+				contentPane.add(btnPointButton);
 							
-							JButton btnPiButton = new JButton("π");
-							btnPiButton.addActionListener(new ActionListener() {
-								public void actionPerformed(ActionEvent e) {
+				JButton btnPiButton = new JButton("π");
+				btnPiButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
 									CalDisplayResult.setText(String.valueOf(Math.PI));
 								}
 							});
-							btnPiButton.setBounds(156, 458, 74, 32);
-							contentPane.add(btnPiButton);
+				btnPiButton.setBounds(156, 410, 74, 32);
+				contentPane.add(btnPiButton);
 							
-							JButton btnEulersNumberButton = new JButton("e");
-							EulerNumber(btnEulersNumberButton,1);
-							btnEulersNumberButton.setBounds(302, 303, 74, 32);
-							contentPane.add(btnEulersNumberButton);
+				JButton btnEulersNumberButton = new JButton("e");		
+				EulerNumber(btnEulersNumberButton,1);
+				btnEulersNumberButton.setBounds(302, 255, 74, 32);
+				contentPane.add(btnEulersNumberButton);
 							
-							JButton btnDegreeButton = new JButton("°");
-							btnDegreeButton.addActionListener(new ActionListener() {
-								public void actionPerformed(ActionEvent e) {
-									double a = Double.parseDouble(CalDisplayResult.getText());
-									String b = String.format("%6.3e", a);
-									CalDisplayResult.setText(b);
-								}
-							});
-							btnDegreeButton.setBounds(156, 272, 74, 32);
-							contentPane.add(btnDegreeButton);
+				JButton btnDegreeButton = new JButton("°");	
+				btnDegreeButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						double a = Double.parseDouble(CalDisplayResult.getText());
+						String b = String.format("%6.3e", a);
+						CalDisplayResult.setText(b);
+					}
+				});
+				btnDegreeButton.setBounds(156, 224, 74, 32);
+				contentPane.add(btnDegreeButton);
 							
-							JButton btnAbsoluteButton = new JButton("|x|");
-							btnAbsoluteButton.addActionListener(new ActionListener() {
-								public void actionPerformed(ActionEvent e) {
-									double a = Double.parseDouble(CalDisplayResult.getText());
-									CalDisplayResult.setText(String.valueOf(Math.abs(a)));
-								}
-							});
-							btnAbsoluteButton.setBounds(229, 303, 74, 32);
-							contentPane.add(btnAbsoluteButton);
+				JButton btnAbsoluteButton = new JButton("|x|");
+				OperatorButtonPressed(btnAbsoluteButton,10);
+				btnAbsoluteButton.setBounds(229, 255, 74, 32);
+				contentPane.add(btnAbsoluteButton);
 							
-							JButton btnOpeningParenthesis = new JButton("(");
-							btnOpeningParenthesis.setBounds(156, 334, 74, 32);
-							contentPane.add(btnOpeningParenthesis);
+				JButton btnFactorial = new JButton("n!");
+				GetFactorial(btnFactorial);
+				btnFactorial.setBounds(302, 286, 74, 32);
+				contentPane.add(btnFactorial);
 							
-							JButton btnClosingParenthesis = new JButton(")");
-							btnClosingParenthesis.setBounds(229, 334, 74, 32);
-							contentPane.add(btnClosingParenthesis);
+				JButton btnPercentageButton = new JButton("%");		
+				GetPercentage(btnPercentageButton);
+				btnPercentageButton.setBounds(156, 255, 74, 32);
+				contentPane.add(btnPercentageButton);
 							
-							JButton btnFactorial = new JButton("n!");
-							GetFactorial(btnFactorial);
-							btnFactorial.setBounds(302, 334, 74, 32);
-							contentPane.add(btnFactorial);
+				JButton btnSquareButton = new JButton("<html>x<sup>2</sup></html>");
+				powfunc(btnSquareButton, 1);
+				btnSquareButton.setBounds(10, 255, 74, 32);
+				contentPane.add(btnSquareButton);
+				
+				JButton btnCubeButton = new JButton("<html>x<sup>3</sup></html>");
+				powfunc(btnCubeButton, 2);
+				btnCubeButton.setBounds(10, 286, 74, 32);
+				contentPane.add(btnCubeButton);
 							
-							JButton btnPercentageButton = new JButton("%");
-							GetPercentage(btnPercentageButton);
-							btnPercentageButton.setBounds(156, 303, 74, 32);
-							contentPane.add(btnPercentageButton);
+				JButton btnXtothepowerofY = new JButton("<html>x<sup>y</sup></html>");
+				OperatorButtonPressed(btnXtothepowerofY,4);
+				btnXtothepowerofY.setBounds(10, 317, 74, 32);
+				contentPane.add(btnXtothepowerofY);
 							
-							JButton btnSquareButton = new JButton("<html>x<sup>2</sup></html>");
-							powfunc(btnSquareButton, 1);
-							btnSquareButton.setBounds(10, 303, 74, 32);;
-							contentPane.add(btnSquareButton);
+				JButton btn10tothepowerofX = new JButton("<html>10<sup>x</sup></html>");
+				powfunc(btn10tothepowerofX, 4);
+				btn10tothepowerofX.setBounds(10, 348, 74, 32);
+				contentPane.add(btn10tothepowerofX);
 							
-							JButton btnCubeButton = new JButton("<html>x<sup>3</sup></html>");
-							powfunc(btnCubeButton, 2);
-							btnCubeButton.setBounds(10, 334, 74, 32);
-							contentPane.add(btnCubeButton);
+				JButton btnLogof10Button = new JButton("log");
+				powfunc(btnLogof10Button, 7);
+				btnLogof10Button.setBounds(10, 379, 74, 32);
+				contentPane.add(btnLogof10Button);
 							
-							JButton btnXtothepowerofY = new JButton("<html>x<sup>y</sup></html>");
-							OperatorButtonPressed(btnXtothepowerofY,4);
-							btnXtothepowerofY.setBounds(10, 365, 74, 32);
-							contentPane.add(btnXtothepowerofY);
+				JButton btnNaturalLog = new JButton("ln");
+				powfunc(btnNaturalLog, 8);
+				btnNaturalLog.setBounds(10, 410, 74, 32);
+				contentPane.add(btnNaturalLog);
 							
-							JButton btn10tothepowerofX = new JButton("<html>10<sup>x</sup></html>");
-							powfunc(btn10tothepowerofX, 4);
-							btn10tothepowerofX.setBounds(10, 396, 74, 32);
-							contentPane.add(btn10tothepowerofX);
+				JButton btnModularButton = new JButton("mod");
+				OperatorButtonPressed(btnModularButton,7);
+				btnModularButton.setBounds(375, 255, 74, 32);
+				contentPane.add(btnModularButton);
 							
-							JButton btnLogof10Button = new JButton("log");
-							powfunc(btnLogof10Button, 7);
-							btnLogof10Button.setBounds(10, 427, 74, 32);
-							contentPane.add(btnLogof10Button);
+				JButton btnSquareRootButton = new JButton("\u221A"+"x");
+				powfunc(btnSquareRootButton, 5);
+				btnSquareRootButton.setBounds(83, 255, 74, 32);
+				contentPane.add(btnSquareRootButton);
 							
-							JButton btnNaturalLog = new JButton("ln");
-							powfunc(btnNaturalLog, 8);
-							btnNaturalLog.setBounds(10, 458, 74, 32);
-							contentPane.add(btnNaturalLog);
+				JButton btnCubeRootButton = new JButton("\u221B"+"x");
+				powfunc(btnCubeRootButton, 6);
+				btnCubeRootButton.setBounds(83, 286, 74, 32);
+				contentPane.add(btnCubeRootButton);
 							
-							JButton btnModularButton = new JButton("mod");
-							OperatorButtonPressed(btnModularButton,7);
-							btnModularButton.setBounds(375, 303, 74, 32);
-							contentPane.add(btnModularButton);
+				JButton btn2SquareButton = new JButton("<html>2<sup>x</sup></html>");
+				powfunc(btn2SquareButton, 3);
+				btn2SquareButton.setBounds(83, 348, 74, 32);
+				contentPane.add(btn2SquareButton);
 							
-							JButton btnSquareRootButton = new JButton("\u221A"+"x");
-							powfunc(btnSquareRootButton, 5);
-							btnSquareRootButton.setBounds(83, 303, 74, 32);
-							contentPane.add(btnSquareRootButton);
+				JButton btnYRootButton = new JButton("<html><sup>y</sup>\u221Ax</html>");
+				OperatorButtonPressed(btnYRootButton,5);
+				btnYRootButton.setBounds(83, 317, 74, 32);
+				contentPane.add(btnYRootButton);
 							
-							JButton btnCubeRootButton = new JButton("\u221B"+"x");
-							powfunc(btnCubeRootButton, 6);
-							btnCubeRootButton.setBounds(83, 334, 74, 32);
-							contentPane.add(btnCubeRootButton);
-							
-							JButton btn2SquareButton = new JButton("<html>2<sup>x</sup></html>");
-							powfunc(btn2SquareButton, 3);
-							btn2SquareButton.setBounds(83, 396, 74, 32);
-							contentPane.add(btn2SquareButton);
-							
-							JButton btnYRootButton = new JButton("<html><sup>y</sup>\u221Ax</html>");
-							OperatorButtonPressed(btnYRootButton,5);
-							btnYRootButton.setBounds(83, 365, 74, 32);
-							contentPane.add(btnYRootButton);
-							
-							JButton btnLogYofXButton = new JButton("<html>log<sub>y</sub>x</html>");
-							OperatorButtonPressed(btnLogYofXButton,6);
-							btnLogYofXButton.setBounds(83, 427, 74, 32);
-							contentPane.add(btnLogYofXButton);
-							
-					JButton btnEulertothepowerofX = new JButton("<html>e<sup>x</sup></html>");
-					EulerNumber(btnEulertothepowerofX,2);
-					btnEulertothepowerofX.setBounds(83, 458, 74, 32);
-					contentPane.add(btnEulertothepowerofX);
-					
-					JButton btnCombinationButton = new JButton("nCr");
-					btnCombinationButton.setBounds(83, 272, 74, 32);
-					contentPane.add(btnCombinationButton);
-					
-					JButton btnSinButton = new JButton("Sin");
-					btnSinButton.setBounds(10, 241, 74, 32);
-					contentPane.add(btnSinButton);
-					
-					JButton btnCosButton_1 = new JButton("Cos");
-					btnCosButton_1.setBounds(83, 241, 74, 32);
-					contentPane.add(btnCosButton_1);
-					
-					JButton btnTanButton = new JButton("Tan");
-					btnTanButton.setBounds(156, 241, 74, 32);
-					contentPane.add(btnTanButton);
-					
-					JButton btnCotanButton = new JButton("Cotan");
-					btnCotanButton.setBounds(229, 241, 74, 32);
-					contentPane.add(btnCotanButton);
-					
-					JButton btnSecButton = new JButton("Sec");
-					btnSecButton.setBounds(302, 241, 74, 32);
-					contentPane.add(btnSecButton);
-					
-					JButton btnCscButton = new JButton("Csc");
-					btnCscButton.setBounds(375, 241, 74, 32);
-					contentPane.add(btnCscButton);
-					
-					JToggleButton tglbtnNewToggleButton = new JToggleButton("New toggle button");
-					tglbtnNewToggleButton.setBounds(10, 141, 123, 23);
-					contentPane.add(tglbtnNewToggleButton);
-					
-					JToggleButton tglbtnNewToggleButton_1 = new JToggleButton("New toggle button");
-					tglbtnNewToggleButton_1.setBounds(143, 141, 123, 23);
-					contentPane.add(tglbtnNewToggleButton_1);
+				JButton btnLogYofXButton = new JButton("<html>log<sub>y</sub>x</html>");
+				OperatorButtonPressed(btnLogYofXButton,6);
+				btnLogYofXButton.setBounds(83, 379, 74, 32);
+				contentPane.add(btnLogYofXButton);
 						
-		
+				JButton btnEulertothepowerofX = new JButton("<html>e<sup>x</sup></html>");
+				EulerNumber(btnEulertothepowerofX,2);
+				btnEulertothepowerofX.setBounds(83, 410, 74, 32);
+				contentPane.add(btnEulertothepowerofX);
+					
+				JButton btnCombinationButton = new JButton("nCr");
+				OperatorButtonPressed(btnCombinationButton,8);
+				btnCombinationButton.setBounds(83, 224, 74, 32);
+				contentPane.add(btnCombinationButton);
+					
+				JButton btnSinButton = new JButton("Sin");
+				TrigonometryButtonPressed(btnSinButton,0);
+				btnSinButton.setBounds(10, 193, 74, 32);
+				contentPane.add(btnSinButton);
+					
+				JButton btnCosButton = new JButton("Cos");
+				TrigonometryButtonPressed(btnCosButton,1);
+				btnCosButton.setBounds(83, 193, 74, 32);
+				contentPane.add(btnCosButton);
+					
+				JButton btnTanButton = new JButton("Tan");
+				TrigonometryButtonPressed(btnTanButton,2);
+				btnTanButton.setBounds(156, 193, 74, 32);
+				contentPane.add(btnTanButton);
+					
+				JButton btnCotanButton = new JButton("Cotan");
+				TrigonometryButtonPressed(btnCotanButton,3);
+				btnCotanButton.setBounds(229, 193, 74, 32);
+				contentPane.add(btnCotanButton);
+				
+				JButton btnSecButton = new JButton("Sec");
+				TrigonometryButtonPressed(btnSecButton,4);
+				btnSecButton.setBounds(302, 193, 74, 32);
+				contentPane.add(btnSecButton);
+					
+				JButton btnCscButton = new JButton("Csc");
+				TrigonometryButtonPressed(btnCscButton,5);
+				btnCscButton.setBounds(375, 193, 74, 32);
+				contentPane.add(btnCscButton);
+				
+				JRadioButton rdbtnHybperbolicRadioButton = new JRadioButton("Hyperbolic");
+				rdbtnHybperbolicRadioButton.addActionListener(new ActionListener() 
+				{
+					public void actionPerformed(ActionEvent ae) 
+					{
+						TrigonometryMode = 1;
+					}
+				});
+				rdbtnHybperbolicRadioButton.setBounds(93, 137, 80, 23);
+				contentPane.add(rdbtnHybperbolicRadioButton);
+				
+				JRadioButton rdbtnCircleButton = new JRadioButton("Circle");
+				rdbtnCircleButton.setSelected(true);
+				if(rdbtnCircleButton.isSelected())TrigonometryMode = 0;
+				rdbtnCircleButton.addActionListener(new ActionListener() 
+				{
+					public void actionPerformed(ActionEvent ae) 
+					{
+						TrigonometryMode = 0;
+					}
+				});
+				rdbtnCircleButton.setBounds(93, 163, 80, 23);
+				contentPane.add(rdbtnCircleButton);
+				
+				JRadioButton rdbtnRegButton = new JRadioButton("Regular");
+				rdbtnRegButton.setSelected(true);
+				if(rdbtnRegButton.isSelected())InvRegInd = 0;
+				rdbtnRegButton.addActionListener(new ActionListener() 
+				{
+					public void actionPerformed(ActionEvent ae) 
+					{
+						InvRegInd = 0;
+					}
+				});
+				rdbtnRegButton.setBounds(175, 137, 80, 23);
+				contentPane.add(rdbtnRegButton);
+				
+				JRadioButton rdbtnInvButton = new JRadioButton("Inverse");
+				rdbtnInvButton.addActionListener(new ActionListener() 
+				{
+					public void actionPerformed(ActionEvent ae) 
+					{
+						InvRegInd = 1;
+					}
+				});
+				rdbtnInvButton.setBounds(175, 163, 80, 23);
+				contentPane.add(rdbtnInvButton);
+				
+				JLabel lblTrigonometryLabel = new JLabel("Trigonometry");
+				lblTrigonometryLabel.setBounds(20, 127, 80, 33);
+				contentPane.add(lblTrigonometryLabel);
+				
+				ButtonGroup HypCir = new ButtonGroup();
+				HypCir.add(rdbtnHybperbolicRadioButton);
+				HypCir.add(rdbtnCircleButton);
+				
+				ButtonGroup InvReg = new ButtonGroup();
+				InvReg.add(rdbtnRegButton);
+				InvReg.add(rdbtnInvButton);
+				
 			}
 		});
 	}
@@ -904,6 +1014,8 @@ public class MainWindow extends JFrame {
 				btnButtonSeven.setBounds(156, 393, 74, 32);
 				btnButtonEight.setBounds(229, 393, 74, 32);
 				btnButtonNine.setBounds(302, 393, 74, 32);
+				btnOpeningParenthesis.setBounds(156, 362, 74, 32);
+				btnClosingParenthesis.setBounds(229, 362, 74, 32);
 				
 		//Operator Buttons 
 				programmerOperatorButtonInitiate();	
@@ -914,6 +1026,7 @@ public class MainWindow extends JFrame {
 				btnEqualButton.setBounds(375, 486, 74, 32);
 				btnANDButton.setBounds(10, 331, 74, 32);
 				btnORButton.setBounds(10, 362, 74, 32);
+				btnNOTButton.setBounds(10, 393, 74, 32);
 				btnNANDButton.setBounds(10, 424, 74, 32);
 				btnNORButton.setBounds(10, 455, 74, 32);
 				btnXORButton.setBounds(10, 486, 74, 32);
@@ -928,7 +1041,7 @@ public class MainWindow extends JFrame {
 				btnHexFButton.setBounds(83, 486, 74, 32);
 				
 		//Clear, CLear Entry  and Delete Button
-				Clear_DeleteButton();
+				Clear_DeleteButton_Prog();
 				btnClearButton.setBounds(302, 331, 74, 32);
 				btnClearEntryButton.setBounds(302, 362, 74, 32);
 				btnDeleteButton.setBounds(375, 331, 74, 32);
@@ -946,20 +1059,6 @@ public class MainWindow extends JFrame {
 				});
 				btnNegateButton.setBounds(156, 486, 74, 32);
 				contentPane.add(btnNegateButton);
-				
-
-				JButton btnOpeningParenthesis = new JButton("(");
-				btnOpeningParenthesis.setBounds(156, 362, 74, 32);
-				contentPane.add(btnOpeningParenthesis);
-				
-				JButton btnClosingParenthesis = new JButton(")");
-				btnClosingParenthesis.setBounds(229, 362, 74, 32);
-				contentPane.add(btnClosingParenthesis);
-				
-				JButton btnNOTButton = new JButton("NOT");
-				OperatorButtonPressed(btnNOTButton,1);
-				btnNOTButton.setBounds(10, 393, 74, 32);
-				contentPane.add(btnNOTButton);
 				
 				HEXtextField = new JTextField();
 				HEXtextField.setBounds(83, 172, 367, 20);
@@ -984,24 +1083,54 @@ public class MainWindow extends JFrame {
 				JRadioButton ArithmeticShift = new JRadioButton("Arithmetic Shift");
 				ArithmeticShift.setFont(new Font("Tahoma", Font.PLAIN, 10));
 				ArithmeticShift.setHorizontalAlignment(SwingConstants.LEFT);
+				ArithmeticShift.addActionListener(new ActionListener() 
+				{
+					public void actionPerformed(ActionEvent ae) 
+					{
+						ShiftMode = 1;
+					}
+				});
+				ArithmeticShift.setSelected(true);
+				if(ArithmeticShift.isSelected())ShiftMode=1;
 				ArithmeticShift.setBounds(10, 271, 97, 23);
 				contentPane.add(ArithmeticShift);
 				
 				JRadioButton LogicalShift = new JRadioButton("Logical Shift");
 				LogicalShift.setFont(new Font("Tahoma", Font.PLAIN, 10));
 				LogicalShift.setHorizontalAlignment(SwingConstants.LEFT);
+				LogicalShift.addActionListener(new ActionListener() 
+				{
+					public void actionPerformed(ActionEvent ae) 
+					{
+						ShiftMode = 2;
+					}
+				});
 				LogicalShift.setBounds(10, 301, 97, 23);
 				contentPane.add(LogicalShift);
 				
 				JRadioButton RotateCirShift = new JRadioButton("Rotate Circular Shift");
 				RotateCirShift.setFont(new Font("Tahoma", Font.PLAIN, 10));
 				RotateCirShift.setHorizontalAlignment(SwingConstants.LEFT);
+				RotateCirShift.addActionListener(new ActionListener() 
+				{
+					public void actionPerformed(ActionEvent ae) 
+					{
+						ShiftMode = 3;
+					}
+				});
 				RotateCirShift.setBounds(109, 271, 123, 23);
 				contentPane.add(RotateCirShift);
 				
 				JRadioButton RotateThrCarCirShift = new JRadioButton("Rotate Throught Carry Circular Shift");
 				RotateThrCarCirShift.setFont(new Font("Tahoma", Font.PLAIN, 10));
 				RotateThrCarCirShift.setHorizontalAlignment(SwingConstants.LEFT);
+				RotateThrCarCirShift.addActionListener(new ActionListener() 
+				{
+					public void actionPerformed(ActionEvent ae) 
+					{
+						ShiftMode = 4;
+					}
+				});
 				RotateThrCarCirShift.setBounds(109, 301, 194, 23);
 				contentPane.add(RotateThrCarCirShift);
 				
@@ -1046,6 +1175,8 @@ public class MainWindow extends JFrame {
 						NumbModeSelector(3);
 					}
 				});
+				DECButton.setSelected(true);
+				if(DECButton.isSelected())NumbModeSelector(3);
 				DECButton.setBounds(10, 140, 53, 23);
 				contentPane.add(DECButton);
 				
@@ -1063,6 +1194,88 @@ public class MainWindow extends JFrame {
 			}
 		});
 	}
+	
+	public void initiateUnitConvertCal(JMenuItem UnitConvertCal) 
+	{
+		UnitConvertCal.addActionListener(new ActionListener() {
+			@SuppressWarnings({ "unchecked", "rawtypes" })
+			public void actionPerformed(ActionEvent arg0) {
+		
+				setTitle("Unit Converter Calculator - Project 1");
+				setBounds(100, 100, 444, 578);
+				
+				String[] convertertype = 
+					{"Volume","Length","Weight & Mass","Temperatur","Energy"};
+				String[] VolumeUnitType = 
+					{"Mililiters","Cubic centimeters","Liters","Cubic meters"};
+				String[] LengthUnitType = 
+					{"Nanometers","Microns","Millimeters","Meters","Kilometers"
+							,"Inches","Feet","Yards","Miles","Nautical Miles"};
+				String[] MassUnitType = 
+					{"Carats","Milligrams","Centigrams","Decigrams","Grams","Dekagrams"
+							,"Hectograms","Kilograms","Metric tonnes","Ounces","Pounds"
+							,"Stone","Short tons(US)","Long tons(UK)"};
+				String[] Temperature =
+					{"Celsius","Fahrenheit","Kelvin"};
+				String[] Energy = 
+					{"Electron volts","Joules","Kilojoules","Thermal calories"
+							,"Food calories","Foot-pounds","British thermal units"};
+				
+		//Refresh main variable 
+				RefreshCal();
+				
+		//Set up Calculator display text field
+				CalDisplayEngage();
+				CalDisplayInput.setBounds(10, 285, 147, 57);
+				CalDisplayResult.setBounds(10, 121, 147, 57);
+				
+		//Clear, CLear Entry  and Delete Button
+				Clear_DeleteButton();
+				btnClearEntryButton.setBounds(200, 121, 74, 45);
+				btnClearButton.setBounds(273, 121, 74, 45);
+				btnDeleteButton.setBounds(346, 121, 74, 45);
+								
+		//Number Buttons
+				BasicNumberButtonInitiate();				
+				btnZeroButton.setBounds(273, 297, 74, 45);		
+				btnButtonOne.setBounds(200, 253, 74, 45);				
+				btnButtonTwo.setBounds(273, 253, 74, 45);				
+				btnButtonThree.setBounds(346, 253, 74, 45);			
+				btnButtonFour.setBounds(200, 209, 74, 45);				
+				btnButtonFive.setBounds(273, 209, 74, 45);				
+				btnButtonSix.setBounds(346, 209, 74, 45);				
+				btnButtonSeven.setBounds(200, 165, 74, 45);				
+				btnButtonEight.setBounds(273, 165, 74, 45);				
+				btnButtonNine.setBounds(346, 165, 74, 45);				
+
+				btnPointButton = new JButton(".");
+				btnPointButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						if(!CalDisplayResult.getText().contains(".")) 
+						{
+							CalDisplayResult.setText(CalDisplayResult.getText() + btnPointButton.getText());
+						}
+					}
+				});
+				btnPointButton.setBounds(346, 297, 74, 45);	
+				contentPane.add(btnPointButton);
+				
+				JComboBox ConverterComboBox = new JComboBox(convertertype);
+				ConverterComboBox.setSelectedIndex(0);
+				ConverterComboBox.setBounds(127, 29, 107, 29);
+				contentPane.add(ConverterComboBox);
+				
+				JComboBox comboBox_1 = new JComboBox();
+				comboBox_1.setBounds(50, 189, 107, 29);
+				contentPane.add(comboBox_1);
+				
+				JComboBox comboBox_2 = new JComboBox();
+				comboBox_2.setBounds(50, 357, 107, 29);
+				contentPane.add(comboBox_2);
+			}
+		});
+	}
+	
 	/**
 	 * Create the frame.
 	 */
@@ -1071,7 +1284,7 @@ public class MainWindow extends JFrame {
 		setBackground(Color.WHITE);
 		setTitle("Calculator - Project 1");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 483, 659);
+		setBounds(100, 100, 444, 578);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -1092,13 +1305,7 @@ public class MainWindow extends JFrame {
 		mnFileMenu.add(mntmProgramerItem);
 		
 		JMenuItem mntmUnitConvertItem = new JMenuItem("Unit convert");
-		mntmUnitConvertItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				setTitle("Unit convert Calculator - Project 1");
-				setBounds(100, 100, 884, 367);
-				CalDisplayInput.setBounds(10, 11, 494, 37);
-			}
-		});
+		initiateUnitConvertCal(mntmUnitConvertItem);
 		mnFileMenu.add(mntmUnitConvertItem);
 		
 		contentPane = new JPanel();
@@ -1106,7 +1313,8 @@ public class MainWindow extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-	
+		
+		
 	}
 }
 

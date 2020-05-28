@@ -3,7 +3,7 @@ package Calculators;
 public class Token {
 	String op;
 	float val;
-	long valprog;
+	int valprog;
 	String func;
 	int precidence;
 	enum OpType {BINARY_LEFT_ASSOC,BINARY_RIGHT_ASSOC};
@@ -33,7 +33,7 @@ public class Token {
 		val = f;
 	}
 	
-	Token(long f)
+	Token(int f)
 	{
 		ttype = TokenType.NUMBER;
 		valprog = f;

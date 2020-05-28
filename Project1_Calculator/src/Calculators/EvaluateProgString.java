@@ -10,7 +10,7 @@ public class EvaluateProgString {
 			'0','1','2','3','4','5','6','7','8','9'};
 	
 	@SuppressWarnings("deprecation")
-	public static String TokenizeInfix(String expression) 
+	public static String TokenizeInfix(String expression, int mode) 
 	{
 		char[] token = expression.toCharArray();
 		String numstr,func;
@@ -32,10 +32,12 @@ public class EvaluateProgString {
 				i--;
 				switch(func) 
 				{
-				case"and":case"or":case"not":case"nand":case"nor":case"xor":
-				case"lsh":case"rsh": case"mod":
+				case"and":case"or":case"nand":case"nor":case"xor":
+				case"alsh":case"arsh":case"llsh":case"lrsh":
 					InfixQueue.addLast(new Token(func.toString(), Token.OpType.BINARY_RIGHT_ASSOC, 50));
         		break;
+				case"not":case"ror":case"rol":
+					InfixQueue.addLast(new Token(func.toString()));break;
 				}
 			}break;
 			case 'A' :case 'B' :case 'C' :case 'D' :case 'E' :case 'F':
@@ -43,7 +45,7 @@ public class EvaluateProgString {
         	case '5' :case '6' :case '7' :case '8' :case '9' :case '.':
         		{
     				numstr=new String();
-    				long nums = 0 ;
+    				int nums = 0 ;
     				if(token[i]=='u') numstr=numstr+'-';
     				else
     				numstr=numstr+Character.toString(token[i]);
@@ -51,8 +53,14 @@ public class EvaluateProgString {
     				while (i<expression.length() && isNumeric(expression.charAt(i)))
     					{numstr=numstr+Character.toString(expression.charAt(i));i++;}
     				i--;
-    				nums = Long.decode(numstr);
-					InfixQueue.addLast(new Token(new Long(nums).longValue()));
+    				switch(mode) 
+    				{
+    				case 2:nums = Integer.valueOf(numstr, 2);break;
+    				case 8:nums = Integer.parseInt(numstr, 8);break;
+    				case 10: nums = Integer.parseInt(numstr, 10);break;
+    				case 16: nums = Integer.parseInt(numstr, 16);break; 
+    				}
+					InfixQueue.addLast(new Token(new Integer(nums).intValue()));
 				}break;
         	
         	case '+': case '-': 
@@ -66,9 +74,7 @@ public class EvaluateProgString {
 				else 
 					InfixQueue.addLast(new Token(String.valueOf(token[i]), Token.OpType.BINARY_LEFT_ASSOC, 50));
     		}break;
-        	case'%':					
-        		InfixQueue.addLast(new Token(String.valueOf(token[i])));break;
-        	case '*': case '/':
+        	case '*': case '/':case '%':
         		InfixQueue.addLast(new Token(String.valueOf(token[i]), Token.OpType.BINARY_LEFT_ASSOC, 60));
         		break;
         	case '(' : InfixQueue.addLast(new Token(Token.TokenType.BRACKET_LEFT));break;
@@ -155,9 +161,9 @@ public class EvaluateProgString {
 	{
 		if (PostfixQueue.size()==0) return "0";
 		Token t;
-		long a1;
+		int a1;
 		LinkedList<Token> postfixQueue = new LinkedList<Token>(PostfixQueue);
-		Stack<Long> rpevalStack = new Stack<Long>();
+		Stack<Integer> rpevalStack = new Stack<Integer>();
 		//rpevalStack.clear();
 		while (!postfixQueue.isEmpty()) 
 		{
@@ -190,13 +196,27 @@ public class EvaluateProgString {
 						}break;
 					case "*":rpevalStack.push(a1*rpevalStack.pop());break;
 					case "/":rpevalStack.push(rpevalStack.pop()/a1);break;
+					case "and":rpevalStack.push(a1&rpevalStack.pop());break;
+					case "or":rpevalStack.push(a1|rpevalStack.pop());break;
+					case "xor":rpevalStack.push(a1|rpevalStack.pop());break;
+					case "%":rpevalStack.push(rpevalStack.pop()%a1);break;
+					case "nand":rpevalStack.push(~(a1&rpevalStack.pop()));break;
+					case "nor":rpevalStack.push(~(a1|rpevalStack.pop()));break;
+					case "alsh":rpevalStack.push(rpevalStack.pop()<<a1);break;
+					case "arsh":rpevalStack.push(rpevalStack.pop()>>a1);break;
+					case "llsh":rpevalStack.push(rpevalStack.pop()<<a1);break;
+					case "lrsh":rpevalStack.push(rpevalStack.pop()>>>a1);break;
 					}break;
 			case FUNC: 
 				if(rpevalStack.isEmpty()) {postfixQueue.addLast(t);break;}
 				a1 = rpevalStack.pop();
 				switch(t.func) 
 				{
-					case "%":rpevalStack.push(a1/100);break;
+				case "not":rpevalStack.push(~a1);break;
+				case "rol":rpevalStack.push(a1<<1);break;
+				case "ror":rpevalStack.push(a1>>1);break;
+				case "crol":rpevalStack.push(a1<<1);break;
+				case "cror":rpevalStack.push(a1>>>1);break;
 				}
 			default:break;
 			}
@@ -204,23 +224,23 @@ public class EvaluateProgString {
 		return rpevalStack.pop().toString();
 	}
 	
-	static String Eval(String str,int mode) 
+	static String Eval(String str,int mode,int mode2) 
 	{//
 		//return
-				TokenizeInfix(str);
+				TokenizeInfix(str,mode);
 				//
 				//return
 				ConvertToPostfix();
 	//
 				String sout = null;
 				String s = Evaluate();
-				long out = Long.parseLong(s);
-				switch(mode) 
+				int out = Integer.parseInt(s);
+				switch(mode2) 
 				{
-					case 2:sout = Long.toBinaryString(out);break;
-					case 8:sout = Long.toOctalString(out);break;
-					case 10:sout = Long.toString(out);break;
-					case 16:sout = Long.toHexString(out);break;
+					case 2:sout = Integer.toBinaryString(out);break;
+					case 8:sout = Integer.toOctalString(out);break;
+					case 10:sout = Integer.toString(out);break;
+					case 16:sout = Integer.toHexString(out);break;
 				}
 				return sout;
 	}
@@ -231,7 +251,7 @@ public class EvaluateProgString {
       // System.out.println(EvaluateString.Eval("10.5 + 2 ^ 6")); 
        // System.out.print(EvaluateString.Eval(" 10.5+----2^6"));
         //System.out.print(EvaluateString.Eval(" 10.5+-(-2)^6"));
-        System.out.println(EvaluateProgString.Eval("5a+b",16)); 
+        System.out.println(EvaluateProgString.Eval("5a+b",10,16)); 
         //System.out.println(EvaluateString.Eval("100.8^9 * ( 2 + 12 )")); 
        // System.out.println(EvaluateString.Eval("100 * ( 2 + 12 ) / 14")); 
     } 

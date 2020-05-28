@@ -16,6 +16,15 @@ public class EvaluateString
 		return(n==1||n==0) ? 1:n*factorial(n-1);
 	}
 	
+	public static float combination(float n, float k) 
+	{
+		return(factorial(n)/factorial(n-k)*factorial(k));
+	}
+	public static float permutation(float n, float k) 
+	{
+		return(factorial(n)/factorial(n-k));
+	}
+	
 	@SuppressWarnings("deprecation")
 	public static String TokenizeInfix(String expression) 
 	{
@@ -40,14 +49,17 @@ public class EvaluateString
 				i--;
 				switch(func) 
 				{
-				case"cuber":case"sqrr":case"cube":case"sqr":case"log":case"ln":
-				case"sin":case"cos":case"tan":
+				case"cuber":case"sqrr":case"cube":case"sqr":case"log":case"ln":case"abs":
+				case"fact":case"sin":case"cos":case"tan":case"cot":case"sec":case"csc":
+				case"sinh":case"cosh":case"tanh":case"coth":case"sech":case"csch":
+				case"asin":case"aos":case"atan":case"acot":case"asec":case"acsc":
+				case"asinh":case"acosh":case"atanh":case"acoth":case"asech":case"acsch":
 					InfixQueue.addLast(new Token(func.toString()));break;
 				case"e":
 					InfixQueue.addLast(new Token(new Float(Math.exp(1))));break;
 				case"π":        		
 					InfixQueue.addLast(new Token(new Float(Math.PI)));break;
-				case"logb":
+				case"logb":case"comb":case"perm":
 					InfixQueue.addLast(new Token(func.toString(), Token.OpType.BINARY_RIGHT_ASSOC, 100));
         		break;
 				}
@@ -182,29 +194,19 @@ public class EvaluateString
 				a1 = rpevalStack.pop();
 				switch(t.op) 
 				{
-					case "+": switch(t.otype) 
-						{
-						case BINARY_LEFT_ASSOC:
-							if(rpevalStack.isEmpty())
-								rpevalStack.push(a1); 
+					case "+": 
+							if(rpevalStack.isEmpty())rpevalStack.push(a1); 
 								else rpevalStack.push(rpevalStack.pop()+a1);break;
-						//case UNARY_PREFIX:rpevalStack.push(+rpevalStack.pop());break;
-						default:break;
-					}break;
 					case "-":
-						switch(t.otype) 
-						{
-						case BINARY_LEFT_ASSOC:
 							if(rpevalStack.isEmpty())rpevalStack.push(-a1); 
 								else rpevalStack.push(rpevalStack.pop()-a1);break;
-						//case UNARY_PREFIX:rpevalStack.push(-rpevalStack.pop());break;
-						default:break;
-						}break;
 					case "*":rpevalStack.push(a1*rpevalStack.pop());break;
 					case "/":rpevalStack.push(rpevalStack.pop()/a1);break;
 					case "^":rpevalStack.push(new Float(Math.pow(rpevalStack.pop(),a1)));break;
 					case "√":rpevalStack.push(new Float(Math.pow(a1,1/rpevalStack.pop())));break;
 					case "logb":rpevalStack.push(new Float(Math.log(a1)/Math.log(rpevalStack.pop())));break;
+					case "comb":rpevalStack.push(new Float(combination(a1,rpevalStack.pop())));break;
+					case "perm":rpevalStack.push(new Float(permutation(a1,rpevalStack.pop())));break;
 				}break;
 			case FUNC: 
 				if(rpevalStack.isEmpty()) {postfixQueue.addLast(t);break;}
@@ -217,7 +219,29 @@ public class EvaluateString
 					case "sqrr":rpevalStack.push(new Float(Math.sqrt(a1)));break;
 					case "cube":rpevalStack.push(new Float(Math.pow(3,a1)));break;
 					case "sqr":rpevalStack.push(new Float(Math.pow(2,a1)));break;
-					case "!":rpevalStack.push(new Float(factorial(a1)));break;
+					case "fact":rpevalStack.push(new Float(factorial(a1)));break;
+					case "sin":rpevalStack.push(new Float(Math.sin(Math.toRadians(a1))));break;
+					case "cos":rpevalStack.push(new Float(Math.cos(Math.toRadians(a1))));break;
+					case "tan":rpevalStack.push(new Float(Math.tan(Math.toRadians(a1))));break;
+					case "cot":rpevalStack.push(new Float(1/Math.tan(Math.toRadians(a1))));break;
+					case "csc":rpevalStack.push(new Float(1/Math.sin(Math.toRadians(a1))));break;
+					case "sec":rpevalStack.push(new Float(1/Math.cos(Math.toRadians(a1))));break;
+					case "sinh":rpevalStack.push(new Float(Math.sinh(Math.toRadians(a1))));break;
+					case "cosh":rpevalStack.push(new Float(Math.cosh(Math.toRadians(a1))));break;
+					case "tanh":rpevalStack.push(new Float(Math.tanh(Math.toRadians(a1))));break;
+					case "coth":rpevalStack.push(new Float(1/Math.tanh(Math.toRadians(a1))));break;
+					case "csch":rpevalStack.push(new Float(1/Math.sinh(Math.toRadians(a1))));break;
+					case "sech":rpevalStack.push(new Float(1/Math.cosh(Math.toRadians(a1))));break;
+					case "asin":rpevalStack.push(new Float(Math.asin(Math.toRadians(a1))));break;
+					case "acos":rpevalStack.push(new Float(Math.acos(Math.toRadians(a1))));break;
+					case "atan":rpevalStack.push(new Float(Math.atan(Math.toRadians(a1))));break;
+					case "acot":rpevalStack.push(new Float(Math.atan(1/Math.toRadians(a1))));break;
+					case "asinh":rpevalStack.push(new Float(Math.log(a1+Math.sqrt(a1*a1+1))));break;
+					case "acosh":rpevalStack.push(new Float(Math.log(a1+Math.sqrt(a1*a1-1))));break;
+					case "atanh":rpevalStack.push(new Float((1/2)*Math.log((1+a1)/(1-a1))));break;
+					case "acoth":rpevalStack.push(new Float((1/2)*Math.log((a1+1)/(a1-1))));break;
+					case "asech":rpevalStack.push(new Float(Math.log((1+Math.sqrt(1-a1*a1)/a1))));break;
+					case "acsch":rpevalStack.push(new Float(Math.log(((1/a1)+Math.sqrt((1/a1*a1)+1)))));break;
 					case "%":rpevalStack.push(a1/100);break;
 				}
 			default:break;
