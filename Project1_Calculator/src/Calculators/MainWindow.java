@@ -12,9 +12,11 @@ import javax.swing.JMenu;
 import javax.swing.JTextField;
 
 import java.awt.event.ActionListener;
+import java.util.Iterator;
 import java.awt.event.ActionEvent;
 
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import java.awt.Color;
 import javax.swing.UIManager;
@@ -85,8 +87,9 @@ public class MainWindow extends JFrame {
 	private JButton btnClearEntryButton;
 	private JButton btnClearButton;
 	private JButton btnDeleteButton;
-	
-	//
+	//Converter ComboBox
+	private JComboBox<String> comboBox_1;
+	private JComboBox<String> comboBox_2;
 
 	
 	/**
@@ -540,6 +543,7 @@ public class MainWindow extends JFrame {
 				OCTtextField.setText(OCTanswer);
 				String HEXanswer = EvaluateProgString.Eval(input,mode,16);
 				HEXtextField.setText(HEXanswer);
+				mark = 1 ;
 			}
 		});
 	}
@@ -623,6 +627,7 @@ public class MainWindow extends JFrame {
 				String input = CalDisplayInput.getText();
 				String answer = EvaluateString.Eval(input);
 				CalDisplayResult.setText(answer);
+				mark = 1;
 			}
 		});
 	}
@@ -679,9 +684,9 @@ public class MainWindow extends JFrame {
 				btnPointButton = new JButton(".");
 				btnPointButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						if(!CalDisplayResult.getText().contains(".")) 
+						if(!CalDisplayInput.getText().contains(".")) 
 						{
-							CalDisplayResult.setText(CalDisplayResult.getText() + btnPointButton.getText());
+							CalDisplayInput.setText(CalDisplayInput.getText() + btnPointButton.getText());
 						}
 					}
 				});
@@ -775,11 +780,11 @@ public class MainWindow extends JFrame {
 				btnPointButton.addActionListener(new ActionListener() {	
 				public void actionPerformed(ActionEvent e) {
 					if(!CalDisplayResult.getText().contains(".")) 
-									{
-										CalDisplayResult.setText(CalDisplayResult.getText() + btnPointButton.getText());
-									}
-								}
-							});
+							{
+								CalDisplayInput.setText(CalDisplayInput.getText() + btnPointButton.getText());
+							}
+						}
+					});
 				btnPointButton.setBounds(302, 410, 74, 32);	
 				contentPane.add(btnPointButton);
 							
@@ -1195,21 +1200,97 @@ public class MainWindow extends JFrame {
 		});
 	}
 	
-	public void initiateUnitConvertCal(JMenuItem UnitConvertCal) 
+	public void initiateVolumeConvertCal(JMenuItem UnitConvertCal) 
 	{
 		UnitConvertCal.addActionListener(new ActionListener() {
-			@SuppressWarnings({ "unchecked", "rawtypes" })
+			@SuppressWarnings("unchecked")
 			public void actionPerformed(ActionEvent arg0) {
-		
-				setTitle("Unit Converter Calculator - Project 1");
-				setBounds(100, 100, 444, 578);
+				setTitle("Volume Converter Calculator - Project 1");
+				setBounds(100, 100, 444, 378);
 				
-				String[] convertertype = 
-					{"Volume","Length","Weight & Mass","Temperatur","Energy"};
 				String[] VolumeUnitType = 
-					{"Mililiters","Cubic centimeters","Liters","Cubic meters"};
+					{"Teaspoons","Tablespoons","Fluid ounces","Cups","Pints","Quarts","Gallons","Cubic yards",
+						"Cubic inches","Cubic feet","Milliliter","Liters","Cubic meters"};
+		//Refresh main variable 
+				RefreshCal();
+				
+		//Set up Calculator display text field
+				CalDisplayEngage();
+				CalDisplayInput.setBounds(10, 21, 147, 57);
+				CalDisplayResult.setBounds(10, 185, 147, 57);
+		//Set up combo box
+				comboBox_1 = new JComboBox<String>(VolumeUnitType);
+				comboBox_1.setSelectedItem("Teaspoons");
+				comboBox_1.setBounds(50, 89, 107, 29);
+				contentPane.add(comboBox_1);
+				
+				comboBox_2 = new JComboBox<String>(VolumeUnitType);
+				comboBox_2.setSelectedItem("Teaspoons");
+				comboBox_2.setBounds(50, 257, 107, 29);
+				contentPane.add(comboBox_2);
+		//Clear, CLear Entry  and Delete Button
+				Clear_DeleteButton();
+				btnClearEntryButton.setBounds(200, 21, 74, 45);
+				btnClearButton.setBounds(273, 21, 74, 45);
+				btnDeleteButton.setBounds(346, 21, 74, 45);
+								
+		//Number Buttons
+				BasicNumberButtonInitiate();				
+				btnZeroButton.setBounds(273, 197, 74, 45);		
+				btnButtonOne.setBounds(200, 153, 74, 45);				
+				btnButtonTwo.setBounds(273, 153, 74, 45);				
+				btnButtonThree.setBounds(346, 153, 74, 45);			
+				btnButtonFour.setBounds(200, 109, 74, 45);				
+				btnButtonFive.setBounds(273, 109, 74, 45);				
+				btnButtonSix.setBounds(346, 109, 74, 45);				
+				btnButtonSeven.setBounds(200, 65, 74, 45);				
+				btnButtonEight.setBounds(273, 65, 74, 45);				
+				btnButtonNine.setBounds(346, 65, 74, 45);				
+
+				btnPointButton = new JButton(".");
+				btnPointButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						if(!CalDisplayInput.getText().contains(".")) 
+						{
+							CalDisplayInput.setText(CalDisplayInput.getText() + btnPointButton.getText());
+						}
+					}
+				});
+				btnPointButton.setBounds(346, 197, 74, 45);	
+				contentPane.add(btnPointButton);
+				
+				JButton btnConvButton = new JButton("=");
+				btnConvButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						if(!CalDisplayResult.getText().contains(".")) 
+						{
+							double res = 
+									VolumeConverter.convert(Double.parseDouble(CalDisplayInput.getText()),
+											comboBox_1.getSelectedItem().toString(),
+											comboBox_2.getSelectedItem().toString()
+									);
+							CalDisplayResult.setText(String.valueOf(res));
+							mark = 1;
+						}
+					}
+				});
+				btnConvButton.setBounds(200, 197, 74, 45);	
+				contentPane.add(btnConvButton);
+				
+			}
+		});
+	}
+	
+	public void initiateLengthConvertCal(JMenuItem UnitConvertCal) 
+	{
+		UnitConvertCal.addActionListener(new ActionListener() {
+			@SuppressWarnings("unchecked")
+			public void actionPerformed(ActionEvent arg0) {
+				setTitle("Volume Converter Calculator - Project 1");
+				setBounds(100, 100, 444, 378);
+				
 				String[] LengthUnitType = 
-					{"Nanometers","Microns","Millimeters","Meters","Kilometers"
+					{"Nanometers","Microns","Millimeters","Centimeters","Meters","Kilometers"
 							,"Inches","Feet","Yards","Miles","Nautical Miles"};
 				String[] MassUnitType = 
 					{"Carats","Milligrams","Centigrams","Decigrams","Grams","Dekagrams"
@@ -1220,71 +1301,86 @@ public class MainWindow extends JFrame {
 				String[] Energy = 
 					{"Electron volts","Joules","Kilojoules","Thermal calories"
 							,"Food calories","Foot-pounds","British thermal units"};
-				
 		//Refresh main variable 
 				RefreshCal();
 				
 		//Set up Calculator display text field
 				CalDisplayEngage();
-				CalDisplayInput.setBounds(10, 285, 147, 57);
-				CalDisplayResult.setBounds(10, 121, 147, 57);
+				CalDisplayInput.setBounds(10, 21, 147, 57);
+				CalDisplayResult.setBounds(10, 185, 147, 57);
+		//Set up combo box
+				comboBox_1 = new JComboBox(LengthUnitType);
+				comboBox_1.setSelectedItem("Centimeters");
+				comboBox_1.setBounds(50, 89, 107, 29);
+				contentPane.add(comboBox_1);
 				
+				comboBox_2 = new JComboBox(LengthUnitType);
+				comboBox_2.setSelectedItem("Centimeters");
+				comboBox_2.setBounds(50, 257, 107, 29);
+				contentPane.add(comboBox_2);
 		//Clear, CLear Entry  and Delete Button
 				Clear_DeleteButton();
-				btnClearEntryButton.setBounds(200, 121, 74, 45);
-				btnClearButton.setBounds(273, 121, 74, 45);
-				btnDeleteButton.setBounds(346, 121, 74, 45);
+				btnClearEntryButton.setBounds(200, 21, 74, 45);
+				btnClearButton.setBounds(273, 21, 74, 45);
+				btnDeleteButton.setBounds(346, 21, 74, 45);
 								
 		//Number Buttons
 				BasicNumberButtonInitiate();				
-				btnZeroButton.setBounds(273, 297, 74, 45);		
-				btnButtonOne.setBounds(200, 253, 74, 45);				
-				btnButtonTwo.setBounds(273, 253, 74, 45);				
-				btnButtonThree.setBounds(346, 253, 74, 45);			
-				btnButtonFour.setBounds(200, 209, 74, 45);				
-				btnButtonFive.setBounds(273, 209, 74, 45);				
-				btnButtonSix.setBounds(346, 209, 74, 45);				
-				btnButtonSeven.setBounds(200, 165, 74, 45);				
-				btnButtonEight.setBounds(273, 165, 74, 45);				
-				btnButtonNine.setBounds(346, 165, 74, 45);				
+				btnZeroButton.setBounds(273, 197, 74, 45);		
+				btnButtonOne.setBounds(200, 153, 74, 45);				
+				btnButtonTwo.setBounds(273, 153, 74, 45);				
+				btnButtonThree.setBounds(346, 153, 74, 45);			
+				btnButtonFour.setBounds(200, 109, 74, 45);				
+				btnButtonFive.setBounds(273, 109, 74, 45);				
+				btnButtonSix.setBounds(346, 109, 74, 45);				
+				btnButtonSeven.setBounds(200, 65, 74, 45);				
+				btnButtonEight.setBounds(273, 65, 74, 45);				
+				btnButtonNine.setBounds(346, 65, 74, 45);				
 
 				btnPointButton = new JButton(".");
 				btnPointButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						if(!CalDisplayResult.getText().contains(".")) 
+						if(!CalDisplayInput.getText().contains(".")) 
 						{
-							CalDisplayResult.setText(CalDisplayResult.getText() + btnPointButton.getText());
+							CalDisplayInput.setText(CalDisplayInput.getText() + btnPointButton.getText());
 						}
 					}
 				});
-				btnPointButton.setBounds(346, 297, 74, 45);	
+				btnPointButton.setBounds(346, 197, 74, 45);	
 				contentPane.add(btnPointButton);
 				
-				JComboBox ConverterComboBox = new JComboBox(convertertype);
-				ConverterComboBox.setSelectedIndex(0);
-				ConverterComboBox.setBounds(127, 29, 107, 29);
-				contentPane.add(ConverterComboBox);
+				JButton btnConvButton = new JButton("=");
+				btnConvButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						if(!CalDisplayResult.getText().contains(".")) 
+						{
+							double res = 
+									LengthConverter.convert(Double.parseDouble(CalDisplayInput.getText()),
+											comboBox_1.getSelectedItem().toString(),
+											comboBox_2.getSelectedItem().toString()
+									);
+							CalDisplayResult.setText(String.valueOf(res));
+							mark = 1;
+						}
+					}
+				});
+				btnConvButton.setBounds(200, 197, 74, 45);	
+				contentPane.add(btnConvButton);
 				
-				JComboBox comboBox_1 = new JComboBox();
-				comboBox_1.setBounds(50, 189, 107, 29);
-				contentPane.add(comboBox_1);
-				
-				JComboBox comboBox_2 = new JComboBox();
-				comboBox_2.setBounds(50, 357, 107, 29);
-				contentPane.add(comboBox_2);
 			}
 		});
 	}
 	
 	/**
 	 * Create the frame.
+	 * @return 
 	 */
 	public MainWindow() {
 		
 		setBackground(Color.WHITE);
 		setTitle("Calculator - Project 1");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 444, 578);
+		setBounds(100, 100, 453, 364);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -1304,16 +1400,31 @@ public class MainWindow extends JFrame {
 		initiateProgrammerCal(mntmProgramerItem );
 		mnFileMenu.add(mntmProgramerItem);
 		
-		JMenuItem mntmUnitConvertItem = new JMenuItem("Unit convert");
-		initiateUnitConvertCal(mntmUnitConvertItem);
-		mnFileMenu.add(mntmUnitConvertItem);
+		JMenu mnConvertMenu = new JMenu("Converter");
+		mnFileMenu.add(mnConvertMenu);
 		
+		JMenuItem mntmVolumeMenuItem = new JMenuItem("Volume");
+		initiateVolumeConvertCal(mntmVolumeMenuItem);
+		mnConvertMenu.add(mntmVolumeMenuItem);
+		
+		JMenuItem mntmLengthMenuItem = new JMenuItem("Length");
+		initiateLengthConvertCal(mntmLengthMenuItem);
+		mnConvertMenu.add(mntmLengthMenuItem);
+		
+		JMenuItem mntmWeightMenuItem = new JMenuItem("Weight and Mass");
+		mnConvertMenu.add(mntmWeightMenuItem);
+		
+		JMenuItem mntmTemperatureMenuItem = new JMenuItem("Temperature");
+		mnConvertMenu.add(mntmTemperatureMenuItem);
+		
+		JMenuItem mntmEnergyMenuItem = new JMenuItem("Energy");
+		mnConvertMenu.add(mntmEnergyMenuItem);
+
 		contentPane = new JPanel();
 		contentPane.setBackground(UIManager.getColor("Button.background"));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
 		
 	}
 }

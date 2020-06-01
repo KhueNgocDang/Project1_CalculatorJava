@@ -19,16 +19,16 @@ public class LengthConverter {
 	{
 		switch(unit) 
 		{
-		case "in": factor = inch_to_meter;break;
-		case "ft": factor = foot_to_meter;break;
-		case "mi": factor = mile_to_meter;break;
-		case "mm": factor = mm_to_meter;break;
-		case "cm": factor = cm_to_meter;break;
-		case "km": factor = km_to_meter;break;
-		case "yd": factor = yd_to_meter;break;
-		case "nm": factor = nm_to_meter;break;
-		case "mc": factor = mc_to_meter;break;
-		case "na": factor = naticamiles_to_meter;break;
+		case "Inches": factor = inch_to_meter;break;
+		case "Feet": factor = foot_to_meter;break;
+		case "Miles": factor = mile_to_meter;break;
+		case "Millimeters": factor = mm_to_meter;break;
+		case "Centimeters": factor = cm_to_meter;break;
+		case "Kilometers": factor = km_to_meter;break;
+		case "Yards": factor = yd_to_meter;break;
+		case "Nanometers": factor = nm_to_meter;break;
+		case "Microns": factor = mc_to_meter;break;
+		case "Nautical Miles": factor = naticamiles_to_meter;break;
 		}
 	}
 	
