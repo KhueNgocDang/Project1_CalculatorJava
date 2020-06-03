@@ -12,11 +12,9 @@ import javax.swing.JMenu;
 import javax.swing.JTextField;
 
 import java.awt.event.ActionListener;
-import java.util.Iterator;
 import java.awt.event.ActionEvent;
 
 import javax.swing.ButtonGroup;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import java.awt.Color;
 import javax.swing.UIManager;
@@ -30,6 +28,8 @@ import javax.swing.JComboBox;
 
 public class MainWindow extends JFrame {
 	EvaluateString  Evaluate= new EvaluateString();
+	EvaluateProgString EvaluateProg = new EvaluateProgString();
+	
 	
 	double result;
 	int ShiftMode=1;
@@ -1203,7 +1203,6 @@ public class MainWindow extends JFrame {
 	public void initiateVolumeConvertCal(JMenuItem UnitConvertCal) 
 	{
 		UnitConvertCal.addActionListener(new ActionListener() {
-			@SuppressWarnings("unchecked")
 			public void actionPerformed(ActionEvent arg0) {
 				setTitle("Volume Converter Calculator - Project 1");
 				setBounds(100, 100, 444, 378);
@@ -1286,7 +1285,7 @@ public class MainWindow extends JFrame {
 		UnitConvertCal.addActionListener(new ActionListener() {
 			@SuppressWarnings("unchecked")
 			public void actionPerformed(ActionEvent arg0) {
-				setTitle("Volume Converter Calculator - Project 1");
+				setTitle("Length Converter Calculator - Project 1");
 				setBounds(100, 100, 444, 378);
 				
 				String[] LengthUnitType = 

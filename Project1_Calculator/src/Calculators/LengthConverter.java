@@ -51,14 +51,5 @@ public class LengthConverter {
 		double converted = to.fromMeters(meters);
 		return converted;
 	}
-	public static void main(String[] args) 
-    { 
-		
-      // System.out.println(EvaluateString.Eval("10.5 + 2 ^ 6")); 
-       // System.out.print(EvaluateString.Eval(" 10.5+----2^6"));
-        //System.out.print(EvaluateString.Eval(" 10.5+-(-2)^6"));
-        System.out.println(LengthConverter.convert(20,"in","yd")); 
-        //System.out.println(EvaluateString.Eval("100.8^9 * ( 2 + 12 )")); 
-       // System.out.println(EvaluateString.Eval("100 * ( 2 + 12 ) / 14")); 
-    } 
+	
 }
