@@ -1203,10 +1203,6 @@ public class MainWindow extends JFrame {
 	public void initiateVolumeConvertCal(JMenuItem UnitConvertCal) 
 	{
 		UnitConvertCal.addActionListener(new ActionListener() {
-<<<<<<< HEAD
-			
-=======
->>>>>>> branch 'master' of https://github.com/KhueNgocDang/Project1_CalculatorJava
 			public void actionPerformed(ActionEvent arg0) {
 				setTitle("Volume Converter Calculator - Project 1");
 				setBounds(100, 100, 444, 378);
