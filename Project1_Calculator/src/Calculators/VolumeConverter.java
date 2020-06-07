@@ -31,17 +31,17 @@ public class VolumeConverter {
 		case "Cubic feet": factor = cubfeet_to_liter;break;
 		case "Cubic yards": factor = cubyard_to_liter;break;
 		case "Milliliter": factor = ml_to_liter;break;
-		case "Cubic meters": factor = cubm_to_liter;break;
+		case "Cubic liters": factor = cubm_to_liter;break;
 		case "Liters": factor = 1;
 		}
 	}
 	
-	public double fromMeters(double measurement) 
+	public double fromliters(double measurement) 
 	{
 		return (measurement/factor);
 	}
 	
-	public double toMeters(double measurement) 
+	public double toliters(double measurement) 
 	{
 		return (measurement*factor);
 	}
@@ -51,8 +51,8 @@ public class VolumeConverter {
 		VolumeConverter from = new VolumeConverter(fromUnit);
 		VolumeConverter to = new VolumeConverter(toUnit);
 		
-		double meters = from.toMeters(measurement);
-		double converted = to.fromMeters(meters);
+		double liters = from.toliters(measurement);
+		double converted = to.fromliters(liters);
 		return converted;
 	}
 	public static void main(String[] args) 
