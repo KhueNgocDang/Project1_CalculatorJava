@@ -26,6 +26,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 
+@SuppressWarnings("serial")
 public class MainWindow extends JFrame {
 	EvaluateString  Evaluate= new EvaluateString();
 	EvaluateProgString EvaluateProg = new EvaluateProgString();
@@ -1283,7 +1284,7 @@ public class MainWindow extends JFrame {
 	public void initiateLengthConvertCal(JMenuItem UnitConvertCal) 
 	{
 		UnitConvertCal.addActionListener(new ActionListener() {
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings({ "unchecked", "rawtypes" })
 			public void actionPerformed(ActionEvent arg0) {
 				setTitle("Length Converter Calculator - Project 1");
 				setBounds(100, 100, 444, 378);
@@ -1365,7 +1366,7 @@ public class MainWindow extends JFrame {
 	public void initiateMassConvertCal(JMenuItem UnitConvertCal) 
 	{
 		UnitConvertCal.addActionListener(new ActionListener() {
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings({ "unchecked", "rawtypes" })
 			public void actionPerformed(ActionEvent arg0) {
 				setTitle("Mass and Weight Converter Calculator - Project 1");
 				setBounds(100, 100, 444, 378);
@@ -1448,6 +1449,90 @@ public class MainWindow extends JFrame {
 			}
 		});
 	}
+	
+	public void initiateTemperatureConvertCal(JMenuItem UnitConvertCal) 
+	{
+		UnitConvertCal.addActionListener(new ActionListener() {
+			@SuppressWarnings({ "unchecked", "rawtypes" })
+			public void actionPerformed(ActionEvent arg0) {
+				setTitle("Mass and Weight Converter Calculator - Project 1");
+				setBounds(100, 100, 444, 378);
+				
+				String[] Temperature =
+					{"Celsius","Fahrenheit","Kelvin"};
+				String[] Energy = 
+					{"Electron volts","Joules","Kilojoules","Thermal calories"
+							,"Food calories","Foot-pounds","British thermal units"};
+		//Refresh main variable 
+				RefreshCal();
+				
+		//Set up Calculator display text field
+				CalDisplayEngage();
+				CalDisplayInput.setBounds(10, 21, 147, 57);
+				CalDisplayResult.setBounds(10, 185, 147, 57);
+		//Set up combo box
+				comboBox_1 = new JComboBox(Temperature);
+				comboBox_1.setSelectedItem("Centimeters");
+				comboBox_1.setBounds(50, 89, 107, 29);
+				contentPane.add(comboBox_1);
+				
+				comboBox_2 = new JComboBox(Temperature);
+				comboBox_2.setSelectedItem("Centimeters");
+				comboBox_2.setBounds(50, 257, 107, 29);
+				contentPane.add(comboBox_2);
+		//Clear, CLear Entry  and Delete Button
+				Clear_DeleteButton();
+				btnClearEntryButton.setBounds(200, 21, 74, 45);
+				btnClearButton.setBounds(273, 21, 74, 45);
+				btnDeleteButton.setBounds(346, 21, 74, 45);
+								
+		//Number Buttons
+				BasicNumberButtonInitiate();				
+				btnZeroButton.setBounds(273, 197, 74, 45);		
+				btnButtonOne.setBounds(200, 153, 74, 45);				
+				btnButtonTwo.setBounds(273, 153, 74, 45);				
+				btnButtonThree.setBounds(346, 153, 74, 45);			
+				btnButtonFour.setBounds(200, 109, 74, 45);				
+				btnButtonFive.setBounds(273, 109, 74, 45);				
+				btnButtonSix.setBounds(346, 109, 74, 45);				
+				btnButtonSeven.setBounds(200, 65, 74, 45);				
+				btnButtonEight.setBounds(273, 65, 74, 45);				
+				btnButtonNine.setBounds(346, 65, 74, 45);				
+
+				btnPointButton = new JButton(".");
+				btnPointButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						if(!CalDisplayInput.getText().contains(".")) 
+						{
+							CalDisplayInput.setText(CalDisplayInput.getText() + btnPointButton.getText());
+						}
+					}
+				});
+				btnPointButton.setBounds(346, 197, 74, 45);	
+				contentPane.add(btnPointButton);
+				
+				JButton btnConvButton = new JButton("=");
+				btnConvButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						if(!CalDisplayResult.getText().contains(".")) 
+						{
+							double res = 
+									MassConverter.convert(Double.parseDouble(CalDisplayInput.getText()),
+											comboBox_1.getSelectedItem().toString(),
+											comboBox_2.getSelectedItem().toString()
+									);
+							CalDisplayResult.setText(String.valueOf(res));
+							mark = 1;
+						}
+					}
+				});
+				btnConvButton.setBounds(200, 197, 74, 45);	
+				contentPane.add(btnConvButton);
+				
+			}
+		});
+	}
+	
 	
 	/**
 	 * Create the frame.

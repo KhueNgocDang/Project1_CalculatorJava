@@ -25,6 +25,7 @@ public class EvaluateString
 		return(factorial(n)/factorial(n-k));
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static String TokenizeInfix(String expression) 
 	{
 		char[] token = expression.toCharArray();
@@ -173,6 +174,7 @@ public class EvaluateString
 		return PostfixQueue.toString();
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static String Evaluate() 
 	{
 		if (PostfixQueue.size()==0) return "";
