@@ -9,7 +9,6 @@ public class EvaluateProgString {
 	static char[] num= {'A','B','C','D','E','F',
 			'0','1','2','3','4','5','6','7','8','9'};
 	
-	@SuppressWarnings("deprecation")
 	public static String TokenizeInfix(String expression, int mode) 
 	{
 		char[] token = expression.toCharArray();
@@ -245,14 +244,4 @@ public class EvaluateProgString {
 				return sout;
 	}
 
-	public static void main(String[] args) 
-    { 
-		
-      // System.out.println(EvaluateString.Eval("10.5 + 2 ^ 6")); 
-       // System.out.print(EvaluateString.Eval(" 10.5+----2^6"));
-        //System.out.print(EvaluateString.Eval(" 10.5+-(-2)^6"));
-        System.out.println(EvaluateProgString.Eval("5a+b",10,16)); 
-        //System.out.println(EvaluateString.Eval("100.8^9 * ( 2 + 12 )")); 
-       // System.out.println(EvaluateString.Eval("100 * ( 2 + 12 ) / 14")); 
-    } 
 }
