@@ -1590,7 +1590,7 @@ public class MainWindow extends JFrame {
 						if(!CalDisplayResult.getText().contains(".")) 
 						{
 							double res = 
-									TemperatureConverter.convert(Double.parseDouble(CalDisplayInput.getText()),
+									EnergyConverter.convert(Double.parseDouble(CalDisplayInput.getText()),
 											comboBox_1.getSelectedItem().toString(),
 											comboBox_2.getSelectedItem().toString()
 									);
@@ -1654,6 +1654,7 @@ public class MainWindow extends JFrame {
 		mnConvertMenu.add(mntmTemperatureMenuItem);
 		
 		JMenuItem mntmEnergyMenuItem = new JMenuItem("Energy");
+		initiateEnergyConvertCal(mntmEnergyMenuItem);
 		mnConvertMenu.add(mntmEnergyMenuItem);
 
 		contentPane = new JPanel();
