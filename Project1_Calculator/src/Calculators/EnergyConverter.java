@@ -2,13 +2,13 @@ package Calculators;
 
 public class EnergyConverter {
 
-	private double volts_to_joules = 0.2;
-	private double kilojoules_to_joules = 10;
-	private double Tcalories_to_joules = 0.1;
+	private double volts_to_joules = 1.602177e-19;
+	private double kilojoules_to_joules = 1000;
+	private double Tcalories_to_joules = 4.184;
 	private double joules_to_joules = 1;
-	private double Fcalories_to_joules = 0.001;
-	private double Footpounds_to_joules = 0.01;
-	private double British_thermal_units_to_joules = 1000;
+	private double Fcalories_to_joules = 4184;
+	private double Footpounds_to_joules = 1.355818;
+	private double British_thermal_units_to_joules = 1055.056;
 	
 	private double factor;
 	
