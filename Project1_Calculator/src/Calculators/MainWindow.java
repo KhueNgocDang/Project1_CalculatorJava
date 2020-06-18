@@ -225,51 +225,51 @@ public class MainWindow extends JFrame {
 	//Create basic number button to be use and reuse in other modes of the calculator
 	public void BasicNumberButtonInitiate() 
 	{	
-		btnZeroButton = new JButton("0");
+		btnZeroButton = new JButton("\u0030");
 		NumberButtonPressed(btnZeroButton);
 		contentPane.add(btnZeroButton);
 		
-		btnButtonOne = new JButton("1");
+		btnButtonOne = new JButton("\u0031");
 		NumberButtonPressed(btnButtonOne);
 		contentPane.add(btnButtonOne);
 		
-		btnButtonTwo = new JButton("2");
+		btnButtonTwo = new JButton("\u0032");
 		NumberButtonPressed(btnButtonTwo);
 		contentPane.add(btnButtonTwo);
 		
-		btnButtonThree = new JButton("3");
+		btnButtonThree = new JButton("\u0033");
 		NumberButtonPressed(btnButtonThree);
 		contentPane.add(btnButtonThree);
 
-		btnButtonFour = new JButton("4");
+		btnButtonFour = new JButton("\u0034");
 		NumberButtonPressed(btnButtonFour);
 		contentPane.add(btnButtonFour);
 		
-		btnButtonFive = new JButton("5");
+		btnButtonFive = new JButton("\u0035");
 		NumberButtonPressed(btnButtonFive);
 		contentPane.add(btnButtonFive);
 		
-		btnButtonSix = new JButton("6");
+		btnButtonSix = new JButton("\u0036");
 		NumberButtonPressed(btnButtonSix);
 		contentPane.add(btnButtonSix);
 		
-		btnButtonSeven = new JButton("7");
+		btnButtonSeven = new JButton("\u0037");
 		NumberButtonPressed(btnButtonSeven);
 		contentPane.add(btnButtonSeven);
 		
-		btnButtonEight = new JButton("8");
+		btnButtonEight = new JButton("\u0038");
 		NumberButtonPressed(btnButtonEight);
 		contentPane.add(btnButtonEight);
 		
-		btnButtonNine = new JButton("9");
+		btnButtonNine = new JButton("\u0039");
 		NumberButtonPressed(btnButtonNine);
 		contentPane.add(btnButtonNine);
 		
-		btnOpeningParenthesis = new JButton("(");
+		btnOpeningParenthesis = new JButton("\u0028");
 		NumberButtonPressed(btnOpeningParenthesis);
 		contentPane.add(btnOpeningParenthesis);
 		
-		btnClosingParenthesis = new JButton(")");
+		btnClosingParenthesis = new JButton("\u0029");
 		NumberButtonPressed(btnClosingParenthesis);
 		contentPane.add(btnClosingParenthesis);
 		
@@ -357,50 +357,50 @@ public class MainWindow extends JFrame {
 	//Create basic operator button to be use and reuse in other modes of the calculator
 	public void BasicOperatorButtonInitiate() 
 	{
-		btnPlusButton = new JButton("+");
+		btnPlusButton = new JButton("\u002B");
 		OperatorButtonPressed(btnPlusButton,0);
 		contentPane.add(btnPlusButton);
 		
-		btnMinusButton = new JButton("-");
+		btnMinusButton = new JButton("\u002D");
 		OperatorButtonPressed(btnMinusButton,1);
 		contentPane.add(btnMinusButton);
 		
-		btnMultiplyButton = new JButton("×");
+		btnMultiplyButton = new JButton("\u00d7");
 		OperatorButtonPressed(btnMultiplyButton,2);
 		contentPane.add(btnMultiplyButton);
 
-		btnDivideButton = new JButton("÷");
+		btnDivideButton = new JButton("\u00f7");
 		OperatorButtonPressed(btnDivideButton,3);
 		contentPane.add(btnDivideButton);
 		
-		btnEqualButton = new JButton("=");
+		btnEqualButton = new JButton("\u003D");
 		EqualButtonPressed(btnEqualButton);
 		contentPane.add(btnEqualButton);
 	}
 	
 	public void programmerOperatorButtonInitiate() 
 	{
-		btnPlusButton = new JButton("+");
+		btnPlusButton = new JButton("\u002B");
 		BitwiseOperatorButtonPressed(btnPlusButton,8);
 		contentPane.add(btnPlusButton);
 		
-		btnMinusButton = new JButton("-");
+		btnMinusButton = new JButton("\u002D");
 		BitwiseOperatorButtonPressed(btnMinusButton,9);
 		contentPane.add(btnMinusButton);
 		
-		btnMultiplyButton = new JButton("×");
+		btnMultiplyButton = new JButton("\u00d7");
 		BitwiseOperatorButtonPressed(btnMultiplyButton,10);
 		contentPane.add(btnMultiplyButton);
 
-		btnDivideButton = new JButton("/");
+		btnDivideButton = new JButton("\u00f7");
 		OperatorButtonPressed(btnDivideButton,11);
 		contentPane.add(btnDivideButton);
 		
-		btnEqualButton = new JButton("=");
+		btnEqualButton = new JButton("\u003D");
 		EqualBitwiseButtonPressed(btnEqualButton);
 		contentPane.add(btnEqualButton);
 		
-		btnModButton = new JButton("%");
+		btnModButton = new JButton("\u0025");
 		BitwiseOperatorButtonPressed(btnModButton,12);
 		contentPane.add(btnModButton);
 		
@@ -568,6 +568,7 @@ public class MainWindow extends JFrame {
 				case 10: operator = "abs(";break;
 				}
 				CalDisplayInput.setText(CalDisplayInput.getText()+" "+operator.toString()+" ");
+				mark = 0;
 			}
 		});
 	}

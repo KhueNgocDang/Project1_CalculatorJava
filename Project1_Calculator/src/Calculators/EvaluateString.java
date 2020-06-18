@@ -261,14 +261,4 @@ public class EvaluateString
 				return Evaluate();
 	}
 
-	public static void main(String[] args) 
-    { 
-		
-      // System.out.println(EvaluateString.Eval("10.5 + 2 ^ 6")); 
-       // System.out.print(EvaluateString.Eval(" 10.5+----2^6"));
-        //System.out.print(EvaluateString.Eval(" 10.5+-(-2)^6"));
-        System.out.println(EvaluateString.Eval("9!+(2*π)^2+38-65/e")); 
-        //System.out.println(EvaluateString.Eval("100.8^9 * ( 2 + 12 )")); 
-       // System.out.println(EvaluateString.Eval("100 * ( 2 + 12 ) / 14")); 
-    } 
 }
