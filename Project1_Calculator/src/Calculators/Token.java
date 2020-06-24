@@ -6,7 +6,7 @@ public class Token {
 	int valprog;
 	String func;
 	int precidence;
-	enum OpType {BINARY_LEFT_ASSOC,BINARY_RIGHT_ASSOC};
+	enum OpType {BINARY_LEFT_ASSOC,BINARY_RIGHT_ASSOC,UNARY_PREFIX,UNARY_POSTFIX};
 	enum TokenType {NUMBER,OPERATOR,FUNC,BRACKET_LEFT,BRACKET_RIGHT};
 	enum FuncType{PREFIX,POSTFIX};
 	OpType otype;
@@ -44,7 +44,6 @@ public class Token {
 		if (t == TokenType.BRACKET_LEFT|| t == TokenType.BRACKET_RIGHT) ttype = t;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public String toString() 
 	{
 		switch(ttype) 
@@ -53,7 +52,7 @@ public class Token {
 		case FUNC: return func;
 		case NUMBER: 
 			{
-				if(Math.floor(val)==val) return new Integer((int)val).toString();
+				if(Math.floor(val)==val) return Integer.toString(Math.round(val));
 				else return String.valueOf(val);
 			}
 		case BRACKET_LEFT: return "(";

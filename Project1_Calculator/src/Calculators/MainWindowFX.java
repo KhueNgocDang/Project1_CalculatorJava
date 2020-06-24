@@ -27,21 +27,19 @@ import javax.swing.JLabel;
 import javax.swing.JComboBox;
 
 @SuppressWarnings("serial")
-public class MainWindow extends JFrame {
+public class MainWindowFX extends JFrame {
 	EvaluateString  Evaluate= new EvaluateString();
 	EvaluateProgString EvaluateProg = new EvaluateProgString();
 	
 	
 	double result;
-	int ShiftMode = 1;
-	int mark = 0;
-	int point = 0;
+	int ShiftMode=1;
+	int mark=0;
 	int mode = 10;
 	int TrigonometryMode = 0;
 	int InvRegInd = 0;
 	String operator ;
 	
-	//TextField
 	private JPanel contentPane;
 	private JTextField CalDisplayInput;
 	private JTextField CalDisplayResult;
@@ -102,7 +100,7 @@ public class MainWindow extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainWindow frame = new MainWindow();
+					MainWindowFX frame = new MainWindowFX();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -118,7 +116,6 @@ public class MainWindow extends JFrame {
 		operator = "/";
 		mark=0;
 		mode = 10;
-		point = 0;
 	}
 	public void NumberButtonPressed(JButton Button) 
 	{
@@ -212,15 +209,14 @@ public class MainWindow extends JFrame {
 		CalDisplayInput.setText("");
 		CalDisplayInput.setHorizontalAlignment(SwingConstants.RIGHT);
 		CalDisplayInput.setBackground(Color.WHITE);
-		CalDisplayInput.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		contentPane.add(CalDisplayInput);
 		CalDisplayInput.setColumns(10);
 		
 		CalDisplayResult = new JTextField();
+		CalDisplayResult.setFont(new Font("Tahoma", Font.PLAIN, 22));
 		CalDisplayResult.setText("0");
 		CalDisplayResult.setHorizontalAlignment(SwingConstants.RIGHT);
 		CalDisplayResult.setBackground(Color.WHITE);
-		CalDisplayResult.setFont(new Font("Tahoma", Font.PLAIN, 22));
 		contentPane.add(CalDisplayResult);
 		CalDisplayResult.setColumns(10);
 		
@@ -288,9 +284,6 @@ public class MainWindow extends JFrame {
 		btnClearEntryButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				CalDisplayResult.setText("0");
-				mark=0;
-				mode = 10;
-				point = 0;
 			}
 		});
 		contentPane.add(btnClearEntryButton);
@@ -301,9 +294,6 @@ public class MainWindow extends JFrame {
 				CalDisplayInput.setText("");
 				CalDisplayResult.setText("0");
 				result = 0;
-				mark=0;
-				mode = 10;
-				point = 0;
 			}
 		});
 		contentPane.add(btnClearButton);
@@ -577,7 +567,7 @@ public class MainWindow extends JFrame {
 				case 3: operator = "/";break;
 				case 4: operator = "^";break;
 				case 5: operator = "yroot";break;
-				case 6: operator = "logb";break;
+				case 6: operator = "base log";break;
 				case 7: operator = "mod";break;
 				case 8: operator = "comb";break;
 				case 9: operator = "perm";break;
@@ -585,7 +575,6 @@ public class MainWindow extends JFrame {
 				}
 				CalDisplayInput.setText(CalDisplayInput.getText()+" "+operator.toString()+" ");
 				mark = 0;
-				point = 0;
 			}
 		});
 	}
@@ -703,10 +692,9 @@ public class MainWindow extends JFrame {
 				btnPointButton = new JButton(".");
 				btnPointButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						if(point == 0) 
+						if(!CalDisplayInput.getText().contains(".")) 
 						{
 							CalDisplayInput.setText(CalDisplayInput.getText() + btnPointButton.getText());
-							point = 1;
 						}
 					}
 				});
@@ -1360,6 +1348,7 @@ public class MainWindow extends JFrame {
 				JButton btnConvButton = new JButton("=");
 				btnConvButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						if(!CalDisplayResult.getText().contains(".")) 
 						{
 							double res = 
 									LengthConverter.convert(Double.parseDouble(CalDisplayInput.getText()),
@@ -1389,7 +1378,6 @@ public class MainWindow extends JFrame {
 					{"Carats","Milligrams","Centigrams","Decigrams","Grams","Dekagrams"
 							,"Hectograms","Kilograms","Metric tonnes","Ounces","Pounds"
 							,"Stone","Short tons(US)","Long tons(UK)"};
-				
 		//Refresh main variable 
 				RefreshCal();
 				
@@ -1441,10 +1429,13 @@ public class MainWindow extends JFrame {
 				JButton btnConvButton = new JButton("=");
 				btnConvButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						if(!CalDisplayResult.getText().contains(".")) 
 						{
-							double res = MassConverter.convert(Double.parseDouble(CalDisplayInput.getText()),
-									comboBox_1.getSelectedItem().toString(),
-									comboBox_2.getSelectedItem().toString());
+							double res = 
+									MassConverter.convert(Double.parseDouble(CalDisplayInput.getText()),
+											comboBox_1.getSelectedItem().toString(),
+											comboBox_2.getSelectedItem().toString()
+									);
 							CalDisplayResult.setText(String.valueOf(res));
 							mark = 1;
 						}
@@ -1517,6 +1508,7 @@ public class MainWindow extends JFrame {
 				JButton btnConvButton = new JButton("=");
 				btnConvButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						if(!CalDisplayResult.getText().contains(".")) 
 						{
 							double res = 
 									TemperatureConverter.convert(Double.parseDouble(CalDisplayInput.getText()),
@@ -1596,6 +1588,7 @@ public class MainWindow extends JFrame {
 				JButton btnConvButton = new JButton("=");
 				btnConvButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						if(!CalDisplayResult.getText().contains(".")) 
 						{
 							double res = 
 									EnergyConverter.convert(Double.parseDouble(CalDisplayInput.getText()),
@@ -1617,7 +1610,7 @@ public class MainWindow extends JFrame {
 	 * Create the frame.
 	 * @return 
 	 */
-	public MainWindow() {
+	public MainWindowFX() {
 		
 		setBackground(Color.WHITE);
 		setTitle("Calculator - Project 1");
@@ -1670,6 +1663,90 @@ public class MainWindow extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		setTitle("Standard Calculator - Project 1");
+				setBounds(100, 100, 325, 465);
+				
+		//Refresh main variable 
+				RefreshCal();
+				
+		//Set up Calculator display text field
+				CalDisplayEngage();
+				CalDisplayInput.setBounds(10, 11, 295, 37);
+				CalDisplayResult.setBounds(10, 59, 295, 57);
+				
+		//Clear, CLear Entry  and Delete Button
+				Clear_DeleteButton();
+				btnClearEntryButton.setBounds(83, 127, 74, 45);
+				btnClearButton.setBounds(156, 127, 74, 45);
+				btnDeleteButton.setBounds(229, 127, 74, 45);
+								
+		//Operator Buttons		
+				BasicOperatorButtonInitiate();				
+				btnPlusButton.setBounds(229, 303, 74, 45);				
+				btnMinusButton.setBounds(229, 259, 74, 45);				
+				btnMultiplyButton.setBounds(229, 215, 74, 45);				
+				btnDivideButton.setBounds(229, 171, 74, 45);				
+				btnEqualButton.setBounds(229, 347, 74, 45);
+					
+		//Number Buttons
+				BasicNumberButtonInitiate();				
+				btnZeroButton.setBounds(83, 347, 74, 45);		
+				btnButtonOne.setBounds(10, 303, 74, 45);				
+				btnButtonTwo.setBounds(83, 303, 74, 45);				
+				btnButtonThree.setBounds(156, 303, 74, 45);			
+				btnButtonFour.setBounds(10, 259, 74, 45);				
+				btnButtonFive.setBounds(83, 259, 74, 45);				
+				btnButtonSix.setBounds(156, 259, 74, 45);				
+				btnButtonSeven.setBounds(10, 215, 74, 45);				
+				btnButtonEight.setBounds(83, 215, 74, 45);				
+				btnButtonNine.setBounds(156, 215, 74, 45);				
+				
+		//Standard Calculator other button
+				JButton btnPercentageButton = new JButton("%");
+				GetPercentage(btnPercentageButton);
+				btnPercentageButton.setBounds(10, 127, 74, 45);
+				contentPane.add(btnPercentageButton);
+				
+				btnPointButton = new JButton(".");
+				btnPointButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						if(!CalDisplayInput.getText().contains(".")) 
+						{
+							CalDisplayInput.setText(CalDisplayInput.getText() + btnPointButton.getText());
+						}
+					}
+				});
+				btnPointButton.setBounds(156, 347, 74, 45);	
+				contentPane.add(btnPointButton);
+				
+				JButton btnReciprocalButton = new JButton("1/x");
+				GetReciprocal(btnReciprocalButton);
+				btnReciprocalButton.setBounds(10, 171, 74, 45);
+				contentPane.add(btnReciprocalButton);
+				
+				JButton btnNegateButton = new JButton("+/-");
+				btnNegateButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						if(CalDisplayResult.getText()!=null) 
+						{
+							CalDisplayInput.setText("\u002D"+ CalDisplayInput.getText());
+						}
+					}
+				});
+				btnNegateButton.setBounds(10, 347, 74, 45);
+				contentPane.add(btnNegateButton);
+				
+				JButton btnSquareButton = new JButton("<html>x<sup>2</sup></html>");
+				powfunc(btnSquareButton, 1);
+				btnSquareButton.setBounds(83, 171, 74, 45);
+				contentPane.add(btnSquareButton);
+				
+				JButton btnSquareRootButton = new JButton("\u221A"+"x");
+				powfunc(btnSquareRootButton, 5);
+				btnSquareRootButton.setBounds(156, 171, 74, 45);
+				contentPane.add(btnSquareRootButton);
+			
 		
 	}
 }

@@ -6,10 +6,8 @@ import java.util.Stack;
 public class EvaluateProgString {
 	static LinkedList<Token> InfixQueue = new LinkedList<Token>();
 	static LinkedList<Token> PostfixQueue = new LinkedList<Token>();
-	static char[] num= {'A','B','C','D','E','F',
-			'0','1','2','3','4','5','6','7','8','9'};
 	
-	@SuppressWarnings("deprecation")
+	
 	public static String TokenizeInfix(String expression, int mode) 
 	{
 		char[] token = expression.toCharArray();
@@ -41,13 +39,11 @@ public class EvaluateProgString {
 				}
 			}break;
 			case 'A' :case 'B' :case 'C' :case 'D' :case 'E' :case 'F':
-        	case '0' :case '1' :case '2' :case '3' :case '4' :case 'u':
+        	case '0' :case '1' :case '2' :case '3' :case '4' :
         	case '5' :case '6' :case '7' :case '8' :case '9' :case '.':
         		{
     				numstr=new String();
     				int nums = 0 ;
-    				if(token[i]=='u') numstr=numstr+'-';
-    				else
     				numstr=numstr+Character.toString(token[i]);
     				i++;
     				while (i<expression.length() && isNumeric(expression.charAt(i)))
@@ -60,17 +56,15 @@ public class EvaluateProgString {
     				case 10: nums = Integer.parseInt(numstr, 10);break;
     				case 16: nums = Integer.parseInt(numstr, 16);break; 
     				}
-					InfixQueue.addLast(new Token(new Integer(nums).intValue()));
+					InfixQueue.addLast(new Token(Float.valueOf(nums)));
 				}break;
         	
         	case '+': case '-': 
         	{
-        		
-    			if (InfixQueue.isEmpty() || 
-    					//InfixQueue.getLast().ttype==Token.TokenType.OPERATOR || 
+        		if (InfixQueue.isEmpty() || 
+    					InfixQueue.getLast().ttype!=Token.TokenType.NUMBER || 
     						InfixQueue.getLast().ttype==Token.TokenType.BRACKET_LEFT) 
-    				{token[i]='u';i--;}
-				//InfixQueue.addLast(new Token('u', Token.OpType.UNARY_PREFIX, 100));
+    				InfixQueue.addLast(new Token(String.valueOf(token[i]), Token.OpType.UNARY_PREFIX, 100));
 				else 
 					InfixQueue.addLast(new Token(String.valueOf(token[i]), Token.OpType.BINARY_LEFT_ASSOC, 50));
     		}break;
@@ -86,12 +80,13 @@ public class EvaluateProgString {
 			}
 			
 		}
-		//return display(InfixQueue);
 		return InfixQueue.toString();
 	}
 
 	private static boolean isNumeric( char ch) 
 	{
+		char[] num= {'A','B','C','D','E','F',
+				'0','1','2','3','4','5','6','7','8','9'};
 		for(char s: num) 
 		{
 			if(s == ch) return true;
@@ -121,6 +116,8 @@ public class EvaluateProgString {
 				case OPERATOR:
 					switch(t.otype) 
 					{
+						case UNARY_PREFIX: OperatorStack.addLast(t);break;
+						case UNARY_POSTFIX: OperatorStack.addLast(t);break;
 						case BINARY_LEFT_ASSOC:
 							while (!OperatorStack.isEmpty() && OperatorStack.getLast().precidence > t.precidence) 
 								PostfixQueue.addLast(OperatorStack.removeLast());
@@ -153,7 +150,6 @@ public class EvaluateProgString {
 			}
 			else PostfixQueue.addLast(OperatorStack.removeLast());
 		}
-		//return display(PostfixQueue);
 		return PostfixQueue.toString();
 	}
 	
@@ -164,7 +160,6 @@ public class EvaluateProgString {
 		int a1;
 		LinkedList<Token> postfixQueue = new LinkedList<Token>(PostfixQueue);
 		Stack<Integer> rpevalStack = new Stack<Integer>();
-		//rpevalStack.clear();
 		while (!postfixQueue.isEmpty()) 
 		{
 			t=postfixQueue.removeFirst();
@@ -172,28 +167,15 @@ public class EvaluateProgString {
 			{
 			case NUMBER:rpevalStack.push(t.valprog);break;
 			case OPERATOR:
-				if(rpevalStack.isEmpty()) {postfixQueue.addLast(t);break;}
 				a1 = rpevalStack.pop();
 				switch(t.op) 
 				{
-					case "+": switch(t.otype) 
-						{
-						case BINARY_LEFT_ASSOC:
-							if(rpevalStack.isEmpty())
-								rpevalStack.push(a1); 
-								else rpevalStack.push(rpevalStack.pop()+a1);break;
-						//case UNARY_PREFIX:rpevalStack.push(+rpevalStack.pop());break;
-						default:break;
-					}break;
+					case "+": 
+						if(t.otype==Token.OpType.UNARY_PREFIX)rpevalStack.push(a1);
+						if(t.otype==Token.OpType.BINARY_LEFT_ASSOC)rpevalStack.push(rpevalStack.pop()+a1);break;
 					case "-":
-						switch(t.otype) 
-						{
-						case BINARY_LEFT_ASSOC:
-							if(rpevalStack.isEmpty())rpevalStack.push(-a1); 
-								else rpevalStack.push(rpevalStack.pop()-a1);break;
-						//case UNARY_PREFIX:rpevalStack.push(-rpevalStack.pop());break;
-						default:break;
-						}break;
+						if(t.otype==Token.OpType.UNARY_PREFIX)rpevalStack.push(-a1);
+						if(t.otype==Token.OpType.BINARY_LEFT_ASSOC)rpevalStack.push(rpevalStack.pop()-a1);break;
 					case "*":rpevalStack.push(a1*rpevalStack.pop());break;
 					case "/":rpevalStack.push(rpevalStack.pop()/a1);break;
 					case "and":rpevalStack.push(a1&rpevalStack.pop());break;
@@ -225,13 +207,9 @@ public class EvaluateProgString {
 	}
 	
 	static String Eval(String str,int mode,int mode2) 
-	{//
-		//return
+	{
 				TokenizeInfix(str,mode);
-				//
-				//return
 				ConvertToPostfix();
-	//
 				String sout = null;
 				String s = Evaluate();
 				int out = Integer.parseInt(s);
