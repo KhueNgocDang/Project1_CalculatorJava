@@ -26,19 +26,22 @@ import javax.swing.JRadioButton;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 
-@SuppressWarnings("serial")
 public class MainWindow extends JFrame {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	EvaluateString  Evaluate= new EvaluateString();
 	EvaluateProgString EvaluateProg = new EvaluateProgString();
 	
 	
 	double result;
-	int ShiftMode = 1;
+	int ShiftMode = 1;//For Shift setting in Programmer Calculator
 	int mark = 0;
-	int point = 0;
-	int mode = 10;
-	int TrigonometryMode = 0;
-	int InvRegInd = 0;
+	int point = 0;//For decimal separator
+	int mode = 10;//For programmer numerical mode
+	int TrigonometryMode = 0;//For Trigonometry setting
+	int InvRegInd = 0;//For Inverse or Regular mode in Trigonometry 
 	String operator ;
 	
 	//TextField
@@ -50,7 +53,7 @@ public class MainWindow extends JFrame {
 	private JTextField OCTtextField;
 	private JTextField BINtextField;
 	//Basic Number Button
-	private JButton btnZeroButton;
+	private JButton btnZeroButton;;
 	private JButton btnButtonOne;
 	private JButton btnButtonTwo;
 	private JButton btnButtonThree;
@@ -226,55 +229,71 @@ public class MainWindow extends JFrame {
 		
 	}
 	//Shunting_yard_algorithm
-
+	public void FlatStyleButton(JButton Button) 
+	{
+		Button.setFocusPainted(false);
+		Button.setContentAreaFilled(false);
+	}
 	//Create basic number button to be use and reuse in other modes of the calculator
 	public void BasicNumberButtonInitiate() 
 	{	
 		btnZeroButton = new JButton("\u0030");
+		FlatStyleButton(btnZeroButton);
 		NumberButtonPressed(btnZeroButton);
 		contentPane.add(btnZeroButton);
 		
 		btnButtonOne = new JButton("\u0031");
+		FlatStyleButton(btnButtonOne);
 		NumberButtonPressed(btnButtonOne);
 		contentPane.add(btnButtonOne);
 		
 		btnButtonTwo = new JButton("\u0032");
+		FlatStyleButton(btnButtonTwo);
 		NumberButtonPressed(btnButtonTwo);
 		contentPane.add(btnButtonTwo);
 		
 		btnButtonThree = new JButton("\u0033");
+		FlatStyleButton(btnButtonThree);
 		NumberButtonPressed(btnButtonThree);
 		contentPane.add(btnButtonThree);
 
 		btnButtonFour = new JButton("\u0034");
+		FlatStyleButton(btnButtonFour);
 		NumberButtonPressed(btnButtonFour);
 		contentPane.add(btnButtonFour);
 		
 		btnButtonFive = new JButton("\u0035");
+		FlatStyleButton(btnButtonFive);
 		NumberButtonPressed(btnButtonFive);
 		contentPane.add(btnButtonFive);
 		
 		btnButtonSix = new JButton("\u0036");
+		FlatStyleButton(btnButtonSix);
 		NumberButtonPressed(btnButtonSix);
 		contentPane.add(btnButtonSix);
 		
 		btnButtonSeven = new JButton("\u0037");
+		FlatStyleButton(btnButtonSeven);
 		NumberButtonPressed(btnButtonSeven);
 		contentPane.add(btnButtonSeven);
 		
 		btnButtonEight = new JButton("\u0038");
+		FlatStyleButton(btnButtonEight);
 		NumberButtonPressed(btnButtonEight);
 		contentPane.add(btnButtonEight);
 		
 		btnButtonNine = new JButton("\u0039");
+		FlatStyleButton(btnButtonNine);
 		NumberButtonPressed(btnButtonNine);
 		contentPane.add(btnButtonNine);
 		
 		btnOpeningParenthesis = new JButton("\u0028");
+		FlatStyleButton(btnOpeningParenthesis);
 		NumberButtonPressed(btnOpeningParenthesis);
 		contentPane.add(btnOpeningParenthesis);
 		
 		btnClosingParenthesis = new JButton("\u0029");
+		FlatStyleButton(btnClosingParenthesis);
 		NumberButtonPressed(btnClosingParenthesis);
 		contentPane.add(btnClosingParenthesis);
 		
@@ -285,6 +304,7 @@ public class MainWindow extends JFrame {
 	public void Clear_DeleteButton() 
 	{
 		btnClearEntryButton = new JButton("CE");
+		FlatStyleButton(btnClearEntryButton);
 		btnClearEntryButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				CalDisplayResult.setText("0");
@@ -296,6 +316,7 @@ public class MainWindow extends JFrame {
 		contentPane.add(btnClearEntryButton);
 		
 		btnClearButton = new JButton("C");
+		FlatStyleButton(btnClearButton);
 		btnClearButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				CalDisplayInput.setText("");
@@ -309,6 +330,7 @@ public class MainWindow extends JFrame {
 		contentPane.add(btnClearButton);
 		
 		btnDeleteButton = new JButton("\u232b");
+		FlatStyleButton(btnDeleteButton);
 		btnDeleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String bsp = null;
@@ -326,6 +348,7 @@ public class MainWindow extends JFrame {
 	public void Clear_DeleteButton_Prog() 
 	{
 		btnClearEntryButton = new JButton("CE");
+		FlatStyleButton(btnClearEntryButton);
 		btnClearEntryButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				CalDisplayResult.setText("0");
@@ -338,6 +361,7 @@ public class MainWindow extends JFrame {
 		contentPane.add(btnClearEntryButton);
 		
 		btnClearButton = new JButton("C");
+		FlatStyleButton(btnClearButton);
 		btnClearButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				CalDisplayInput.setText("");
@@ -352,6 +376,7 @@ public class MainWindow extends JFrame {
 		contentPane.add(btnClearButton);
 		
 		btnDeleteButton = new JButton("\u232b");
+		FlatStyleButton(btnDeleteButton);
 		btnDeleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String bsp = null;
@@ -369,22 +394,27 @@ public class MainWindow extends JFrame {
 	public void BasicOperatorButtonInitiate() 
 	{
 		btnPlusButton = new JButton("\u002B");
+		FlatStyleButton(btnPlusButton);
 		OperatorButtonPressed(btnPlusButton,0);
 		contentPane.add(btnPlusButton);
 		
 		btnMinusButton = new JButton("\u002D");
+		FlatStyleButton(btnMinusButton);
 		OperatorButtonPressed(btnMinusButton,1);
 		contentPane.add(btnMinusButton);
 		
 		btnMultiplyButton = new JButton("\u00d7");
+		FlatStyleButton(btnMultiplyButton);
 		OperatorButtonPressed(btnMultiplyButton,2);
 		contentPane.add(btnMultiplyButton);
 
 		btnDivideButton = new JButton("\u00f7");
+		FlatStyleButton(btnDivideButton);
 		OperatorButtonPressed(btnDivideButton,3);
 		contentPane.add(btnDivideButton);
 		
 		btnEqualButton = new JButton("\u003D");
+		FlatStyleButton(btnEqualButton);
 		EqualButtonPressed(btnEqualButton);
 		contentPane.add(btnEqualButton);
 	}
@@ -472,11 +502,19 @@ public class MainWindow extends JFrame {
 		contentPane.add(btnHexFButton);
 	}
 	
-	public void EulerNumber(JButton Button, int exptype) 
+	public void SpeicalNumber(JButton Button, int type) 
 	{
 		Button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				CalDisplayInput.setText(CalDisplayInput.getText() +"e");
+				String iNum = null;
+				switch(type) 
+				{
+				case 1: iNum = "e";
+				case 2: iNum = "π";
+				}
+				if(mark==1) CalDisplayInput.setText(iNum);
+				else CalDisplayInput.setText(CalDisplayInput.getText()+iNum);
+				mark = 0;
 			}
 		});
 	}
@@ -576,14 +614,15 @@ public class MainWindow extends JFrame {
 				case 2: operator = "*";break;
 				case 3: operator = "/";break;
 				case 4: operator = "^";break;
-				case 5: operator = "yroot";break;
+				case 5: operator = "\u221A";break;
 				case 6: operator = "logb";break;
 				case 7: operator = "mod";break;
 				case 8: operator = "comb";break;
 				case 9: operator = "perm";break;
 				case 10: operator = "abs(";break;
 				}
-				CalDisplayInput.setText(CalDisplayInput.getText()+" "+operator.toString()+" ");
+				if(mark==1) CalDisplayInput.setText(operator.toString());
+				else CalDisplayInput.setText(CalDisplayInput.getText()+" "+operator.toString()+" ");
 				mark = 0;
 				point = 0;
 			}
@@ -622,18 +661,20 @@ public class MainWindow extends JFrame {
 					break;
 			case 2: CalDisplayInput.setText(CalDisplayInput.getText() +"^3");
 					break;
-			case 3: CalDisplayInput.setText(CalDisplayInput.getText() +"^(-1)");
+			case 3: CalDisplayInput.setText(CalDisplayInput.getText() +"2^");
 					break;
 			case 4: CalDisplayInput.setText(CalDisplayInput.getText() +"10^");
 					break;
-			case 5: CalDisplayInput.setText(CalDisplayInput.getText() +"2√");
+			case 5: CalDisplayInput.setText(CalDisplayInput.getText() +"sqrr(");
 					break;
-			case 6: CalDisplayInput.setText(CalDisplayInput.getText() +"3√");
+			case 6: CalDisplayInput.setText(CalDisplayInput.getText() +"cuber(");
 					break;
 			case 7: CalDisplayInput.setText(CalDisplayInput.getText() +"log(");
 					break;
 			case 8: CalDisplayInput.setText(CalDisplayInput.getText() +"ln(");
-					break;	
+					break;
+			case 9: CalDisplayInput.setText(CalDisplayInput.getText() + "e^");
+				break;
 			}; 
 		}
 		});
@@ -647,6 +688,7 @@ public class MainWindow extends JFrame {
 				String answer = EvaluateString.Eval(input);
 				CalDisplayResult.setText(answer);
 				mark = 1;
+				point = 0;
 			}
 		});
 	}
@@ -696,11 +738,13 @@ public class MainWindow extends JFrame {
 				
 		//Standard Calculator other button
 				JButton btnPercentageButton = new JButton("%");
+				FlatStyleButton(btnPercentageButton);
 				GetPercentage(btnPercentageButton);
 				btnPercentageButton.setBounds(10, 127, 74, 45);
 				contentPane.add(btnPercentageButton);
 				
 				btnPointButton = new JButton(".");
+				FlatStyleButton(btnPointButton);
 				btnPointButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						if(point == 0) 
@@ -714,11 +758,13 @@ public class MainWindow extends JFrame {
 				contentPane.add(btnPointButton);
 				
 				JButton btnReciprocalButton = new JButton("1/x");
+				FlatStyleButton(btnReciprocalButton);
 				GetReciprocal(btnReciprocalButton);
 				btnReciprocalButton.setBounds(10, 171, 74, 45);
 				contentPane.add(btnReciprocalButton);
 				
 				JButton btnNegateButton = new JButton("+/-");
+				FlatStyleButton(btnNegateButton);
 				btnNegateButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						if(CalDisplayResult.getText()!=null) 
@@ -731,11 +777,13 @@ public class MainWindow extends JFrame {
 				contentPane.add(btnNegateButton);
 				
 				JButton btnSquareButton = new JButton("<html>x<sup>2</sup></html>");
+				FlatStyleButton(btnSquareButton);
 				powfunc(btnSquareButton, 1);
 				btnSquareButton.setBounds(83, 171, 74, 45);
 				contentPane.add(btnSquareButton);
 				
 				JButton btnSquareRootButton = new JButton("\u221A"+"x");
+				FlatStyleButton(btnSquareRootButton);
 				powfunc(btnSquareRootButton, 5);
 				btnSquareRootButton.setBounds(156, 171, 74, 45);
 				contentPane.add(btnSquareRootButton);
@@ -749,7 +797,7 @@ public class MainWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				setTitle("Sciencetific Calculator - Project 1");
-				setBounds(100, 100, 513, 589);
+				setBounds(100, 100, 469, 510);
 			//Refresh main variable
 				RefreshCal();
 				
@@ -790,11 +838,13 @@ public class MainWindow extends JFrame {
 							
 			//Scientific Calculator Buttons
 				JButton btnButtonPermutation = new JButton("nPr");
+				FlatStyleButton(btnButtonPermutation);
 				OperatorButtonPressed(btnButtonPermutation,9);
 				btnButtonPermutation.setBounds(10, 224, 74, 32);		
 				contentPane.add(btnButtonPermutation);
 							
 				btnPointButton = new JButton(".");
+				FlatStyleButton(btnPointButton);
 				btnPointButton.addActionListener(new ActionListener() {	
 				public void actionPerformed(ActionEvent e) {
 					if(!CalDisplayResult.getText().contains(".")) 
@@ -807,141 +857,164 @@ public class MainWindow extends JFrame {
 				contentPane.add(btnPointButton);
 							
 				JButton btnPiButton = new JButton("π");
-				btnPiButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-									CalDisplayResult.setText(String.valueOf(Math.PI));
-								}
-							});
+				FlatStyleButton(btnPiButton);
+				SpeicalNumber(btnPiButton,2);
 				btnPiButton.setBounds(156, 410, 74, 32);
 				contentPane.add(btnPiButton);
 							
-				JButton btnEulersNumberButton = new JButton("e");		
-				EulerNumber(btnEulersNumberButton,1);
+				JButton btnEulersNumberButton = new JButton("e");
+				FlatStyleButton(btnEulersNumberButton);
+				SpeicalNumber(btnEulersNumberButton,1);
 				btnEulersNumberButton.setBounds(302, 255, 74, 32);
 				contentPane.add(btnEulersNumberButton);
 							
-				JButton btnDegreeButton = new JButton("°");	
+				JButton btnDegreeButton = new JButton("°");
+				FlatStyleButton(btnDegreeButton);
 				btnDegreeButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						double a = Double.parseDouble(CalDisplayResult.getText());
-						String b = String.format("%6.3e", a);
-						CalDisplayResult.setText(b);
+						if(!CalDisplayResult.getText().contains("°")) 
+						{
+							CalDisplayInput.setText(CalDisplayInput.getText() + btnDegreeButton.getText());
+						}
 					}
 				});
 				btnDegreeButton.setBounds(156, 224, 74, 32);
 				contentPane.add(btnDegreeButton);
 							
 				JButton btnAbsoluteButton = new JButton("|x|");
+				FlatStyleButton(btnAbsoluteButton);
 				OperatorButtonPressed(btnAbsoluteButton,10);
 				btnAbsoluteButton.setBounds(229, 255, 74, 32);
 				contentPane.add(btnAbsoluteButton);
 							
 				JButton btnFactorial = new JButton("n!");
+				FlatStyleButton(btnFactorial);
 				GetFactorial(btnFactorial);
 				btnFactorial.setBounds(302, 286, 74, 32);
 				contentPane.add(btnFactorial);
 							
-				JButton btnPercentageButton = new JButton("%");		
+				JButton btnPercentageButton = new JButton("%");
+				FlatStyleButton(btnPercentageButton);
 				GetPercentage(btnPercentageButton);
 				btnPercentageButton.setBounds(156, 255, 74, 32);
 				contentPane.add(btnPercentageButton);
 							
 				JButton btnSquareButton = new JButton("<html>x<sup>2</sup></html>");
+				FlatStyleButton(btnSquareButton);
 				powfunc(btnSquareButton, 1);
 				btnSquareButton.setBounds(10, 255, 74, 32);
 				contentPane.add(btnSquareButton);
 				
 				JButton btnCubeButton = new JButton("<html>x<sup>3</sup></html>");
+				FlatStyleButton(btnCubeButton);
 				powfunc(btnCubeButton, 2);
 				btnCubeButton.setBounds(10, 286, 74, 32);
 				contentPane.add(btnCubeButton);
 							
 				JButton btnXtothepowerofY = new JButton("<html>x<sup>y</sup></html>");
+				FlatStyleButton(btnXtothepowerofY);
 				OperatorButtonPressed(btnXtothepowerofY,4);
 				btnXtothepowerofY.setBounds(10, 317, 74, 32);
 				contentPane.add(btnXtothepowerofY);
 							
 				JButton btn10tothepowerofX = new JButton("<html>10<sup>x</sup></html>");
+				FlatStyleButton(btn10tothepowerofX);
 				powfunc(btn10tothepowerofX, 4);
 				btn10tothepowerofX.setBounds(10, 348, 74, 32);
 				contentPane.add(btn10tothepowerofX);
 							
 				JButton btnLogof10Button = new JButton("log");
+				FlatStyleButton(btnLogof10Button);
 				powfunc(btnLogof10Button, 7);
 				btnLogof10Button.setBounds(10, 379, 74, 32);
 				contentPane.add(btnLogof10Button);
 							
 				JButton btnNaturalLog = new JButton("ln");
+				FlatStyleButton(btnNaturalLog);
 				powfunc(btnNaturalLog, 8);
 				btnNaturalLog.setBounds(10, 410, 74, 32);
 				contentPane.add(btnNaturalLog);
 							
 				JButton btnModularButton = new JButton("mod");
+				FlatStyleButton(btnModularButton);
 				OperatorButtonPressed(btnModularButton,7);
 				btnModularButton.setBounds(375, 255, 74, 32);
 				contentPane.add(btnModularButton);
 							
 				JButton btnSquareRootButton = new JButton("\u221A"+"x");
+				FlatStyleButton(btnSquareRootButton);
 				powfunc(btnSquareRootButton, 5);
 				btnSquareRootButton.setBounds(83, 255, 74, 32);
 				contentPane.add(btnSquareRootButton);
 							
 				JButton btnCubeRootButton = new JButton("\u221B"+"x");
+				FlatStyleButton(btnCubeRootButton);
 				powfunc(btnCubeRootButton, 6);
 				btnCubeRootButton.setBounds(83, 286, 74, 32);
 				contentPane.add(btnCubeRootButton);
 							
 				JButton btn2SquareButton = new JButton("<html>2<sup>x</sup></html>");
+				FlatStyleButton(btn2SquareButton);
 				powfunc(btn2SquareButton, 3);
 				btn2SquareButton.setBounds(83, 348, 74, 32);
 				contentPane.add(btn2SquareButton);
 							
 				JButton btnYRootButton = new JButton("<html><sup>y</sup>\u221Ax</html>");
+				FlatStyleButton(btnYRootButton);
 				OperatorButtonPressed(btnYRootButton,5);
 				btnYRootButton.setBounds(83, 317, 74, 32);
 				contentPane.add(btnYRootButton);
 							
 				JButton btnLogYofXButton = new JButton("<html>log<sub>y</sub>x</html>");
+				FlatStyleButton(btnLogYofXButton);
 				OperatorButtonPressed(btnLogYofXButton,6);
 				btnLogYofXButton.setBounds(83, 379, 74, 32);
 				contentPane.add(btnLogYofXButton);
 						
 				JButton btnEulertothepowerofX = new JButton("<html>e<sup>x</sup></html>");
-				EulerNumber(btnEulertothepowerofX,2);
+				FlatStyleButton(btnEulertothepowerofX);
+				powfunc(btnEulertothepowerofX,9);
 				btnEulertothepowerofX.setBounds(83, 410, 74, 32);
 				contentPane.add(btnEulertothepowerofX);
 					
 				JButton btnCombinationButton = new JButton("nCr");
+				FlatStyleButton(btnCombinationButton);
 				OperatorButtonPressed(btnCombinationButton,8);
 				btnCombinationButton.setBounds(83, 224, 74, 32);
 				contentPane.add(btnCombinationButton);
 					
 				JButton btnSinButton = new JButton("Sin");
+				FlatStyleButton(btnSinButton);
 				TrigonometryButtonPressed(btnSinButton,0);
 				btnSinButton.setBounds(10, 193, 74, 32);
 				contentPane.add(btnSinButton);
 					
 				JButton btnCosButton = new JButton("Cos");
+				FlatStyleButton(btnCosButton);
 				TrigonometryButtonPressed(btnCosButton,1);
 				btnCosButton.setBounds(83, 193, 74, 32);
 				contentPane.add(btnCosButton);
 					
 				JButton btnTanButton = new JButton("Tan");
+				FlatStyleButton(btnTanButton);
 				TrigonometryButtonPressed(btnTanButton,2);
 				btnTanButton.setBounds(156, 193, 74, 32);
 				contentPane.add(btnTanButton);
 					
 				JButton btnCotanButton = new JButton("Cotan");
+				FlatStyleButton(btnCotanButton);
 				TrigonometryButtonPressed(btnCotanButton,3);
 				btnCotanButton.setBounds(229, 193, 74, 32);
 				contentPane.add(btnCotanButton);
 				
 				JButton btnSecButton = new JButton("Sec");
+				FlatStyleButton(btnSecButton);
 				TrigonometryButtonPressed(btnSecButton,4);
 				btnSecButton.setBounds(302, 193, 74, 32);
 				contentPane.add(btnSecButton);
 					
 				JButton btnCscButton = new JButton("Csc");
+				FlatStyleButton(btnCscButton);
 				TrigonometryButtonPressed(btnCscButton,5);
 				btnCscButton.setBounds(375, 193, 74, 32);
 				contentPane.add(btnCscButton);
@@ -954,7 +1027,7 @@ public class MainWindow extends JFrame {
 						TrigonometryMode = 1;
 					}
 				});
-				rdbtnHybperbolicRadioButton.setBounds(93, 137, 80, 23);
+				rdbtnHybperbolicRadioButton.setBounds(93, 137, 107, 23);
 				contentPane.add(rdbtnHybperbolicRadioButton);
 				
 				JRadioButton rdbtnCircleButton = new JRadioButton("Circle");
@@ -967,7 +1040,7 @@ public class MainWindow extends JFrame {
 						TrigonometryMode = 0;
 					}
 				});
-				rdbtnCircleButton.setBounds(93, 163, 80, 23);
+				rdbtnCircleButton.setBounds(93, 163, 107, 23);
 				contentPane.add(rdbtnCircleButton);
 				
 				JRadioButton rdbtnRegButton = new JRadioButton("Regular");
@@ -980,7 +1053,7 @@ public class MainWindow extends JFrame {
 						InvRegInd = 0;
 					}
 				});
-				rdbtnRegButton.setBounds(175, 137, 80, 23);
+				rdbtnRegButton.setBounds(223, 137, 80, 23);
 				contentPane.add(rdbtnRegButton);
 				
 				JRadioButton rdbtnInvButton = new JRadioButton("Inverse");
@@ -991,11 +1064,11 @@ public class MainWindow extends JFrame {
 						InvRegInd = 1;
 					}
 				});
-				rdbtnInvButton.setBounds(175, 163, 80, 23);
+				rdbtnInvButton.setBounds(223, 163, 80, 23);
 				contentPane.add(rdbtnInvButton);
 				
 				JLabel lblTrigonometryLabel = new JLabel("Trigonometry");
-				lblTrigonometryLabel.setBounds(20, 127, 80, 33);
+				lblTrigonometryLabel.setBounds(10, 127, 80, 33);
 				contentPane.add(lblTrigonometryLabel);
 				
 				ButtonGroup HypCir = new ButtonGroup();

@@ -2,7 +2,7 @@ package Calculators;
 
 public class Token {
 	String op;
-	float val;
+	double val;
 	int valprog;
 	String func;
 	int precidence;
@@ -27,7 +27,7 @@ public class Token {
 		func = f;
 	}
 	
-	Token(float f)
+	Token(double f)
 	{
 		ttype = TokenType.NUMBER;
 		val = f;
@@ -50,11 +50,7 @@ public class Token {
 		{
 		case OPERATOR: return op;
 		case FUNC: return func;
-		case NUMBER: 
-			{
-				if(Math.floor(val)==val) return Integer.toString(Math.round(val));
-				else return String.valueOf(val);
-			}
+		case NUMBER: return String.valueOf(val);
 		case BRACKET_LEFT: return "(";
 		case BRACKET_RIGHT: return ")";
 		default: return "";
