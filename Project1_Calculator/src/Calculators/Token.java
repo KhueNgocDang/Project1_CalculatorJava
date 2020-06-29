@@ -9,9 +9,11 @@ public class Token {
 	enum OpType {BINARY_LEFT_ASSOC,BINARY_RIGHT_ASSOC,UNARY_PREFIX,UNARY_POSTFIX};
 	enum TokenType {NUMBER,OPERATOR,FUNC,BRACKET_LEFT,BRACKET_RIGHT};
 	enum FuncType{PREFIX,POSTFIX};
+	enum NumberType{NORMAL,PROG}
 	OpType otype;
 	TokenType ttype;
 	FuncType ftype;
+	NumberType ntype;
 	
 	Token(String o, OpType t, int prec)
 	{
@@ -27,15 +29,17 @@ public class Token {
 		func = f;
 	}
 	
-	Token(double f)
+	Token(double f,NumberType n)
 	{
 		ttype = TokenType.NUMBER;
+		ntype = n;
 		val = f;
 	}
 	
-	Token(int f)
+	Token(int f,NumberType n)
 	{
 		ttype = TokenType.NUMBER;
+		ntype = n;
 		valprog = f;
 	}
 	

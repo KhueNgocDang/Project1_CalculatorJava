@@ -76,16 +76,16 @@ public class EvaluateString
 				i--;
 				switch(func) 
 					{
-				case"cubrr":case"sqrr":case"cube":case"sqr":case"log":case"ln":case"abs":
+				case"cuber":case"sqrr":case"cube":case"sqr":case"log":case"ln":case"abs":
 				case"fact":case"sin":case"cos":case"tan":case"cot":case"sec":case"csc":
 				case"sinh":case"cosh":case"tanh":case"coth":case"sech":case"csch":
 				case"asin":case"aos":case"atan":case"acot":case"asec":case"acsc":
 				case"asinh":case"acosh":case"atanh":case"acoth":case"asech":case"acsch":
 					InfixQueue.addLast(new Token(func.toString()));break;
 				case"e":
-					InfixQueue.addLast(new Token((Math.exp(1))));break;
+					InfixQueue.addLast(new Token((Math.exp(1)), Token.NumberType.NORMAL));break;
 				case"π":        		
-					InfixQueue.addLast(new Token((Math.PI)));break;
+					InfixQueue.addLast(new Token((Math.PI), Token.NumberType.NORMAL));break;
 				case"logb":case"comb":case"perm":
 					InfixQueue.addLast(new Token(func.toString(), Token.OpType.BINARY_RIGHT_ASSOC, 100));
         		break;
@@ -100,7 +100,7 @@ public class EvaluateString
     				while (i<expression.length() && isNumeric(expression.charAt(i)))
     					{numstr=numstr+Character.toString(expression.charAt(i));i++;}
     				i--;
-    				InfixQueue.addLast(new Token(Double.valueOf(numstr)));
+    				InfixQueue.addLast(new Token(Double.valueOf(numstr), Token.NumberType.NORMAL));
 				}break;
         	case '+': case '-': 
         	{
@@ -216,8 +216,11 @@ public class EvaluateString
 					case "*":rpevalStack.push(a1*rpevalStack.pop());break;
 					case "/":if(a1==0) return "Math error: Can't divide for 0";rpevalStack.push(rpevalStack.pop()/a1);break;
 					case "^":rpevalStack.push(Math.pow(rpevalStack.pop(),a1));break;
-					case "√":if(rpevalStack.peek()== 0)return "Math error";rpevalStack.push((Math.pow(a1,1/rpevalStack.pop())));break;
-					case "logb":rpevalStack.push((Math.log(a1)/Math.log(rpevalStack.pop())));break;
+					case "√":if(rpevalStack.peek()== 0||(rpevalStack.peek()%2==0 && a1<0))return "Math error";
+					rpevalStack.push((Math.pow(a1,1/rpevalStack.pop())));break;
+					case "logb":if(a1<=0||rpevalStack.peek()<=0)return "Math error";
+						rpevalStack.push((Math.log(a1)/Math.log(rpevalStack.pop())));
+						break;
 					case "comb":if(combination(rpevalStack.peek(),a1)==null)return "Math error";
 						rpevalStack.push(combination(rpevalStack.pop(),a1));break;
 					case "perm":if(combination(rpevalStack.peek(),a1)==null)return "Math error";
@@ -232,10 +235,18 @@ public class EvaluateString
 				a1 = rpevalStack.pop();
 				switch(t.func) 
 				{
-					case "log":rpevalStack.push((Math.log10(a1)));break;
-					case "ln":rpevalStack.push(((Math.log(a1))));break;
-					case "cuber":rpevalStack.push((Math.cbrt(a1)));break;
-					case "sqrr":rpevalStack.push((Math.sqrt(a1)));break;
+					case "log":if(a1<=0)return "Math error";
+						rpevalStack.push((Math.log10(a1)));
+						break;
+					case "ln":if(a1<=0)return "Math error";
+						rpevalStack.push(((Math.log(a1))));
+						break;
+					case "cuber":if(a1<0)return "Math error";
+						rpevalStack.push((Math.cbrt(a1)));
+						break;
+					case "sqrr":if(a1<0)return "Math error";
+						rpevalStack.push((Math.sqrt(a1)));
+						break;
 					case "cube":rpevalStack.push((Math.pow(3,a1)));break;
 					case "sqr":rpevalStack.push((Math.pow(2,a1)));break;
 					case "abs":rpevalStack.push(Math.abs(a1));break;
@@ -251,16 +262,26 @@ public class EvaluateString
 					case "coth":rpevalStack.push((1/Math.tanh(Math.toRadians(a1))));break;
 					case "csch":rpevalStack.push((1/Math.sinh(Math.toRadians(a1))));break;
 					case "sech":rpevalStack.push((1/Math.cosh(Math.toRadians(a1))));break;
-					case "asin":rpevalStack.push((Math.asin(Math.toRadians(a1))));break;
-					case "acos":rpevalStack.push((Math.acos(Math.toRadians(a1))));break;
-					case "atan":rpevalStack.push((Math.atan(Math.toRadians(a1))));break;
-					case "acot":rpevalStack.push((Math.atan(1/Math.toRadians(a1))));break;
-					case "asinh":rpevalStack.push((Math.log(a1+Math.sqrt(a1*a1+1))));break;
-					case "acosh":rpevalStack.push((Math.log(a1+Math.sqrt(a1*a1-1))));break;
-					case "atanh":rpevalStack.push(((1/2)*Math.log((1+a1)/(1-a1))));break;
-					case "acoth":rpevalStack.push(((1/2)*Math.log((a1+1)/(a1-1))));break;
-					case "asech":rpevalStack.push((Math.log((1+Math.sqrt(1-a1*a1)/a1))));break;
-					case "acsch":rpevalStack.push((Math.log(((1/a1)+Math.sqrt((1/a1*a1)+1)))));break;
+					case "asin":
+						rpevalStack.push((Math.asin(Math.toRadians(a1))));break;
+					case "acos":
+						rpevalStack.push((Math.acos(Math.toRadians(a1))));break;
+					case "atan":
+						rpevalStack.push((Math.atan(Math.toRadians(a1))));break;
+					case "acot":
+						rpevalStack.push((Math.atan(1/Math.toRadians(a1))));break;
+					case "asinh":
+						rpevalStack.push((Math.log(a1+Math.sqrt(a1*a1+1))));break;
+					case "acosh":
+						rpevalStack.push((Math.log(a1+Math.sqrt(a1*a1-1))));break;
+					case "atanh":
+						rpevalStack.push(((1/2)*Math.log((1+a1)/(1-a1))));break;
+					case "acoth":
+						rpevalStack.push(((1/2)*Math.log((a1+1)/(a1-1))));break;
+					case "asech":
+						rpevalStack.push((Math.log((1+Math.sqrt(1-a1*a1)/a1))));break;
+					case "acsch":
+						rpevalStack.push((Math.log(((1/a1)+Math.sqrt((1/a1*a1)+1)))));break;
 				}
 			default:break;
 			}
@@ -277,8 +298,8 @@ public class EvaluateString
 
 	public static void main(String[] args) 
 	{
-		 System.out.println(EvaluateString.TokenizeInfix("90°"));
-		 //System.out.println(EvaluateString.ConvertToPostfix());
-		 //System.out.println(EvaluateString.Eval("90°"));
+		 System.out.println(EvaluateString.TokenizeInfix("sqrr 4"));
+		 System.out.println(EvaluateString.ConvertToPostfix());
+		 System.out.println(EvaluateString.Eval("sqrr 4"));
 	}
 }

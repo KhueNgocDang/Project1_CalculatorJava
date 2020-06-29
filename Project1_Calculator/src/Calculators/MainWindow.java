@@ -422,82 +422,102 @@ public class MainWindow extends JFrame {
 	public void programmerOperatorButtonInitiate() 
 	{
 		btnPlusButton = new JButton("\u002B");
+		FlatStyleButton(btnPlusButton);
 		BitwiseOperatorButtonPressed(btnPlusButton,8);
 		contentPane.add(btnPlusButton);
 		
 		btnMinusButton = new JButton("\u002D");
+		FlatStyleButton(btnMinusButton);
 		BitwiseOperatorButtonPressed(btnMinusButton,9);
 		contentPane.add(btnMinusButton);
 		
 		btnMultiplyButton = new JButton("\u00d7");
+		FlatStyleButton(btnMultiplyButton);
 		BitwiseOperatorButtonPressed(btnMultiplyButton,10);
 		contentPane.add(btnMultiplyButton);
 
 		btnDivideButton = new JButton("\u00f7");
+		FlatStyleButton(btnDivideButton );
 		OperatorButtonPressed(btnDivideButton,11);
 		contentPane.add(btnDivideButton);
 		
 		btnEqualButton = new JButton("\u003D");
+		FlatStyleButton(btnEqualButton);
 		EqualBitwiseButtonPressed(btnEqualButton);
 		contentPane.add(btnEqualButton);
 		
 		btnModButton = new JButton("\u0025");
+		FlatStyleButton(btnModButton );
 		BitwiseOperatorButtonPressed(btnModButton,12);
 		contentPane.add(btnModButton);
 		
 		btnLeftShiftButton = new JButton("<<");
+		FlatStyleButton(btnLeftShiftButton);
 		BitwiseOperatorButtonPressed(btnLeftShiftButton,6);
 		contentPane.add(btnLeftShiftButton);
 		
 		btnRightShiftButton = new JButton(">>");
+		FlatStyleButton(btnRightShiftButton);
 		BitwiseOperatorButtonPressed(btnRightShiftButton,7);
 		contentPane.add(btnRightShiftButton);
 		
 		btnANDButton = new JButton("AND");
+		FlatStyleButton(btnANDButton);
 		BitwiseOperatorButtonPressed(btnANDButton,1);
 		contentPane.add(btnANDButton);;
 		
 		btnORButton = new JButton("OR");
+		FlatStyleButton(btnORButton);
 		BitwiseOperatorButtonPressed(btnORButton,2);
 		contentPane.add(btnORButton);
 
 		btnNOTButton = new JButton("NOT");
+		FlatStyleButton(btnNOTButton);
 		BitwiseOperatorButtonPressed(btnNOTButton,13);
 		contentPane.add(btnNOTButton);
 		
 		btnNANDButton = new JButton("NAND");
+		FlatStyleButton(btnNANDButton);
 		BitwiseOperatorButtonPressed(btnNANDButton,3);
 		contentPane.add(btnNANDButton);
 		
 		btnNORButton = new JButton("NOR");
+		FlatStyleButton(btnNORButton);
 		BitwiseOperatorButtonPressed(btnNORButton,4);
 		contentPane.add(btnNORButton);
 		
 		btnXORButton = new JButton("XOR");
+		FlatStyleButton(btnXORButton);
 		BitwiseOperatorButtonPressed(btnXORButton,5);
 		contentPane.add(btnXORButton);
 	
 		btnHexAButton = new JButton("A");
+		FlatStyleButton(btnHexAButton);
 		NumberButtonPressed(btnHexAButton);
 		contentPane.add(btnHexAButton);
 
 		btnHexBButton = new JButton("B");
+		FlatStyleButton(btnHexBButton);
 		NumberButtonPressed(btnHexBButton);
 		contentPane.add(btnHexBButton);
 		
 		btnHexDButton = new JButton("D");
+		FlatStyleButton(btnHexDButton);
 		NumberButtonPressed(btnHexDButton);
 		contentPane.add(btnHexDButton);
 		
 		btnHexCButton = new JButton("C");
+		FlatStyleButton(btnHexCButton);
 		NumberButtonPressed(btnHexCButton);
 		contentPane.add(btnHexCButton);
 		
 		btnHexEButton = new JButton("E");
+		FlatStyleButton(btnHexEButton);
 		NumberButtonPressed(btnHexEButton);
 		contentPane.add(btnHexEButton);
 		
 		btnHexFButton = new JButton("F");
+		FlatStyleButton(btnHexFButton);
 		NumberButtonPressed(btnHexFButton);
 		contentPane.add(btnHexFButton);
 	}
@@ -598,7 +618,8 @@ public class MainWindow extends JFrame {
 				OCTtextField.setText(OCTanswer);
 				String HEXanswer = EvaluateProgString.Eval(input,mode,16);
 				HEXtextField.setText(HEXanswer);
-				mark = 1 ;
+				mark = 1;
+				point = 0;
 			}
 		});
 	}
@@ -1089,7 +1110,7 @@ public class MainWindow extends JFrame {
 		ProgrammerCal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				setTitle("Programmer Calculator - Project 1");
-				setBounds(100, 100, 513, 589);
+				setBounds(100, 100, 470, 589);
 		//Refresh main variable
 				RefreshCal();
 				
@@ -1143,13 +1164,12 @@ public class MainWindow extends JFrame {
 				btnDeleteButton.setBounds(375, 331, 74, 32);
 				
 				JButton btnNegateButton = new JButton("+/-");
+				FlatStyleButton(btnNegateButton);
 				btnNegateButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						if(CalDisplayResult.getText()!=null) 
 						{
-							Long ops = Long.parseLong(String.valueOf(CalDisplayResult.getText()));
-							ops = ops *(-1);
-							CalDisplayResult.setText(String.valueOf(ops));
+							CalDisplayInput.setText("\u002D"+ CalDisplayInput.getText());
 						}
 					}
 				});
@@ -1306,8 +1326,10 @@ public class MainWindow extends JFrame {
 				
 		//Set up Calculator display text field
 				CalDisplayEngage();
-				CalDisplayInput.setBounds(10, 21, 147, 57);
-				CalDisplayResult.setBounds(10, 185, 147, 57);
+				CalDisplayInput.setBounds(10, 21, 170, 57);
+				CalDisplayInput.setFont(new Font("Tahoma", Font.PLAIN, 16));
+				CalDisplayResult.setBounds(10, 185, 170, 57);
+				CalDisplayResult.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		//Set up combo box
 				comboBox_1 = new JComboBox<>(VolumeUnitType);
 				comboBox_1.setSelectedItem("Teaspoons");
@@ -1338,6 +1360,7 @@ public class MainWindow extends JFrame {
 				btnButtonNine.setBounds(346, 65, 74, 45);				
 
 				btnPointButton = new JButton(".");
+				FlatStyleButton(btnPointButton);
 				btnPointButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						if(!CalDisplayInput.getText().contains(".")) 
@@ -1350,6 +1373,7 @@ public class MainWindow extends JFrame {
 				contentPane.add(btnPointButton);
 				
 				JButton btnConvButton = new JButton("=");
+				FlatStyleButton(btnConvButton);
 				btnConvButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						if(!CalDisplayResult.getText().contains(".")) 
@@ -1387,8 +1411,10 @@ public class MainWindow extends JFrame {
 				
 		//Set up Calculator display text field
 				CalDisplayEngage();
-				CalDisplayInput.setBounds(10, 21, 147, 57);
-				CalDisplayResult.setBounds(10, 185, 147, 57);
+				CalDisplayInput.setBounds(10, 21, 170, 57);
+				CalDisplayInput.setFont(new Font("Tahoma", Font.PLAIN, 16));
+				CalDisplayResult.setBounds(10, 185, 170, 57);
+				CalDisplayResult.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		//Set up combo box
 				comboBox_1 = new JComboBox<>(LengthUnitType);
 				comboBox_1.setSelectedItem("Centimeters");
@@ -1419,6 +1445,7 @@ public class MainWindow extends JFrame {
 				btnButtonNine.setBounds(346, 65, 74, 45);				
 
 				btnPointButton = new JButton(".");
+				FlatStyleButton(btnPointButton);
 				btnPointButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						if(!CalDisplayInput.getText().contains(".")) 
@@ -1431,6 +1458,7 @@ public class MainWindow extends JFrame {
 				contentPane.add(btnPointButton);
 				
 				JButton btnConvButton = new JButton("=");
+				FlatStyleButton(btnConvButton);
 				btnConvButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						{
@@ -1468,8 +1496,10 @@ public class MainWindow extends JFrame {
 				
 		//Set up Calculator display text field
 				CalDisplayEngage();
-				CalDisplayInput.setBounds(10, 21, 147, 57);
-				CalDisplayResult.setBounds(10, 185, 147, 57);
+				CalDisplayInput.setBounds(10, 21, 170, 57);
+				CalDisplayInput.setFont(new Font("Tahoma", Font.PLAIN, 16));
+				CalDisplayResult.setBounds(10, 185, 170, 57);
+				CalDisplayResult.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		//Set up combo box
 				comboBox_1 = new JComboBox<>(MassUnitType);
 				comboBox_1.setSelectedItem("Grams");
@@ -1500,6 +1530,7 @@ public class MainWindow extends JFrame {
 				btnButtonNine.setBounds(346, 65, 74, 45);				
 
 				btnPointButton = new JButton(".");
+				FlatStyleButton(btnPointButton);
 				btnPointButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						if(!CalDisplayInput.getText().contains(".")) 
@@ -1512,6 +1543,7 @@ public class MainWindow extends JFrame {
 				contentPane.add(btnPointButton);
 				
 				JButton btnConvButton = new JButton("=");
+				FlatStyleButton(btnConvButton);
 				btnConvButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						{
@@ -1544,8 +1576,10 @@ public class MainWindow extends JFrame {
 				
 		//Set up Calculator display text field
 				CalDisplayEngage();
-				CalDisplayInput.setBounds(10, 21, 147, 57);
-				CalDisplayResult.setBounds(10, 185, 147, 57);
+				CalDisplayInput.setBounds(10, 21, 170, 57);
+				CalDisplayInput.setFont(new Font("Tahoma", Font.PLAIN, 16));
+				CalDisplayResult.setBounds(10, 185, 170, 57);
+				CalDisplayResult.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		//Set up combo box
 				comboBox_1 = new JComboBox<>(Temperature);
 				comboBox_1.setSelectedItem("Celsius");
@@ -1576,6 +1610,7 @@ public class MainWindow extends JFrame {
 				btnButtonNine.setBounds(346, 65, 74, 45);				
 
 				btnPointButton = new JButton(".");
+				FlatStyleButton(btnPointButton);
 				btnPointButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						if(!CalDisplayInput.getText().contains(".")) 
@@ -1588,6 +1623,7 @@ public class MainWindow extends JFrame {
 				contentPane.add(btnPointButton);
 				
 				JButton btnConvButton = new JButton("=");
+				FlatStyleButton(btnConvButton);
 				btnConvButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						{
@@ -1623,8 +1659,10 @@ public class MainWindow extends JFrame {
 				
 		//Set up Calculator display text field
 				CalDisplayEngage();
-				CalDisplayInput.setBounds(10, 21, 147, 57);
-				CalDisplayResult.setBounds(10, 185, 147, 57);
+				CalDisplayInput.setBounds(10, 21, 170, 57);
+				CalDisplayInput.setFont(new Font("Tahoma", Font.PLAIN, 16));
+				CalDisplayResult.setBounds(10, 185, 170, 57);
+				CalDisplayResult.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		//Set up combo box
 				comboBox_1 = new JComboBox<>(Energy);
 				comboBox_1.setSelectedItem("Joules");
@@ -1655,6 +1693,7 @@ public class MainWindow extends JFrame {
 				btnButtonNine.setBounds(346, 65, 74, 45);				
 
 				btnPointButton = new JButton(".");
+				FlatStyleButton(btnPointButton);
 				btnPointButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						if(!CalDisplayInput.getText().contains(".")) 
@@ -1667,6 +1706,7 @@ public class MainWindow extends JFrame {
 				contentPane.add(btnPointButton);
 				
 				JButton btnConvButton = new JButton("=");
+				FlatStyleButton(btnConvButton);
 				btnConvButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						{

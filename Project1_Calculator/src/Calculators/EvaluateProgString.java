@@ -32,8 +32,7 @@ public class EvaluateProgString {
 				{
 				case"and":case"or":case"nand":case"nor":case"xor":
 				case"alsh":case"arsh":case"llsh":case"lrsh":
-					InfixQueue.addLast(new Token(func.toString(), Token.OpType.BINARY_RIGHT_ASSOC, 50));
-        		break;
+					InfixQueue.addLast(new Token(func.toString(), Token.OpType.BINARY_RIGHT_ASSOC, 50));break;
 				case"not":case"ror":case"rol":
 					InfixQueue.addLast(new Token(func.toString()));break;
 				}
@@ -56,7 +55,7 @@ public class EvaluateProgString {
     				case 10: nums = Integer.parseInt(numstr, 10);break;
     				case 16: nums = Integer.parseInt(numstr, 16);break; 
     				}
-					InfixQueue.addLast(new Token(Float.valueOf(nums)));
+					InfixQueue.addLast(new Token(Integer.valueOf(nums), Token.NumberType.PROG));
 				}break;
         	
         	case '+': case '-': 
@@ -130,7 +129,7 @@ public class EvaluateProgString {
 							break;
 					}break;
 				case FUNC:
-					PostfixQueue.addLast(t);break;
+					OperatorStack.addLast(t);break;
 				case BRACKET_LEFT:OperatorStack.addLast(t);break;
 				case BRACKET_RIGHT:
 					while (OperatorStack.getLast().ttype != Token.TokenType.BRACKET_LEFT) 
@@ -143,7 +142,8 @@ public class EvaluateProgString {
 		}
 		while (!OperatorStack.isEmpty()) 
 		{
-			if (OperatorStack.getLast().ttype!=Token.TokenType.OPERATOR) 
+			if (OperatorStack.getLast().ttype!=Token.TokenType.OPERATOR
+					&&OperatorStack.getLast().ttype!=Token.TokenType.FUNC) 
 			{
 				PostfixQueue.clear();
 				return("Non-operator on shunting stack");
@@ -171,11 +171,15 @@ public class EvaluateProgString {
 				switch(t.op) 
 				{
 					case "+": 
-						if(t.otype==Token.OpType.UNARY_PREFIX)rpevalStack.push(a1);
-						if(t.otype==Token.OpType.BINARY_LEFT_ASSOC)rpevalStack.push(rpevalStack.pop()+a1);break;
+						if(t.otype==Token.OpType.UNARY_PREFIX)rpevalStack.push(a1); 
+						if(t.otype==Token.OpType.BINARY_LEFT_ASSOC)
+							rpevalStack.push(rpevalStack.pop()+a1);
+						break;
 					case "-":
-						if(t.otype==Token.OpType.UNARY_PREFIX)rpevalStack.push(-a1);
-						if(t.otype==Token.OpType.BINARY_LEFT_ASSOC)rpevalStack.push(rpevalStack.pop()-a1);break;
+						if(t.otype==Token.OpType.UNARY_PREFIX)rpevalStack.push(-a1); 
+						if(t.otype==Token.OpType.BINARY_LEFT_ASSOC)
+							rpevalStack.push(rpevalStack.pop()-a1);
+						break;
 					case "*":rpevalStack.push(a1*rpevalStack.pop());break;
 					case "/":rpevalStack.push(rpevalStack.pop()/a1);break;
 					case "and":rpevalStack.push(a1&rpevalStack.pop());break;
@@ -223,4 +227,11 @@ public class EvaluateProgString {
 				return sout;
 	}
 
+	public static void main(String[] args) 
+	{
+		System.out.println(EvaluateProgString.TokenizeInfix("39%8",10));
+		 System.out.println(EvaluateProgString.ConvertToPostfix());
+		 System.out.println(EvaluateProgString.Evaluate());
+		 System.out.println(EvaluateProgString.Eval("39%8",10,10));
+	}
 }
